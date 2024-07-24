@@ -8,7 +8,7 @@ const port = 3000;
 // Use CORS middleware
 app.use(cors());
 
-async function getText(city) {
+async function getFromWebPage(city) {
 	const url = `https://en.wikivoyage.org/wiki/${encodeURIComponent(city)}`;
 	try {
 		const { data } = await axios.get(url);
@@ -23,7 +23,7 @@ async function getText(city) {
 // Define a route to get the first 200 lines of a city's page
 app.get('/citynew/:city/first200lines', async (req, res) => {
 	const city = req.params.city;
-	const first200Lines = await getText(city);
+	const first200Lines = await getFromWebPage(city);
 
 	if (first200Lines) {
 		res.send(first200Lines);
@@ -34,7 +34,7 @@ app.get('/citynew/:city/first200lines', async (req, res) => {
 app.get('/city', async (req, res) => {
 	const { city } = req.query;
 	console.log('==> get city',city);
-	const result = await getText(city);
+	const result = await getFromWebPage(city);
 	res.json(result);
 });
 
