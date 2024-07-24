@@ -87,6 +87,9 @@ async function preprelims() {
   Serverdata = await mGetRoute('session'); //session ist: users,config,events
   let t2 = performance.now();
   await loadAssets();
+  let textures = await mGetFiles(`../assets/textures`);
+  M.textures = textures.map(x => `../assets/textures/${x}`); //console.log('textures',M.textures)
+
 }
 async function prelims() {
   await preprelims();

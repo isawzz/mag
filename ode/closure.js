@@ -4978,8 +4978,6 @@ async function loadAssets() {
   M.categories = Object.keys(byCat); M.categories.sort();
   M.collections = Object.keys(byColl); M.collections.sort();
   M.names = Object.keys(byFriendly); M.names.sort();
-  let textures = await mGetFiles(`../assets/textures`);
-  M.textures = textures.map(x => `../assets/textures/${x}`); //console.log('textures',M.textures)
   M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
   [M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
 }
