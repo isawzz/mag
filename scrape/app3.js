@@ -19,6 +19,55 @@ async function getFromWebPage(city) {
 		return null;
 	}
 }
+async function processToPageText(filePath) {
+	return new Promise((resolve, reject) => {
+		const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+		const rl = readline.createInterface({
+			input: readStream,
+			crlfDelay: Infinity
+		});
+
+		let lineNumber = 0;
+		let pages = {}, page, title;
+		let inpage = false;
+		rl.on('line', (line) => {
+			let l = trimWhitespace(line);
+			if (l.startsWith('</mediawiki')) {
+				saveYaml(pages, 'pages.yaml');
+			} else if (l.startsWith('</page')) {
+				inpage = false;
+			} else if (inpage) {
+				//page.lines += line;
+				page += l + '\n';
+				if (l.startsWith('<title')) title = stringBetween(l, '<title>', '</title>').trim();
+			} else if (l.startsWith('<page')) {
+				pages[title] = page;
+				page = '';
+				inpage = true;
+			} else console.log(`ERROR line# ${lineNumber}`);
+			// Process each line here
+			lineNumber++;
+			//console.log(line);
+		});
+
+		rl.on('close', () => {
+			console.log('Finished reading file.');
+			parsingComplete = true;
+			resolve(pages);
+		});
+
+		rl.on('error', (error) => {
+			console.error(`Error reading file: ${error.message}`);
+			reject(error);
+		});
+
+		readStream.on('error', (error) => {
+			console.error(`Error reading stream: ${error.message}`);
+			reject(error);
+		});
+	});
+}
+function trimWhitespace(line) { return line.replace(/\s+/g, ''); }
 
 // Define a route to get the first 200 lines of a city's page
 app.get('/citynew/:city/first200lines', async (req, res) => {
@@ -38,6 +87,10 @@ app.get('/city', async (req, res) => {
 	res.json(result);
 });
 
-app.listen(port, () => {
-	console.log(`Server running at http://localhost:${port}/`);
-});
+async function init() {
+	//Session.voyageData = await processToPageText(voyagePath);
+
+	app.listen(port, () => { console.log(`Server running at http://localhost:${port}/`); });
+
+}
+init();

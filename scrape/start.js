@@ -3,16 +3,16 @@ onload = start;
 async function start() { await prelims(); await test4_big(); }
 
 async function test4_big(){
-	let dict = await mGetYaml('../bigdata.yaml');
+	let dict = M.bigdata = await mGetYaml('../bigdata.yaml');
 	
 	let d=clearFlex();
 
-	let city=rChoose(M.capitals);
+	let city=rChoose(M.capitals);console.log(city)
 	let s = dict[city];
 
 	let dOben=mDom(d,{},{html:'info'})
 	let dpre = mDom(d,{},{tag:'pre'});
-	console.log(dict)
+	//console.log(dict)
 	dpre.innerText=s;
 
 	let title = firstAfter(s,'wpb-banner-image-panorama','wpb-name">','<');
