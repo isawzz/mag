@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 });
 app.use(express.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT || 3000;
 const assetsDirectory = path.join(__dirname, '..', 'assets');
 const uploadDirectory = path.join(__dirname, '..', 'y');
 const configFile = path.join(uploadDirectory, 'config.yaml');
@@ -273,13 +273,13 @@ function saveUser(name, o) {
 }
 //const { Readable } = require('stream');
 function saveHugeYaml(o, dir) {
-	for(const k in o){
+	for (const k in o) {
 		if (isNumber(k)) continue;
 		let val = o[k];
 		console.log(val)
-		let p=path.join(uploadDirectory,dir,`${k}.yaml`);
-		console.log('saving to',p);
-		fs.writeFileSync(p,o[k]);
+		let p = path.join(uploadDirectory, dir, `${k}.yaml`);
+		console.log('saving to', p);
+		fs.writeFileSync(p, o[k]);
 	}
 	// let y = yaml.dump(o);
 	// const readable = Readable.from(yamlStr);
@@ -322,7 +322,7 @@ function valf() {
 //#endregion
 
 //#region new functions
-function getFileContent(p){
+function getFileContent(p) {
 	if (!fs.existsSync(p)) return null;
 	yamlFile = fs.readFileSync(p, 'utf8');
 	return yaml.load(yamlFile);
@@ -337,6 +337,51 @@ async function getFromWebPage(city) {
 		console.error(`Error fetching the page for ${city}:`, error);
 		return null;
 	}
+}
+async function processToPageTitles(filePath) {
+	return new Promise((resolve, reject) => {
+		const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+		const rl = readline.createInterface({
+			input: readStream,
+			crlfDelay: Infinity
+		});
+
+		let lineNumber = 0;
+		let titledict = {};
+		let page, title, norm;
+		rl.on('line', (line) => {
+			let l = line.trim();
+			//console.log(l)
+			if (l.includes('<title>')) {
+				title = stringBetween(l, '<title>', '</title>').trim();
+				norm = normalizeString(title)
+			} else if (l.includes('<page')) {
+				if (isdef(title)) titledict[norm] = title;
+				page = '';
+			} else if (l.includes('</mediawiki')) {
+				console.log('END DETECTED!!!!');
+				saveYaml(titledict, path.join(uploadDirectory, 'pagetitles.yaml'));
+			}
+			lineNumber++;
+		});
+
+		rl.on('close', () => {
+			console.log('Finished reading lines', lineNumber);
+			parsingComplete = true;
+
+			resolve(titledict);
+		});
+
+		rl.on('error', (error) => {
+			console.error(`Error reading file: ${error.message}`);
+			reject(error);
+		});
+
+		readStream.on('error', (error) => {
+			console.error(`Error reading stream: ${error.message}`);
+			reject(error);
+		});
+	});
 }
 async function processToPageText(filePath) {
 	return new Promise((resolve, reject) => {
@@ -353,9 +398,9 @@ async function processToPageText(filePath) {
 			//console.log(l)
 			if (l.includes('<title>')) {
 				title = stringBetween(l, '<title>', '</title>').toLowerCase().trim();
-				title=normalizeString(title)
+				title = normalizeString(title)
 			} else if (l.includes('<page')) {
-				if (isdef(title)) pages[title] =page;
+				if (isdef(title)) pages[title] = page;
 				page = '';
 			} else if (l.includes('</mediawiki')) {
 				console.log('END DETECTED!!!!')
@@ -413,30 +458,43 @@ app.get('/wiki', async (req, res) => {
 });
 app.get('/cityxml', async (req, res) => {
 	let { query } = req.query; console.log('==> get cityxml:', query);
-	let norm=normalizeString(query);
-	
-	let xml=lookup(Session,['xml',norm]);
+	let norm = normalizeString(query);
+
+	let xml = lookup(Session, ['xml', norm]);
 	if (xml) return res.json(xml);
 
-	let p=path.join(uploadDirectory,'pages',`${norm}.yaml`);
+	let p = path.join(uploadDirectory, 'pages', `${norm}.yaml`);
 	let content = getFileContent(p);
-	lookupSet(Session,['xml',norm],content);
+	lookupSet(Session, ['xml', norm], content);
 	return res.json(content);
 });
-app.get('/cityweb', async (req, res) => {
-	let { city } = req.query;
-	let norm=normalizeString(city);
+app.get('/cityweb/:city', async (req, res) => {
+	const city = req.params.city;
+	console.log('==> get cityweb',city);
 
-	let web=lookup(Session,['web',norm]);
-	if (web) return res.json(web);
+	let norm = normalizeString(city); 
 
-	console.log('==> get city',city);
-	const result = await getFromWebPage(city);
-	res.json(result);
+	// let web = lookup(Session, ['web', norm]);
+	// if (web) return res.json(web);
+
+	// console.log('==> get city', city);
+	// const result = await getFromWebPage(city);
+	// lookupSet(Session, ['web', norm], result);
+	// res.json(result);
+
+	const first200Lines = await getFromWebPage(city);
+
+	if (first200Lines) {
+		res.send(first200Lines);
+	} else {
+		res.status(404).json({ message: 'City not found or error fetching data' });
+	}
 });
+
 
 async function init() {
 	//Session.voyageData = await processToPageText(voyagePath);
+	//Session.titles = await processToPageTitles(voyagePath);
 
 	app.listen(PORT, () => { console.log(`Server running at http://localhost:${PORT}/`); });
 

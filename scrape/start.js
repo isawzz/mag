@@ -1,7 +1,34 @@
 onload = start;
 
-async function start() { await prelims(); await test4_big(); }
+async function start() { await prelims(); await test5_pagetitles(); }
 
+async function test5_pagetitles(){
+	let diTitles = M.pageTitles = await mGetYaml(`../y/pagetitles.yaml`);
+	console.log(Object.values(diTitles)); //167843 titles in wikivoyage
+
+	//which titles are also cities? how many of them?
+	let incities=[];
+	for(const c in M.cities){ 
+		let norm=normalizeString(c);
+		if (norm in diTitles){incities.push(c); }
+	}
+	console.log(incities); //6601 cities sind da
+
+	//das ist perfekt!
+	//von all denen hol ich jetzt die images
+	//schauen wir ob die banners alle da sind
+	let diPics = {};
+	for(const c of incities){ //}.filter(x=>!x.includes(' '))){
+		let html=await mGetRoute(`cityweb/${encodeURIComponent(c)}`); //'cityweb',{city:c});
+		if (!html) continue;
+		//console.log(typeof html,html); return;
+		let norm = normalizeString(c);
+		diPics[norm]=getImages(html.text);
+		//break;
+	}
+	console.log('diPics',diPics);
+	downloadAsYaml(diPics,'pics.yaml');
+}
 async function test4_big(){
 	let dict = M.bigdata = await mGetYaml('../bigdata.yaml');
 	
