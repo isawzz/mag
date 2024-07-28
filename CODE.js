@@ -23,3 +23,25 @@ function nodejs(){
 	});
 	
 }
+async function _fetchAndPrintDetails(titles) {
+
+	//let titles = Object.keys(Session.locs).map(x=>Session.locs[x].title);//["New York City", "London", "Tokyo", "Paris", "Berlin", "Sydney", "Moscow", "Beijing", "Rio de Janeiro", "Cape Town"];
+	if (nundef(titles)) titles = ["New York City", "London", "Tokyo", "Paris", "Berlin", "Sydney", "Moscow", "Beijing", "Rio de Janeiro", "Cape Town"];
+	titles = arrTake(titles,10);
+	//console.log(titles); return;
+
+	const details = await getPageDetails(titles);
+	return details;
+	//console.log(details); return;
+	if (details) {
+		//console.log(details);
+		details.forEach(detail => {
+			console.log(detail);return;
+			// console.log(`Title: ${detail.title}`);
+			// console.log(`Is City: ${detail.isCity}`);
+			// console.log(`Status: ${detail.status}`);
+			// console.log(`Extract: ${detail.extract}`);
+			console.log('--------------------');
+		});
+	}
+}

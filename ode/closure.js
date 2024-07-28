@@ -4428,9 +4428,9 @@ function getRelCoords(ev, elem) {
   let y = ev.pageY - elem.offset().top;
   return { x: x, y: y };
 }
-function getServerurl() {
+function getServerurl(port=3000) {
   let type = detectSessionType();
-  let server = type == 'vps' ? 'https://server.vidulusludorum.com' : 'http://localhost:3000';
+  let server = type == 'vps' ? 'https://server.vidulusludorum.com' : `http://localhost:${port}`;
   return server;
 }
 function getStyleProp(elem, prop) { return getComputedStyle(elem).getPropertyValue(prop); }
@@ -5654,8 +5654,8 @@ function mGather(dAnchor, styles = {}, opts = {}) {
     mAnchorTo(dx, dAnchor, opts.align);
   });
 }
-async function mGetFiles(dir) {
-  let server = getServerurl();
+async function mGetFiles(dir,port=3000) {
+  let server = getServerurl(port);
   let data = await mGetJsonCors(`${server}/filenames?directory=${dir}`);
   return data.files;
 }
