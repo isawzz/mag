@@ -543,34 +543,6 @@ function handle_userChange(x, id) {
 }
 //#endregion
 
-app.get('/user', (req, res) => {
-	let name = req.query.name;
-	//console.log('==> get user:', name)
-	let data = lookup(Session, ['users', name]);
-	//console.log(data)
-	res.json(data);
-});
-app.get('/otherUser', (req, res) => {
-	let params = req.query;
-	// console.log('params',params,Object.values(params));
-	let list = Array.from(Object.values(params));
-	//console.log(list)
-	let i = list.indexOf(Session.lastUser);
-	//console.log(i)
-	let name = Session.lastUser = i < 0 ? list[0] : list[(i + 1) % list.length];
-	// let [name1, name2] = [params.name1, params.name2];
-	// let name = Session.lastUser = (Session.lastUser == name1 ? name2 : name1);
-	res.json(name);
-});
-app.get('/users', (req, res) => {
-	let users = lookup(Session, ['users']);
-	let di = {};
-	for (const k in users) {
-		if (k.includes('_') || k.includes('unsafe')) continue;
-		di[k] = users[k];
-	}
-	return res.json(di);
-});
 app.get('/config', (req, res) => {
 	console.log('==> get config')
 	res.json(Session.config);
@@ -596,6 +568,18 @@ app.get('/filenames', async (req, res) => {
 		res.status(500).json({ error: 'Error reading directory', details: err.message });
 	}
 });
+app.get('/otherUser', (req, res) => {
+	let params = req.query;
+	// console.log('params',params,Object.values(params));
+	let list = Array.from(Object.values(params));
+	//console.log(list)
+	let i = list.indexOf(Session.lastUser);
+	//console.log(i)
+	let name = Session.lastUser = i < 0 ? list[0] : list[(i + 1) % list.length];
+	// let [name1, name2] = [params.name1, params.name2];
+	// let name = Session.lastUser = (Session.lastUser == name1 ? name2 : name1);
+	res.json(name);
+});
 app.get('/session', (req, res) => {
 	console.log('==> get session')
 	res.json({ users: Session.users, config: Session.config, tables: getTablesInfo() });
@@ -616,6 +600,23 @@ app.get('/table', (req, res) => {
 	res.json(data);
 });
 app.get('/tables', (req, res) => { return res.json(getTablesInfo()); });
+
+app.get('/user', (req, res) => {
+	let name = req.query.name;
+	//console.log('==> get user:', name)
+	let data = lookup(Session, ['users', name]);
+	//console.log(data)
+	res.json(data);
+});
+app.get('/users', (req, res) => {
+	let users = lookup(Session, ['users']);
+	let di = {};
+	for (const k in users) {
+		if (k.includes('_') || k.includes('unsafe')) continue;
+		di[k] = users[k];
+	}
+	return res.json(di);
+});
 
 //#region post routes (uses emit)
 app.post('/deleteImage', (req, res) => {

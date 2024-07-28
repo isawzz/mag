@@ -1,8 +1,35 @@
 
+async function clearCityGood(){
+	let text = await mGetText('../y/citygood.yaml');
+	console.log('text', text.length);
+	let lines = text.split('\n');
+	console.log(lines.length); //return;
+	let di = {};
+	for (let i = 0; i < lines.length; i += 3) {
+		let l = lines[i];//console.log(l);return;
+
+		//if (['diving','public','airport','north','west','south','suburbs','east','railway','prefecture','central','disambig','province','district','_to_','_war_of'].some(x=>l.includes(x)) || l.length > 30) continue;
+
+		if (l.trim().endsWith(':')) {
+			//console.log(l);return;
+			let k = stringBefore(l, ':'); //console.log(k)
+			if (isdef(di[k])) console.log('duplicate', k);
+			else {
+				let cityline = lines[i + 1];
+				let titleline = lines[i + 2];
+				let city = stringAfter(cityline, ':').trim()
+				let title = stringAfter(titleline, ':').trim()
+				di[k] = { city, title };
+			}
+		}
+	}
+	//sortDictionary(keys);
+	console.log(Object.keys(di).length)
+	downloadAsYaml(di,'new_citygood');
+}
 function getBanner() {
 	mByClass('wpb-name');
 }
-
 function getImages(s) {
 	let parts = s.split('<img');
 	let list = [];
@@ -17,7 +44,6 @@ function getImages(s) {
 	}
 	return list;
 }
-
 function getShortInfo(s){
 	let parts = s.split('class="mw-body-content"');
 	assertion(parts.length == 2,s)
