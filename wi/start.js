@@ -1,36 +1,144 @@
 onload = start;
 
-async function start() { await prelims(); await test7_pageIds(); }
+async function start() { await prelims(); await test9_collectAllCategories(); }
 
-async function test7_pageIds() {
-	console.log('DONE! next: downloads => filenofile10-167!')
-	max=168000; return;
-	for(let i=117400;i<max;i+=100){
-		let [di,nodi]=await sammelPages(i,100);
-		downloadAsYaml(di,`file_${i}`);
-		downloadAsYaml(nodi,`nofile_${i}`);
-		//console.log(di,nodi);
+async function test9_collectAllCategories(){
+  let di = await mGetYaml('../wikisaves/di.yaml');
+	let allcats=[];
+	for(const id in di){
+		let o=di[id];
+		o.cats.map(x=>addIf(allcats,x));
 	}
+	console.log(allcats);
+	downloadAsYaml(allcats,'allcats');
 }
-async function sammelPages(istart,inum){
-	let di = {}, nodi={};
-	max=168000;
-	for (let id = istart; id < Math.min(istart + inum, max); id++) {
-		let result = await mGetRoute(`pageInfo/${encodeURIComponent(id)}`);
-		assertion(isdef(result),`problem page id ${id}`);
-		let kpage = Object.keys(result)[0];
-		let o = result[kpage];
-		let cats = o.categories;
-		if (isList(cats) && cats.some(x => x.title.includes('articles'))) {
-				let entry = di[id] = { title:o.title, cats:cats.map(x=>stringAfter(x.title,':')) };
-				console.log(`${id}:`,entry);
-		}else {
-			let ono={title:o.title};addKeys(o,ono);nodi[id]=ono;
+async function test8_duplicateTitles(){
+  let di = await mGetYaml('../wikisaves/di.yaml');
+	let list = getPageList(di,isCity);
+	let titles={};
+	let dupl=[];
+	for(const o of list){
+		let title = o.title;
+		if (nundef(title)) {console.log(`missing title`,o);return;}
+		if (isdef(titles[title])) addIf(dupl,title);
+		lookupAddIfToList(titles,[title],o);
+	}
+	console.log(titles);
+	titles=sortDictionary(titles);
+	
+	let just1={};
+	let bytitle={};
+	for(const t in titles){
+		let list=titles[t];
+		let norm = normalizeString(t);if (nundef(norm)) return;
+		if (list.length==1) {just1[norm]=list[0];}//console.log(`${t} unique`);}
+		else {
+			let o={title:t};
+			o.cats = unionOfArrays(list.map(x=>x.cats));
+			o.pageids=list.map(x=>x.id);
+			o.id = arrLast(list).id;
+			just1[norm]=o;
+			let lencats=o.cats.length;
+			let samecats=true;
+			for(const el of list){
+				if (el.cats.length!=lencats){
+					samecats=false;
+					break;
+				}
+			}
+			if (!samecats){
+				console.log('___',t);
+				console.log('cats',o.cats);
+				list.map(x=>console.log(x.id+`(${x.cats.length}): `+x.cats.join(',')));
+			}
 		}
 	}
-	return [di,nodi]; //
-	//downloadAsYaml(di,`file_${istart}`);
-	//downloadAsYaml(nodi,`nofile_${istart}`);
+	for(const k in just1){
+		let o=just1[k];assertion(isdef(o.title),k)
+		bytitle[o.title]=o;
+	}
+	//downloadAsYaml(just1,'just1');
+	//downloadAsYaml(bytitle,'bytitle');
+	console.log(Object.keys(bytitle));
+}
+async function test8_getAllPages(){
+  let di = await mGetYaml('../wikisaves/di.yaml');
+	let list = getPageList(di,isCity);
+	console.log(list);
+	showPageTitles(list);
+
+}
+async function test2_cities(){
+  let di = await mGetYaml('../wikisaves/di.yaml');
+	for(const k in di){
+		let o=di[k];
+		let cats=o.cats;
+		assertion(isList(cats),'WTF!!!');
+
+		//was will ich jetzt rausfinden ueber eine city?
+
+
+	}
+
+}
+
+async function test2_articles(){
+  let di = await mGetYaml('../wikisaves/di.yaml');
+  console.log(Object.keys(di).length);
+  let cities = {},byTitle={};
+  for(const k in di){
+    let o = di[k];
+    let cats = o.cats;
+    assertion(isList(cats),`problem! ${k}`);
+    if (cats.some(x=>x.toLowerCase().includes('city'))) cities[k]=o;
+  }
+  console.log(Object.values(cities).map(x=>x.title));
+}
+async function test2_zusammen(){
+  let dir='../wikisaves/filenofile80';
+  let files=await mGetFiles(dir);
+  files.sort();
+  let di={},nodi={};
+  for(const f of files){
+    let o=await mGetYaml(`${dir}/${f}`);
+    if (f.startsWith('file')) addKeys(o,di); else break;//addKeys(o,nodi);
+  }
+  downloadAsYaml(di,'di');
+
+}
+async function test1_quoteFrom(){
+  let d=clearFlex();
+  let title='Johann Sebastian Bach'; //'Wolfgang Amadeus Mozart';
+  let result = await mGetRoute(`quotes/${encodeURIComponent(title)}`);
+  console.log('was',result);
+  d.innerHTML = result;
+
+  let q=[];
+  let lis=Array.from(d.querySelectorAll('li'));
+  lis = Array.from(document.querySelectorAll('div>ul>li'));  
+  console.log(lis);
+  for(const li of lis){
+    let text = li.textContent;
+    let parts = splitAtAnyOf(text,'\n(')
+    q.push(parts[0]); 
+  }
+  console.log(q)
+
+  
+}
+async function test1_quote(){
+  clearFlex();
+  let url = 'http://localhost:3000/testquote';
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    mode: 'cors',
+  });
+
+  let res = tryJSONParse(await response.text());
+  console.log('was',res);
+
+  
 }
 async function test7_pageTitles() {
 	//to each page title 
@@ -117,8 +225,6 @@ async function test5_pagetitles2() {
 	console.log('diPics', diPics);
 	downloadAsYaml(diPics, 'pics.yaml');
 }
-
-
 async function test6_pics() {
 	let di = await mGetYaml('../y/pagepics.yaml');
 	console.log(di.a_coruna);
@@ -211,12 +317,6 @@ async function test4_big() {
 	//let extract=
 
 }
-
-function firstAfter(s, sSub, start, end) {
-	let rest = stringAfter(s, sSub);
-	return stringBetween(rest, start, end);
-}
-
 async function test3() {
 
 	console.log(Object.keys(M.cities)); //return;
@@ -245,7 +345,6 @@ async function test2() {
 	}
 	console.log('number', Object.keys(bdata));
 }
-
 async function test1() {
 
 	let dict = {};
