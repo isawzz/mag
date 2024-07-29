@@ -628,6 +628,37 @@ app.get('/pageinfo/:id', async (req, res) => {
 	let o=await getPageDetailsByIds([id]);
 	res.json(o);
 });
+app.get('/quotes/:title', async (req, res) => {
+	const titles = [req.params.title];
+	const pageTitle = req.params.title; //"Wolfgang Amadeus Mozart";
+	const URL = "https://en.wikiquote.org/w/api.php";
+	const PARAMS = {
+		action: "parse",
+		format: "json",
+		page: pageTitle, //titles.join('|'),
+		prop: "text",
+		section: 1 // Usually, the quotes are in the first section after the intro
+	};
+	try { 
+		const response = await axios.get(URL, { params: PARAMS }); //const pages = response.data.query.pages; return pages; 
+		const html = response.data.parse.text["*"];
+		return res.json(html);
+		const quotes = [];
+		const quoteRegex = /<li>(.*?)<\/li>/g;
+		let match;
+		while ((match = quoteRegex.exec(html)) !== null) { //} && quotes.length < 5) {
+			quotes.push(match[1].replace(/<.*?>/g, "")); // Remove HTML tags
+		}
+		return res.json(quotes);
+	}	catch (error) { console.error('Error fetching page details:', error); return res.json('ERROR'); }
+});
+app.get('/testquote', async (req, res) => {
+  let url=`https://en.wikiquote.org/w/api.php?action=query&format=json&titles=Albert%20Einstein&prop=extracts&exintro=true&explaintext=true`;
+  url=`https://en.wikiquote.org/w/api.php?action=query&format=json&titles=Ludwig%20van%20Beethoven&prop=extracts&exintro=true&explaintext=true`;
+  //url=`https://en.wikiquote.org/w/api.php?action=query&format=json&pageids=2169|2170|2180&prop=extracts&exintro=true&explaintext=true`;
+	try { const response = await axios.get(url); const pages = response.data.query.pages; return res.json(pages); }
+	catch (error) { console.error('Error fetching page details:', error); return res.json('ERROR'); }
+});
 app.get('/wiki', async (req, res) => {
 	const { query } = req.query;
 	if (!query) {
@@ -650,6 +681,13 @@ app.get('/wiki', async (req, res) => {
 		console.error('Error fetching data from Wikipedia:', error);
 		res.status(500).json({ error: 'Error fetching data from Wikipedia.' });
 	}
+});
+app.get('/wiquote/:title', async (req, res) => {
+	const titles = [req.params.title];
+	const URL = "https://en.wikiquote.org/w/api.php";
+	const PARAMS = { action: "query", format: "json", titles: titles.join('|'), prop: "categories", redirects: true };
+	try { const response = await axios.get(URL, { params: PARAMS }); const pages = response.data.query.pages; return pages; }
+	catch (error) { console.error('Error fetching page details:', error); return null; }
 });
 
 async function init() {
