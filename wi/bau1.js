@@ -2,11 +2,18 @@
 function catsInclude(o){
 	let list = Array.from(arguments).slice(1); 
 	for(const cat of o.cats){
+		if (list.some(x=>cat.includes(x))) return true;
+	}
+	return false;
+}
+function catsIncludeCaseInsensitive(o){
+	let list = Array.from(arguments).slice(1); 
+	for(const cat of o.cats){
 		if (list.some(x=>cat.toLowerCase().includes(x))) return true;
 	}
 	return false;
 }
-function isCity(o){return catsInclude(o,'city');}
+function isCity(o){return catsInclude(o,'City','Huge city');}
 
 function getPageList(di,func){
 	let list=[];

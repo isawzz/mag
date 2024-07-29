@@ -1,7 +1,50 @@
 onload = start;
 
-async function start() { await prelims(); await test9_collectAllCategories(); }
+async function start() { await prelims(); await test9_holeXmlPage(); }
 
+async function test9_holeXmlPage(){
+	let title = 'Vienna'; console.log('abort!');return;
+	let norm=normalizeString(title);
+	let page = await mGetYaml(`../wikisaves/pages/${norm}.yaml`);
+	console.log(page);
+}
+
+async function test9_FindAllLocationCats(){
+  let list = await mGetYaml('../wikisaves/all_categories.yaml');return;
+  //let byt = await mGetYaml('../wikisaves/bytitle.yaml');
+	let locs=[];
+	for(const cat of list){
+		let catci=cat.toLowerCase();
+		if (['topics','airport','previous','climate','travel',' with ','itineraries','voyage','unesco','regions','diving','maps ','outline','listing','article','pages','usable ','star ','guide ','has '].some(x=>catci.includes(x))) continue;
+		console.log(cat);
+		addIf(locs,cat);
+	}	
+	console.log(locs)
+	downloadAsYaml(locs,'locations');
+}
+async function test9_FindLocationCat(){
+  let list = await mGetYaml('../wikisaves/cities.yaml');
+	for(const c of list){
+		let cats = c.cats;
+		
+	}
+}
+async function test9_CityUseByNorm(){
+  let di = await mGetYaml('../wikisaves/bynorm.yaml');
+	let cities = getPageList(di,isCity);
+	let citiesCI=getPageList(di,x=>catsIncludeCaseInsensitive(x,'city'));
+	let citiesA=getPageList(di,x=>catsInclude(x,'City article','Huge city article','City listing'));
+	console.log(cities.length,citiesCI.length,citiesA.length,arrMinus(citiesCI,citiesA));
+	downloadAsYaml(citiesA,'cities');
+}
+async function test9_City(){
+  let di = await mGetYaml('../wikisaves/di.yaml');
+	let cities = getPageList(di,isCity);
+	let citiesCI=getPageList(di,x=>catsIncludeCaseInsensitive(x,'city'));
+	let citiesA=getPageList(di,x=>catsInclude(x,'City article','Huge city article','City listing'));
+	console.log(cities.length,citiesCI.length,citiesA.length,arrMinus(citiesCI,citiesA));
+	downloadAsYaml(citiesA,'cities');
+}
 async function test9_collectAllCategories(){
   let di = await mGetYaml('../wikisaves/di.yaml');
 	let allcats=[];
@@ -81,7 +124,6 @@ async function test2_cities(){
 	}
 
 }
-
 async function test2_articles(){
   let di = await mGetYaml('../wikisaves/di.yaml');
   console.log(Object.keys(di).length);
@@ -369,7 +411,7 @@ async function test0() {
 
 async function prelims() {
 	await loadAssets();
-	M.pageTitles = await mGetYaml(`../y/pagetitles.yaml`);
+	M.pageTitles = await mGetYaml(`../wikisaves/pagetitles.yaml`);
 	getCapitals();
 	mBy('bGo').onclick = onclickGo;
 	mBy('bNewCity').onclick = setRandomCity;
