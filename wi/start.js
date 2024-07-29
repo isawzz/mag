@@ -1,12 +1,22 @@
 onload = start;
 
-async function start() { await prelims(); await test9_holeXmlPage(); }
+async function start() { await test9_holeXmlPage(); }
 
+async function test10(){
+	let chat=await getChatGpt(title);
+	let info=await getInfo(title);
+	let html = await mGetRoute(`cityweb/${encodeURIComponent(title)}`); 
+	let xml = await mGetText(`../wikisaves/pages/${normalizeString(title)}.yaml`);
+	console.log('hallo');
+}
 async function test9_holeXmlPage(){
-	let title = 'Vienna'; console.log('abort!');return;
+	let title = 'vienna'; //console.log('abort!');return;
+	let d=clearFlex(); 
 	let norm=normalizeString(title);
-	let page = await mGetYaml(`../wikisaves/pages/${norm}.yaml`);
-	console.log(page);
+	let page = await mGetText(`../wikisaves/pages/${norm}.yaml`);
+	//let html = await mGetRoute(`cityweb/${encodeURIComponent(title)}`); 
+	mDom(d,{},{tag:'pre',html});
+	//d.innerHTML = page;
 }
 
 async function test9_FindAllLocationCats(){

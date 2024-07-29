@@ -24,7 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 const assetsDirectory = path.join(__dirname, '..', 'assets');
 const uploadDirectory = path.join(__dirname, '..', 'y');
 const configFile = path.join(uploadDirectory, 'config.yaml');
-const pagesDirectory = path.join(uploadDirectory, 'pages');
+const cacheFile = path.join(uploadDirectory, 'cache.yaml');
+//const pagesDirectory = path.join(uploadDirectory, 'pages');
 const Session = {};
 var parsingComplete = false;
 
@@ -581,6 +582,24 @@ async function loadYamlFile(p){
 	return yaml.load(yamlFile);
 }
 
+//#region ai
+const OpenAI = require('openai');
+const openai = new OpenAI({ apiKey: process.env['API_KEY'] });
+
+async function fetchAnswerOpenai(prompt = "how hot is the sun?") {
+	const completion = await openai.chat.completions.create({
+		messages: [
+			{ role: "system", content: "You are a helpful assistant." },
+			{ role: "user", content: prompt },
+		],
+		model: "gpt-3.5-turbo",
+	});
+	let res = completion.choices[0];
+	//console.log(res);
+	return res;
+}
+//#endregion
+
 app.get('/cityxml', async (req, res) => {
 	let { query } = req.query; console.log('==> get cityxml:', query);
 	let norm = normalizeString(query);
@@ -688,6 +707,25 @@ app.get('/wiquote/:title', async (req, res) => {
 	const PARAMS = { action: "query", format: "json", titles: titles.join('|'), prop: "categories", redirects: true };
 	try { const response = await axios.get(URL, { params: PARAMS }); const pages = response.data.query.pages; return pages; }
 	catch (error) { console.error('Error fetching page details:', error); return null; }
+});
+
+app.post('/ask', async (req, res) => {
+	let prompt = req.body.prompt;
+	if (isString(prompt)) prompt = prompt.toLowerCase(); else return res.json('ERROR');
+	console.log('ask:', prompt);
+	let text = lookup(M.cache, [prompt]);
+	if (text) console.log('FOUND!', text)
+	if (!text) {
+		let result = await fetchAnswerOpenai(prompt);
+		console.log('openai:', result)
+		text = result.message.content;
+		//console.log('text',text)
+		//console.log('cache',M.cache)
+		lookupSet(M.cache, [prompt], text)
+		let y = yaml.dump(M.cache);
+		fs.writeFileSync(cacheFile, y, 'utf8');
+	}
+	res.json(text); //data.choices[0].text.trim() });
 });
 
 async function init() {
