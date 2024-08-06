@@ -1,7 +1,12 @@
 onload = start;
 
-async function start() { TESTING = true; await prelims(); }//await test161_sortlist(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
+async function start() { TESTING = true; await prelims(); await test170_crazu(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 
+async function test170_crazu(){ 
+  //let d=clearFlex();
+  //let canvas = mCanvas
+
+}
 async function test162_asklist(){
   let [word,num]=['insects',200]; 
 	let o = await mPostRoute('ask_list', { word, num });

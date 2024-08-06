@@ -1,4 +1,18 @@
 
+function catsInclude(o){
+	let list = Array.from(arguments).slice(1); 
+	for(const cat of o.cats){
+		if (list.some(x=>cat.includes(x))) return true;
+	}
+	return false;
+}
+function catsIncludeCaseInsensitive(o){
+	let list = Array.from(arguments).slice(1); 
+	for(const cat of o.cats){
+		if (list.some(x=>cat.toLowerCase().includes(x))) return true;
+	}
+	return false;
+}
 async function clearCityGood(){
 	let text = await mGetText('../y/citygood.yaml');
 	console.log('text', text.length);
@@ -34,6 +48,15 @@ function firstAfter(s, sSub, start, end) {
 function getBanner() {
 	mByClass('wpb-name');
 }
+async function getChatGptCity(title){
+	let info=await getInfo(title);
+	console.log('info',info)
+	if (isCity(info)){
+		let prompt=`for the City of ${title}, provide a yaml object with the following properties: country,longitude,latitude,population,language,climate,famous_for.`;
+		let result = await mPostRoute('askyaml',{prompt,key:title});
+		console.log(result);
+	}
+}
 function getImages(s) {
 	let parts = s.split('<img');
 	let list = [];
@@ -45,6 +68,19 @@ function getImages(s) {
 
 
 		list.push(url);
+	}
+	return list;
+}
+async function getInfo(title){
+	let di=await mGetYaml(`../wikisaves/bytitle.yaml`);
+	return di[title];
+}
+function getPageList(di,func){
+	let list=[];
+	for(const k in di){
+		let o= di[k];
+		o.id=k;
+		if (func(o)) list.push(o)
 	}
 	return list;
 }
@@ -64,6 +100,8 @@ async function generateFileNoFile() {
 		//console.log(di,nodi);
 	}
 }
+function isCity(o){return catsInclude(o,'City','Huge city');}
+
 async function onclickGo() {
 	let inp = mBy('inpCity');
 	let city = inp.value;
@@ -164,5 +202,7 @@ async function sammelPages(istart,inum){
 	//downloadAsYaml(nodi,`nofile_${istart}`);
 }
 function setRandomCity() { mBy('inpCity').value = rChoose(M.capitals); }
+
+function showPageTitles(list){console.log(list.map(x=>x.title))}
 
 

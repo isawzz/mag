@@ -7,7 +7,8 @@ here is some code. I would like to modify it to start an express server with a '
 
 write a node js function to query wiki media api to get a list of all cities as yaml objects. the key is cityname and value a list of cities of that name, each with data country,population,longitude,latitude,language,wiki_voyage_link,extract
 
-
+js function that splits a very large xml file holding 168000 <page> sections into 168 files of 1000 <page> elements
+// each, and for each <page> element stores the current filename in a dictionary where keys are all the <title>XYZ</title> (the XYZ should be a key) elements
 
 
 

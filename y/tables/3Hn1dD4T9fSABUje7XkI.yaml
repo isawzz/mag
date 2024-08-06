@@ -1,0 +1,78 @@
+status: started
+id: 3Hn1dD4T9fSABUje7XkI
+fen:
+  flowers:
+    - '#FFD166'
+    - '#8D6E63'
+    - '#3A0CA3'
+    - '#FFD166'
+    - '#9D4EDD'
+    - '#9D4EDD'
+    - '#9D4EDD'
+    - '#3A0CA3'
+    - '#9D4EDD'
+    - '#F4A261'
+    - '#9D4EDD'
+    - '#9D4EDD'
+    - '#8D6E63'
+    - '#FFD166'
+    - '#FFD166'
+    - '#F5C518'
+    - '#F4A261'
+    - '#3A0CA3'
+    - '#FF80AB'
+    - '#8D6E63'
+    - '#F5C518'
+    - '#3A0CA3'
+    - '#F4A261'
+    - '#F5C518'
+    - '#FF80AB'
+    - '#F5C518'
+    - '#FFD166'
+    - '#FF80AB'
+    - '#8D6E63'
+    - '#F4A261'
+    - '#FF80AB'
+    - '#F5C518'
+    - '#F4A261'
+    - '#8D6E63'
+    - '#F4A261'
+    - '#8D6E63'
+    - '#FF80AB'
+    - '#FFD166'
+    - '#3A0CA3'
+    - '#F5C518'
+    - '#3A0CA3'
+    - '#FF80AB'
+    - '#3A0CA3'
+    - '#F4A261'
+    - '#F5C518'
+    - '#9D4EDD'
+    - '#FFD166'
+    - '#8D6E63'
+    - '#FF80AB'
+game: crazu
+owner: amanda
+friendly: rally of Sao Tome
+players:
+  amanda:
+    name: amanda
+    color: '#046307'
+    texture: ../assets/textures/wall1.jpg
+    blendMode: overlay
+    imgKey: amanda
+    playmode: human
+    score: 0
+    positions: []
+    flowers: []
+playerNames:
+  - amanda
+options:
+  numCards: 12
+  gamemode: multi
+step: 0
+moves: []
+plorder:
+  - amanda
+turn:
+  - amanda

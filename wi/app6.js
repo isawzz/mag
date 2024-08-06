@@ -25,6 +25,10 @@ const assetsDirectory = path.join(__dirname, '..', 'assets');
 const uploadDirectory = path.join(__dirname, '..', 'y');
 const configFile = path.join(uploadDirectory, 'config.yaml');
 const cacheFile = path.join(uploadDirectory, 'cache.yaml');
+const mFile = path.join(uploadDirectory, 'm.yaml');
+const superdiFile = path.join(uploadDirectory, 'superdi.yaml');
+const detailsFile = path.join(uploadDirectory, 'details.yaml');
+const listsFile = path.join(uploadDirectory, 'lists.yaml');
 //const pagesDirectory = path.join(uploadDirectory, 'pages');
 const Session = {};
 var parsingComplete = false;
@@ -42,10 +46,10 @@ function arrClear(arr) { arr.length = 0; return arr; }
 function arrLast(arr) { return arr.length > 0 ? arr[arr.length - 1] : null; }
 function arrMinus(arr, b) { if (isList(b)) return arr.filter(x => !b.includes(x)); else return arr.filter(x => x != b); }
 function arrTake(arr, n = 0, from = 0) {
-  if (isDict(arr)) {
-    let keys = Object.keys(arr);
-    return n > 0 ? keys.slice(from, from + n).map(x => (arr[x])) : keys.slice(from).map(x => (arr[x]));
-  } else return n > 0 ? arr.slice(from, from + n) : arr.slice(from);
+	if (isDict(arr)) {
+		let keys = Object.keys(arr);
+		return n > 0 ? keys.slice(from, from + n).map(x => (arr[x])) : keys.slice(from).map(x => (arr[x]));
+	} else return n > 0 ? arr.slice(from, from + n) : arr.slice(from);
 }
 function assertion(cond) {
 	if (!cond) {
@@ -109,19 +113,19 @@ function emitToPlayers(namelist, msgtype, o) {
 		}
 	}
 }
-async function generateCityInfo(){
-	let o=await loadYamlFile(path.join(uploadDirectory, 'citygood.yaml')); 
+async function generateCityInfo() {
+	let o = await loadYamlFile(path.join(uploadDirectory, 'citygood.yaml'));
 	//console.log('o',o);
 	//console.log('keys',Object.keys(o));return;
-	let titles = Object.keys(o).map(x=>o[x].title);
-	console.log(titles.length); 
-	let max=titles.length
-	let nStart=0;
-	for(let n=nStart;n<max;n+=50){
-		let list = titles.slice(n,n+50);
+	let titles = Object.keys(o).map(x => o[x].title);
+	console.log(titles.length);
+	let max = titles.length
+	let nStart = 0;
+	for (let n = nStart; n < max; n += 50) {
+		let list = titles.slice(n, n + 50);
 		let di = await getPageDetails(list);
 		console.log(di)
-		saveYaml(di,`_city_${n}.yaml`);
+		saveYaml(di, `_city_${n}.yaml`);
 	}
 
 }
@@ -514,23 +518,23 @@ async function getPageDetails(titles) {
 
 		//console.log(response.data);
 		let details = {};
-		for(const k in pages){
+		for (const k in pages) {
 			let page = pages[k];
 			console.log(page.title);
-			let o={};
+			let o = {};
 			if (nundef(page.categories)) continue;
-			for(const cat of page.categories){
-				let parts=cat.title.split(':');
-				let val=parts[1].toLowerCase(); console.log(val);
-				if (val.startsWith('city')) o.isCity=true;
-				if (val.startsWith('star')) o.status='star';
-				else if (val.startsWith('guide')) o.status='guide';
-				else if (val.startsWith('usable')) o.status='usable';
+			for (const cat of page.categories) {
+				let parts = cat.title.split(':');
+				let val = parts[1].toLowerCase(); console.log(val);
+				if (val.startsWith('city')) o.isCity = true;
+				if (val.startsWith('star')) o.status = 'star';
+				else if (val.startsWith('guide')) o.status = 'guide';
+				else if (val.startsWith('usable')) o.status = 'usable';
 				else o.status = 'unknown';
-				
+
 				//console.log(cat.title);
 			}
-			details[page.title]=o;
+			details[page.title] = o;
 		}
 		return details;
 
@@ -577,9 +581,42 @@ async function getPageDetailsByIds(pageIds) {
 		return null;
 	}
 }
-async function loadYamlFile(p){
+async function loadYamlFile(p) {
 	let yamlFile = fs.readFileSync(p, 'utf8');
 	return yaml.load(yamlFile);
+}
+function readVoyageFileIntoChunks() {
+	return new Promise((resolve, reject) => {
+		const readStream = fs.createReadStream(voyagePath, { encoding: 'utf8', highWaterMark: 16 * 1024 }); // 16 KB chunks
+
+		Session.chunks={};
+		readStream.on('data', (chunk) => {
+			//console.log(`Received ${chunk.length} bytes of data.`);
+			let rest=chunk;
+			while(!isEmpty(rest)){
+				let s=stringBefore(rest,'<title>');
+				let srest=stringAfter(rest,'<title>');
+
+				let title = stringBefore(srest,'</title>');
+				let afterTitle = stringAfter(srest,'</title>');
+
+				let text=stringBefore(afterTitle,'</page>');
+				rest=stringAfter(afterTitle,'</page>');
+				Session.chunks[normalizeString(title)]=text;
+			}
+			// You can process the chunk (e.g., parse it, save it to a database, etc.)
+		});
+
+		readStream.on('end', () => {
+			console.log('Finished reading file.');
+			resolve();
+		});
+
+		readStream.on('error', (err) => {
+			console.error('Error reading file:', err);
+			reject(err);
+		});
+	});
 }
 
 //#region ai
@@ -612,8 +649,15 @@ app.get('/cityxml', async (req, res) => {
 	lookupSet(Session, ['xml', norm], content);
 	return res.json(content);
 });
+app.get('/xml', async (req, res) => {
+	let { query } = req.query; console.log('==> get xml:', query);
+	let p = path.join(__dirname,`../wikisaves/chunks/chunk_${query}`); 
+	let content = getFileContent(p);
+	//lookupSet(Session, ['xml', query], content);
+	return res.json(content);
+});
 app.get('/cityweb/:city', async (req, res) => {
-	const city = req.params.city;console.log('==> get cityweb', city);
+	const city = req.params.city; console.log('==> get cityweb', city);
 	const first200Lines = await getFromWebPage(city);
 	if (first200Lines) {
 		res.send(first200Lines);
@@ -625,7 +669,7 @@ app.get('/details/:title', async (req, res) => {
 	const title = req.params.title;
 	console.log('==> get details', title);
 	//return res.json({title})
-	let o=await getPageDetails([title]);
+	let o = await getPageDetails([title]);
 	res.json(o);
 });
 app.get('/filenames', async (req, res) => {
@@ -644,7 +688,7 @@ app.get('/filenames', async (req, res) => {
 app.get('/pageinfo/:id', async (req, res) => {
 	const id = req.params.id;
 	console.log('==> get details', id);
-	let o=await getPageDetailsByIds([id]);
+	let o = await getPageDetailsByIds([id]);
 	res.json(o);
 });
 app.get('/quotes/:title', async (req, res) => {
@@ -658,7 +702,7 @@ app.get('/quotes/:title', async (req, res) => {
 		prop: "text",
 		section: 1 // Usually, the quotes are in the first section after the intro
 	};
-	try { 
+	try {
 		const response = await axios.get(URL, { params: PARAMS }); //const pages = response.data.query.pages; return pages; 
 		const html = response.data.parse.text["*"];
 		return res.json(html);
@@ -669,12 +713,12 @@ app.get('/quotes/:title', async (req, res) => {
 			quotes.push(match[1].replace(/<.*?>/g, "")); // Remove HTML tags
 		}
 		return res.json(quotes);
-	}	catch (error) { console.error('Error fetching page details:', error); return res.json('ERROR'); }
+	} catch (error) { console.error('Error fetching page details:', error); return res.json('ERROR'); }
 });
 app.get('/testquote', async (req, res) => {
-  let url=`https://en.wikiquote.org/w/api.php?action=query&format=json&titles=Albert%20Einstein&prop=extracts&exintro=true&explaintext=true`;
-  url=`https://en.wikiquote.org/w/api.php?action=query&format=json&titles=Ludwig%20van%20Beethoven&prop=extracts&exintro=true&explaintext=true`;
-  //url=`https://en.wikiquote.org/w/api.php?action=query&format=json&pageids=2169|2170|2180&prop=extracts&exintro=true&explaintext=true`;
+	let url = `https://en.wikiquote.org/w/api.php?action=query&format=json&titles=Albert%20Einstein&prop=extracts&exintro=true&explaintext=true`;
+	url = `https://en.wikiquote.org/w/api.php?action=query&format=json&titles=Ludwig%20van%20Beethoven&prop=extracts&exintro=true&explaintext=true`;
+	//url=`https://en.wikiquote.org/w/api.php?action=query&format=json&pageids=2169|2170|2180&prop=extracts&exintro=true&explaintext=true`;
 	try { const response = await axios.get(url); const pages = response.data.query.pages; return res.json(pages); }
 	catch (error) { console.error('Error fetching page details:', error); return res.json('ERROR'); }
 });
@@ -727,8 +771,54 @@ app.post('/ask', async (req, res) => {
 	}
 	res.json(text); //data.choices[0].text.trim() });
 });
+app.post('/askyaml', async (req, res) => {
+	let prompt = req.body.prompt;
+	let key = req.body.key; console.log(key)
+	prompt += 'just the yaml object, no quotes,no sentences,no yapping.'
+	if (!isString(prompt)) return res.json('ERROR');
+	console.log('askyaml:', prompt);
+	//console.log(Object.keys(M.cache)); return res.json({key,cache:M.cache});
+	let o = lookup(M.cache, [key]);
+	if (o) { console.log('FOUND!', o); return res.json(o); }
+
+	let result = await fetchAnswerOpenai(prompt);
+
+	console.log('openai:', result);
+	try {
+		o = yaml.load(result.message.content);
+		console.log('o', o);
+
+		//console.log('cache',M.cache)
+		lookupSet(M.cache, [key], o)
+		let y = yaml.dump(M.cache);
+		fs.writeFileSync(cacheFile, y, 'utf8');
+		res.json(o); //data.choices[0].text.trim() });
+	} catch {
+		res.json({ msg: 'answer not parsable to yaml', text: o });
+	}
+});
 
 async function init() {
+	let yamlFile = fs.readFileSync(configFile, 'utf8');
+	Session.config = yaml.load(yamlFile);
+	yamlFile = fs.readFileSync(mFile, 'utf8');
+	M = valf(yaml.load(yamlFile), {});
+	yamlFile = fs.readFileSync(superdiFile, 'utf8');
+	M.superdi = valf(yaml.load(yamlFile), {});
+	yamlFile = fs.readFileSync(detailsFile, 'utf8');
+	M.details = valf(yaml.load(yamlFile), {});
+	yamlFile = fs.readFileSync(listsFile, 'utf8');
+	M.lists = valf(yaml.load(yamlFile), {});
+	yamlFile = fs.readFileSync(cacheFile, 'utf8');
+	M.cache = yaml.load(yamlFile); //console.log('cache',M.cache)
+
+	// Session.xmlvoyage = {}; //loadVoyageXml();
+	// let text = fs.readFileSync(path.join(__dirname, '..', 'enmini.xml'), 'utf8');
+	// let parts = text.split('</page>');
+	// console.log('parts', parts.length)
+	//await readVoyageFileIntoChunks();
+	//console.log('initialized!')
+
 	app.listen(PORT, () => { console.log(`Server running at http://localhost:${PORT}/`); });
 }
 init();

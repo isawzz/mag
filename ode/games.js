@@ -289,6 +289,7 @@ function presentStandardRoundTable() {
 	let minTableSize = 400;
 	let dTable = mDom(d, { hmin: minTableSize, wmin: minTableSize, margin: 20, round: true, className: 'wood' }, { id: 'dTable' });
 	mCenterCenter(dTable);
+	return dTable;
 }
 function setgame() {
 	function setup(table) {
@@ -553,15 +554,17 @@ function showGames(ms = 500) {
   gamelist = ['setgame','crazu'] //, 'fishgame'];//, 'button96'];
   for (const gname of gamelist) {
     let g = getGameConfig(gname);
-    let [sym, bg, color, id] = [M.superdi[g.logo], g.color, null, getUID()];
-    let d1 = mDiv(d, { cursor: 'pointer', rounding: 10, margin: 10, padding: 0, patop: 10, w: 140, height: 100, bg: bg, position: 'relative' }, g.id);
+    //let [sym, bg, color, id] = [M.superdi[g.logo], g.color, null, getUID()];
+		let bg=g.color;
+    let d1 = mDiv(d, { cursor: 'pointer', rounding: 10, margin: 10, padding: 0, patop: 10, w: 140, height: 100, bg, position: 'relative' }, g.id);
     d1.setAttribute('gamename', gname);
     d1.onclick = onclickGameMenuItem;
     mCenterFlex(d1);
     let o = M.superdi[g.logo];
-    let el = mDom(d1, { matop: 0, mabottom: 6, fz: 65, hline: 65, family: 'emoNoto', fg: 'white', display: 'inline-block' }, { html: o.text });
+		let fg=colorIdealText(bg);
+    let el = mDom(d1, { matop: 0, mabottom: 6, fz: 65, hline: 65, family: 'emoNoto', fg, display: 'inline-block' }, { html: o.text });
     mLinebreak(d1);
-    mDiv(d1, { fz: 18, align: 'center' }, null, g.friendly);
+    mDiv(d1, { fz: 18, align: 'center', fg }, null, g.friendly);
   }
 }
 function showNavbar() {

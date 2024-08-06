@@ -1,4 +1,14 @@
 
+_______ TOC
+- wi: https://en.wikivoyage.org/wiki/Destinations
+- ode: crazu = lacuna canvas zeug
+- omnifin: 
+  - date frame button und 
+  - per month amount (toggleButton)
+  - see sql =>switch to sql view and execute statement
+  - color amount: rot ausgabe, gruen einnahme, schwarz internal (text color)
+
+
 _________ scrape / extract from wikivoyage dump
 enwikivoyage-20240220-pages-meta-current.xml
 
