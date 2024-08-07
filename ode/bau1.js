@@ -11,12 +11,12 @@ function crazu() {
 		fen.wbase=100;
 		fen.hbase=70;
 		let colorlist = siebenVonJederFarbe();
-		let poslist = rPositions(fen.wbase,fen.hbase,colorlist.length);
+		let o = rPositions(fen.wbase,fen.hbase,colorlist.length);
 		let flist=[];
 		for(let i=0;i<colorlist.length;i++){
-			flist.push({})
+			flist.push({color:colorlist[i],x:o.list[i].x,y:o.list[i].y,r:o.radius});
 		}
-		fen.flowers = siebenVonJederFarbe(fen.wbase,fen.hbase);
+		fen.flowers = flist; //siebenVonJederFarbe(fen.wbase,fen.hbase);
 		table.plorder = jsCopy(table.playerNames);
 		table.turn = jsCopy(table.playerNames);
 		return fen;
@@ -27,10 +27,11 @@ function crazu() {
 	function present(table) {
 		let dTable = presentStandardRoundTable(table);
 		let fen = table.fen;
-		mStyle('dTable', { padding: 50, wmin: 800, hmin: 600 });
+		mStyle(dTable, { padding: 50, wmin: 800, hmin: 600 });
 
-		let canvas = mCanvas(dTable,{w:650,h:500,bg:'#00000020'}); //mDom(dTable,{w:700,h:500},{tag:'canvas'});
-		placeCircles(canvas,70);
+
+		//let canvas = mCanvas(dTable,{w:650,h:500,bg:'#00000020'}); //mDom(dTable,{w:700,h:500},{tag:'canvas'});
+		//placeCircles(canvas,70);
 		
 
 		return [];

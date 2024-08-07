@@ -1,3 +1,119 @@
+
+_________________________ calc lines between flowers ___________________________
+js function that, given n circles {x,y,size} and a specific position {x1,y1} calculates all straight lines between 2 circles that cross the given position and are not interrupted by another circle.
+the function should return all pairs of circles that meet the requirement
+
+now instead of a point position use another circle of size 10 as position. 2 points are 'valid' if a straight line going through the goal circle is NOT interrupted by any other circle
+
+a pair is valid if you can draw a line of width 3 between these 2 circles and the goalCircle, and no other circle touches that line
+ergebnis:
+
+js function that, given a list of circles (divs), draws a line betweeen every two circles c1,c2 if there no other circle between them
+
+_________________________ placing flowers as in Lacuna ___________________________
+js function that places n circles on a canvas, randomly but rather evenly
+
+js function that:
+places n circles on a div, at random positions, distributed rather evenly withing a circular area that fits the div dimensions
+distribute the circles more evenly 
+the distribution should vary each time
+
+use this function to place the Circles: function placeCircles1(container, n) {
+	const width = container.clientWidth;
+	const height = container.clientHeight;
+	const radius = Math.min(width, height) / 2;
+
+	const circleRadius = 10; // Radius of the circles to be placed
+	const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Approx. 137.5 degrees in radians
+
+	// Clear existing circles
+	while (container.firstChild) {
+			container.removeChild(container.firstChild);
+	}
+
+	// Generate points with slight randomness for more varied distribution
+	for (let i = 0; i < n; i++) {
+			const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
+			const distance = radius * Math.sqrt(i / n) + (Math.random() - 0.5) * radius * 0.1;
+
+			const x = radius + distance * Math.cos(angle);
+			const y = radius + distance * Math.sin(angle);
+
+			// Create and position the circle
+			const circle = document.createElement('div');
+			circle.classList.add('circle');
+			circle.style.width = ${circleRadius * 2}px;
+			circle.style.height = ${circleRadius * 2}px;
+			circle.style.left = ${x - circleRadius}px;
+			circle.style.top = ${y - circleRadius}px;
+			container.appendChild(circle);
+	}
+}
+After placing them, verify that each 2 circles are at least 20px apart. if not, correct the position of one of them
+
+now I want to adjust this function for the div being in the shape of an ellipse with height=400 and width=650
+
+ergebnis:
+function placeCircles1(container, n) {
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    const radiusX = width / 2;
+    const radiusY = height / 2;
+
+    const circleRadius = 10; // Radius of the circles to be placed
+    const minDistance = circleRadius * 2; // Minimum distance between circles
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Approx. 137.5 degrees in radians
+
+    // Clear existing circles
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+
+    const circles = [];
+
+    // Generate points with slight randomness for more varied distribution
+    for (let i = 0; i < n; i++) {
+        let valid = false;
+        let x, y;
+
+        while (!valid) {
+            const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
+            const distance = Math.sqrt(i / n);
+
+            // Calculate x and y within the ellipse
+            x = radiusX + distance * radiusX * Math.cos(angle);
+            y = radiusY + distance * radiusY * Math.sin(angle);
+
+            valid = true;
+            for (const circle of circles) {
+                const dx = circle.x - x;
+                const dy = circle.y - y;
+                if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
+                    valid = false;
+                    break;
+                }
+            }
+        }
+
+        circles.push({ x, y });
+
+        // Create and position the circle
+        const circle = document.createElement('div');
+        circle.classList.add('circle');
+        circle.style.width = `${circleRadius * 2}px`;
+        circle.style.height = `${circleRadius * 2}px`;
+        circle.style.left = `${x - circleRadius}px`;
+        circle.style.top = `${y - circleRadius}px`;
+        container.appendChild(circle);
+    }
+}
+
+// Example usage
+const container = document.getElementById('container');
+placeCircles1(container, 20);
+__________________________________________________________________________________
+
+
 write a python script that, given a wikivoyage page (eg., https://en.wikivoyage.org/wiki/Paris) extracts the most important information plus a few images and a short introductory paragraph to give a good impression of that place
 
 - for the following xml file about the travel location Paris, write an html card introducing the location, with some historic data, some data of the most interesting tourist activities, and images
@@ -9,11 +125,5 @@ write a node js function to query wiki media api to get a list of all cities as 
 
 js function that splits a very large xml file holding 168000 <page> sections into 168 files of 1000 <page> elements
 // each, and for each <page> element stores the current filename in a dictionary where keys are all the <title>XYZ</title> (the XYZ should be a key) elements
-
-
-
-
-
-
 
 

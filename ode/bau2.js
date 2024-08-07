@@ -52,3 +52,115 @@ function rPositions(width,height, n) {
 	}
 	return {list,radius};
 }
+
+function placeCircles1(container, n) {
+	const width = container.clientWidth;
+	const height = container.clientHeight;
+	const radius = Math.min(width, height) / 2;
+
+	const circleRadius = 10; // Radius of the circles to be placed
+	const minDistance = circleRadius * 3; // Minimum distance between circles
+	const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Approx. 137.5 degrees in radians
+
+	// Clear existing circles
+	while (container.firstChild) {
+			container.removeChild(container.firstChild);
+	}
+
+	const circles = [];
+
+	// Generate points with slight randomness for more varied distribution
+	for (let i = 0; i < n; i++) {
+			let valid = false;
+			let x, y;
+
+			while (!valid) {
+					const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
+					const distance = radius * Math.sqrt(i / n) + (Math.random() - 0.5) * radius * 0.1;
+
+					x = radius + distance * Math.cos(angle);
+					y = radius + distance * Math.sin(angle);
+
+					valid = true;
+					for (const circle of circles) {
+							const dx = circle.x - x;
+							const dy = circle.y - y;
+							if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
+									valid = false;
+									break;
+							}
+					}
+			}
+
+			circles.push({ x, y });
+
+			// Create and position the circle
+			const circle = document.createElement('div');
+			circle.classList.add('circle');
+			circle.style.width = `${circleRadius * 2}px`;
+			circle.style.height = `${circleRadius * 2}px`;
+			circle.style.left = `${x - circleRadius}px`;
+			circle.style.top = `${y - circleRadius}px`;
+			container.appendChild(circle);
+	}
+}
+
+function placeCircles1(container, n) {
+	const width = container.clientWidth;
+	const height = container.clientHeight;
+	const radiusX = width / 2;
+	const radiusY = height / 2;
+
+	const circleRadius = 10; // Radius of the circles to be placed
+	const minDistance = circleRadius * 2; // Minimum distance between circles
+	const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Approx. 137.5 degrees in radians
+
+	// Clear existing circles
+	while (container.firstChild) {
+			container.removeChild(container.firstChild);
+	}
+
+	const circles = [];
+
+	// Generate points with slight randomness for more varied distribution
+	for (let i = 0; i < n; i++) {
+			let valid = false;
+			let x, y;
+
+			while (!valid) {
+					const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
+					const distance = Math.sqrt(i / n);
+
+					// Calculate x and y within the ellipse
+					x = radiusX + distance * radiusX * Math.cos(angle);
+					y = radiusY + distance * radiusY * Math.sin(angle);
+
+					valid = true;
+					for (const circle of circles) {
+							const dx = circle.x - x;
+							const dy = circle.y - y;
+							if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
+									valid = false;
+									break;
+							}
+					}
+			}
+
+			circles.push({ x, y });
+
+			// Create and position the circle
+			const circle = document.createElement('div');
+			circle.classList.add('circle');
+			circle.style.width = `${circleRadius * 2}px`;
+			circle.style.height = `${circleRadius * 2}px`;
+			circle.style.left = `${x - circleRadius}px`;
+			circle.style.top = `${y - circleRadius}px`;
+			container.appendChild(circle);
+	}
+}
+
+// Example usage
+const container = document.getElementById('container');
+placeCircles1(container, 20);
+
+
