@@ -1,153 +1,67 @@
 
-onload=start;
-function start(){
-
-	
-
-	// Example usage
-	const circles = Array.from(document.querySelectorAll('.circle'));
-	drawLinesBetweenCircles(circles, 'lineCanvas');
+onload = start;
+async function start() {
+	let [w, h, n] = [800, 800, 2];
+	mStyle(document.body, { padding: 0, margin: 10 });
+	mStyle('container', { position: 'relative', w, h, bg: '#eee' });
+	await test7();
 }
-	
-
-
-
-function placeCircles(container, n) {
-	const width = container.clientWidth;
-	const height = container.clientHeight;
-	const radiusX = width / 2;
-	const radiusY = height / 2;
-
-	const circleRadius = Math.min(10, 10 * 40 / n); // Radius of the circles to be placed
-	const minDistance = circleRadius * 2; // Minimum distance between circles
-	const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Approx. 137.5 degrees in radians
-
-	// Clear existing circles
-	while (container.firstChild) {
-		container.removeChild(container.firstChild);
-	}
-
-	const circles = [];
-
-	// Generate points with slight randomness for more varied distribution
+async function test7() {
+	let d = clearFlex();
+	let [w, h, n, neach, rand] = [500, 500, 49, 7, .8];
+	let d1 = mDom(d, { w, h, bg: '#eee', position:'relative' });
+	let d2 = mDom(d, { w, h, bg: '#ddd', position:'relative' });
+	let clist = { "Red": "#E63946", "Green": "#06D6A0", "Blue": "#118AB2", "Cyan": "#0F4C75", "Magenta": "#D81159", "Yellow": "#FFD166", "Orange": "#F4A261", "Purple": "#9D4EDD", "Pink": "#FF80AB", "Brown": "#8D6E63", "Lime": "#A7FF83", "Indigo": "#3A0CA3", "Violet": "#B5838D", "Gold": "#F5C518", "Teal": "#008080" };
+	clist = Object.values(clist);
+	let points1 = generateRandomPointsRect(n, w, h, rand);
+	let points2 = generateRandomPointsRound(n, w, h, rand);
+	let colors = generateRepeatedColors(n, neach, clist);
+	arrShuffle(colors);
 	for (let i = 0; i < n; i++) {
-		let valid = false;
-		let x, y;
-
-		while (!valid) {
-			const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
-			const distance = Math.sqrt(i / n);
-
-			// Calculate x and y within the ellipse
-			x = radiusX + distance * radiusX * Math.cos(angle);
-			y = radiusY + distance * radiusY * Math.sin(angle);
-
-			valid = true;
-			for (const circle of circles) {
-				const dx = circle.x - x;
-				const dy = circle.y - y;
-				if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
-					valid = false;
-					break;
-				}
-			}
-		}
-
-		let o = { x, y, rad: circleRadius };
-
-		// Create and position the circle
-		const circle = document.createElement('div');
-		circle.classList.add('circle');
-		circle.style.width = `${circleRadius * 2}px`;
-		circle.style.height = `${circleRadius * 2}px`;
-		circle.style.left = `${x - circleRadius}px`;
-		circle.style.top = `${y - circleRadius}px`;
-		container.appendChild(circle);
-
-		o.div = circle;
-		circles.push(o);
-
+		points1[i].bg = points2[i].bg = colors[i];
+		points1[i].sz = points2[i].sz = 20;
 	}
-	return circles;
+	drawPoints(d1, points1);
+	drawPoints(d2, points2);
 }
-
-
-function getCenter(circle) {
-	const rect = circle.getBoundingClientRect();
-	const containerRect = mBy('container').getBoundingClientRect();
-	return {
-		x: rect.left - containerRect.left + rect.width / 2,
-		y: rect.top - containerRect.top + rect.height / 2
-	};
-}
-
-function isLineIntersectingCircle(x1, y1, x2, y2, circle, radius) {
-	const distToCircle = distanceToLineSegment(x1, y1, x2, y2, circle.x, circle.y);
-	return distToCircle < radius;
-}
-
-function distanceToLineSegment(x1, y1, x2, y2, px, py) {
-	const lineLength = Math.hypot(x2 - x1, y2 - y1);
-	if (lineLength === 0) return Math.hypot(px - x1, py - y1);
-
-	const t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / Math.pow(lineLength, 2);
-	const closestX = x1 + t * (x2 - x1);
-	const closestY = y1 + t * (y2 - y1);
-
-	return Math.hypot(px - closestX, py - closestY);
-}
-
-function isClearLine_NOPE(circle1, circle2) {
-	const { x: x1, y: y1 } = getCenter(circle1);
-	const { x: x2, y: y2 } = getCenter(circle2);
-	const radius = parseInt(window.getComputedStyle(circle1).width) / 2;
-
-	return !circles.some(circle => {
-		if (circle === circle1 || circle === circle2) return false;
-		const { x, y } = getCenter(circle);
-		return isLineIntersectingCircle(x1, y1, x2, y2, { x, y }, radius);
-	});
-}
-function isClearLine(circle1, circle2, circles) {
-	const { x: x1, y: y1 } = getCenter(circle1);
-	const { x: x2, y: y2 } = getCenter(circle2);
-	const radius = parseInt(window.getComputedStyle(circle1).width) / 2;
-
-	return !circles.some(circle => {
-		if (circle === circle1 || circle === circle2) return false;
-		const { x, y } = getCenter(circle);
-		const circleRadius = parseInt(window.getComputedStyle(circle).width) / 2;
-		return isLineIntersectingCircle(x1, y1, x2, y2, x, y, circleRadius);
-	});
-}
-function drawLinesBetweenCircles(circles, canvasId) {
-	const canvas = document.getElementById(canvasId);
-	const ctx = canvas.getContext('2d');
-
-	// Resize canvas to fit the container
-	canvas.width = canvas.parentElement.clientWidth;
-	canvas.height = canvas.parentElement.clientHeight;
-
-	// Clear canvas
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-	// Draw lines between circles
-	for (let i = 0; i < circles.length; i++) {
-		for (let j = i + 1; j < circles.length; j++) {
-			const circle1 = circles[i];
-			const circle2 = circles[j];
-			if (isClearLine(circle1, circle2,circles)) {
-				const { x: x1, y: y1 } = getCenter(circle1);
-				const { x: x2, y: y2 } = getCenter(circle2);
-
-				ctx.beginPath();
-				ctx.moveTo(x1, y1);
-				ctx.lineTo(x2, y2);
-				ctx.strokeStyle = '#000';
-				ctx.lineWidth = 2;
-				ctx.stroke();
-			}
-		}
+async function test6() {
+	let dParent = mBy('container');
+	let [w, h, n, neach] = [mGetStyle(dParent, 'w'), mGetStyle(dParent, 'h'), 49, 7];
+	let clist = { "Red": "#E63946", "Green": "#06D6A0", "Blue": "#118AB2", "Cyan": "#0F4C75", "Magenta": "#D81159", "Yellow": "#FFD166", "Orange": "#F4A261", "Purple": "#9D4EDD", "Pink": "#FF80AB", "Brown": "#8D6E63", "Lime": "#A7FF83", "Indigo": "#3A0CA3", "Violet": "#B5838D", "Gold": "#F5C518", "Teal": "#008080" };
+	clist = Object.values(clist)
+	let points = generateRandomPointsRect(n, w, h, .8);
+	let colors = generateRepeatedColors(n, neach, clist);
+	arrShuffle(colors)
+	for (let i = 0; i < n; i++) {
+		points[i].bg = colors[i];
+		points[i].sz = 20;
 	}
+	drawPoints(dParent, points);
 }
-
+async function test5() {
+	let dParent = mBy('container');
+	let [w, h] = [mGetStyle(dParent, 'w'), mGetStyle(dParent, 'h')];
+	let points = generateRandomPointsRect(25, w, h, .8);
+	drawPoints(dParent, points);
+}
+async function test4() {
+	let dParent = mBy('container');
+	let [w, h] = [mGetStyle(dParent, 'w'), mGetStyle(dParent, 'h')];
+	let points = generateRandomPoints(25, w, h);
+	drawPoints(dParent, points);
+}
+async function test3() {
+	let [w, h] = [400, 300];
+	let dParent = mDom('container', { bg: '#ddd', w, h });
+	let points = generateRandomPoints(25, w, h);
+	drawPoints(dParent, points);
+}
+async function test2() {
+	DA.circles = placeCirclesRandom('container', 70, 20, 'green', .15);
+}
+async function test1() {
+	DA.circles = placeCircles('container', 25, 20, 'green');
+}
+async function test0() {
+	let c = placeCircle('container', 5, 5, 10, 'red'); console.log(c, getCenter(c.div));
+}

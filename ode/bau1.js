@@ -29,6 +29,7 @@ function crazu() {
 		let fen = table.fen;
 		mStyle(dTable, { padding: 50, wmin: 800, hmin: 600 });
 
+		placeCircles1(dTable, 30)
 
 		//let canvas = mCanvas(dTable,{w:650,h:500,bg:'#00000020'}); //mDom(dTable,{w:700,h:500},{tag:'canvas'});
 		//placeCircles(canvas,70);

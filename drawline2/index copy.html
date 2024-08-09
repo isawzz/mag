@@ -21,7 +21,7 @@
 			background-color: red;
 		}
 
-		#lineCanvas {
+		#canvas1 {
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -38,7 +38,7 @@
 		<div id="circle1" class="circle" style="top: 100px; left: 100px;"></div>
 		<div id="circle2" class="circle" style="top: 300px; left: 300px;"></div>
 		<div id="circle3" class="circle" style="top: 200px; left: 200px;"></div>
-		<canvas id="lineCanvas"></canvas>
+		<canvas id="canvas1"></canvas>
 	</div>
 
 	<script>
@@ -111,7 +111,7 @@
 
 		// Example usage
 		const circles = Array.from(document.querySelectorAll('.circle'));
-		drawLinesBetweenCircles(circles, 'lineCanvas');
+		drawLinesBetweenCircles(circles, 'canvas1');
 
 		console.log(isClearLine(circles[0], circles[1]))
 

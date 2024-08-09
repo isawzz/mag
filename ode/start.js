@@ -2,65 +2,67 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test170_crazu(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 
-async function test170_crazu(){ 
+async function test170_crazu() {
   //let d=clearFlex();
   //let canvas = mCanvas
+  let colors = { "Red": "#E63946", "Green": "#06D6A0", "Blue": "#118AB2", "Cyan": "#0F4C75", "Magenta": "#D81159", "Yellow": "#FFD166", "Orange": "#F4A261", "Purple": "#9D4EDD", "Pink": "#FF80AB", "Brown": "#8D6E63", "Lime": "#A7FF83", "Indigo": "#3A0CA3", "Violet": "#B5838D", "Gold": "#F5C518", "Teal": "#008080" };
+  
 
 }
-async function test162_asklist(){
-  let [word,num]=['insects',200]; 
-	let o = await mPostRoute('ask_list', { word, num });
+async function test162_asklist() {
+  let [word, num] = ['insects', 200];
+  let o = await mPostRoute('ask_list', { word, num });
   console.log(o);
-  let d = clearFlex(); 
-  showYaml(o,`list of ${num} ${pluralOf(word)}`,d);
+  let d = clearFlex();
+  showYaml(o, `list of ${num} ${pluralOf(word)}`, d);
 }
-async function test161_sortlist(){
-  let x=await mGetYaml('../y/lists.yaml');
-  for(const k in x){
-    let list=x[k].map(x=>normalizeString(x));
+async function test161_sortlist() {
+  let x = await mGetYaml('../y/lists.yaml');
+  for (const k in x) {
+    let list = x[k].map(x => normalizeString(x));
     list = arrRemoveDuplicates(list)
     arrSort(list);
-    x[k]=list;
+    x[k] = list;
   }
-  let y=await mPostYaml(x,'../y/lists.yaml');console.log(y)
+  let y = await mPostYaml(x, '../y/lists.yaml'); console.log(y)
 }
-async function test160_asklist(){
-  let [word,num]=['animal',10];
-	let res = await mPostRoute('ask_list', { word, num });
+async function test160_asklist() {
+  let [word, num] = ['animal', 10];
+  let res = await mPostRoute('ask_list', { word, num });
   console.log(res);
   return;
-  let d = clearFlex(); 
+  let d = clearFlex();
   let prompt = 'list of 300 animals';
-  let o = await askOpenaiListOf('animal',300); console.log(o);
+  let o = await askOpenaiListOf('animal', 300); console.log(o);
   //let o = await askOpenai(prompt);
-  showYaml(o,prompt,d);
+  showYaml(o, prompt, d);
 }
-async function test159_askword(){
-  let d = clearFlex(); 
+async function test159_askword() {
+  let d = clearFlex();
   let w = 'python';
-  let o = await askOpenaiKeyword(w,'animal'); console.log(o);
-  showYaml(o,w,d);
+  let o = await askOpenaiKeyword(w, 'animal'); console.log(o);
+  showYaml(o, w, d);
 }
-async function test159(){
+async function test159() {
   //let result = await mGather(null,{},{content:{word:'',category:''},type:'multi'});
-  let result = {word:'python',category:'animal'}; 
+  let result = { word: 'python', category: 'animal' };
   console.log(result);
-  let prompt = pYamlDetails(result.word,result.category); //'list of 100 very different documentary subjects?';
-  let answer = await askOpenaiYaml(prompt,'yaml');
-  console.log(typeof(answer),answer); //,o, typeof(o))
-  if (answer.includes('```')) answer = stringBeforeLast(stringAfter(answer,'\n'),'\n');
-  console.log(answer,typeof(answer));
+  let prompt = pYamlDetails(result.word, result.category); //'list of 100 very different documentary subjects?';
+  let answer = await askOpenaiYaml(prompt, 'yaml');
+  console.log(typeof (answer), answer); //,o, typeof(o))
+  if (answer.includes('```')) answer = stringBeforeLast(stringAfter(answer, '\n'), '\n');
+  console.log(answer, typeof (answer));
 
-  let o= jsyaml.load(answer);console.log('o',o,typeof o);
+  let o = jsyaml.load(answer); console.log('o', o, typeof o);
 
 
 }
-async function test158_ask(){
+async function test158_ask() {
   let prompt = 'list of 100 very different documentary subjects?';
   let answer = await askOpenai(prompt);
   let d = clearFlex(); //return;
   mDom(d, {}, { tag: 'h1', html: prompt });
-  mDom(d, {}, { tag:'pre', html: answer });
+  mDom(d, {}, { tag: 'pre', html: answer });
 }
 async function test157_gpt() {
   let d = clearFlex(); //return;
@@ -69,7 +71,7 @@ async function test157_gpt() {
   console.log(answer);
   let dTable = mDom(d, { bg: 'white', fg: 'black' });
   mDom(dTable, {}, { tag: 'h1', html: prompt });
-  mDom(dTable, {}, { tag:'pre', html: answer });
+  mDom(dTable, {}, { tag: 'pre', html: answer });
 }
 async function test156_wiki() {
   let d = clearFlex()

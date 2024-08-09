@@ -159,8 +159,5 @@ function placeCircles1(container, n) {
 	}
 }
 
-// Example usage
-const container = document.getElementById('container');
-placeCircles1(container, 20);
 
 
