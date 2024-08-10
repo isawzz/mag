@@ -1,3 +1,33 @@
+
+function mArea(padding,dParent,styles={},opts={}){
+	addKeys({padding,wbox:true},styles)
+	let d0=mDom(dParent,styles);
+	let d=mDom(d0,{w100:true,h100:true,box:true,position:'relative'},opts);
+	let [w,h]=[mGetStyle(d,'w'),mGetStyle(d,'h')];
+	let cv=mDom(d,{position:'absolute',top:0,left:0,w100:true,h100:true,'pointer-events': 'none'},{tag:'canvas',id:'canvas1',width:w,height:h})
+	return [d,cv];
+}
+function drawLine(canvas,x1,y1,x2,y2,stroke=1) {
+	const ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	for (let i = 0; i < circles.length; i++) {
+		for (let j = i + 1; j < circles.length; j++) {
+			const circle1 = circles[i];
+			const circle2 = circles[j];
+			if (isClearLine(circle1, circle2, circles)) {
+				const { x: x1, y: y1 } = getCenter(circle1);
+				const { x: x2, y: y2 } = getCenter(circle2);
+
+				ctx.beginPath();
+				ctx.moveTo(x1, y1);
+				ctx.lineTo(x2, y2);
+				ctx.strokeStyle = '#000';
+				ctx.lineWidth = 1;
+				ctx.stroke();
+			}
+		}
+	}
+}
 function drawPoints(dParent, points) {
 	return points.map(p => placeCircle(dParent, p.x, p.y, valf(p.sz, 20), valf(p.bg, rColor())));
 }
@@ -8,6 +38,19 @@ function getCenter(elem) {
 		x: rect.left - containerRect.left + rect.width / 2,
 		y: rect.top - containerRect.top + rect.height / 2
 	};
+}
+function groupByProperty(list, prop) {
+	const groups = {};
+
+	list.forEach(obj => {
+			const key = obj[prop];
+			if (!groups[key]) {
+					groups[key] = [];
+			}
+			groups[key].push(obj);
+	});
+
+	return Object.values(groups);
 }
 function placeCircle(dParent, cx, cy, sz, bg = 'red') {
 	let o = { cx, cy, sz };
