@@ -1,32 +1,72 @@
 
-function mArea(padding,dParent,styles={},opts={}){
-	addKeys({padding,wbox:true},styles)
-	let d0=mDom(dParent,styles);
-	let d=mDom(d0,{w100:true,h100:true,box:true,position:'relative'},opts);
-	let [w,h]=[mGetStyle(d,'w'),mGetStyle(d,'h')];
-	let cv=mDom(d,{position:'absolute',top:0,left:0,w100:true,h100:true,'pointer-events': 'none'},{tag:'canvas',id:'canvas1',width:w,height:h})
-	return [d,cv];
+function mArea(padding, dParent, styles = {}, opts = {}) {
+	addKeys({ padding, wbox: true }, styles)
+	let d0 = mDom(dParent, styles);
+	let d = mDom(d0, { w100: true, h100: true, box: true, position: 'relative' }, opts);
+	let [w, h] = [mGetStyle(d, 'w'), mGetStyle(d, 'h')];
+	let cv = mDom(d, { position: 'absolute', top: 0, left: 0, w100: true, h100: true, 'pointer-events': 'none' }, { tag: 'canvas', id: 'canvas1', width: w, height: h })
+	return [d, cv];
 }
-function drawLine(canvas,x1,y1,x2,y2,stroke=1) {
-	const ctx = canvas.getContext('2d');
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	for (let i = 0; i < circles.length; i++) {
-		for (let j = i + 1; j < circles.length; j++) {
-			const circle1 = circles[i];
-			const circle2 = circles[j];
-			if (isClearLine(circle1, circle2, circles)) {
-				const { x: x1, y: y1 } = getCenter(circle1);
-				const { x: x2, y: y2 } = getCenter(circle2);
+function findClosePairs(points, x, y, threshold = 3) {
+	function pointLineDistance(px, py, ax, ay, bx, by) {
+			const A = px - ax;
+			const B = py - ay;
+			const C = bx - ax;
+			const D = by - ay;
 
-				ctx.beginPath();
-				ctx.moveTo(x1, y1);
-				ctx.lineTo(x2, y2);
-				ctx.strokeStyle = '#000';
-				ctx.lineWidth = 1;
-				ctx.stroke();
+			const dot = A * C + B * D;
+			const len_sq = C * C + D * D;
+			let param = (len_sq !== 0) ? dot / len_sq : -1;
+
+			let xx, yy;
+
+			if (param < 0) {
+					xx = ax;
+					yy = ay;
+			} else if (param > 1) {
+					xx = bx;
+					yy = by;
+			} else {
+					xx = ax + param * C;
+					yy = ay + param * D;
 			}
-		}
+
+			const dx = px - xx;
+			const dy = py - yy;
+			return Math.sqrt(dx * dx + dy * dy);
 	}
+
+	const closePairs = [];
+
+	for (let i = 0; i < points.length; i++) {
+			for (let j = i + 1; j < points.length; j++) {
+					const [ax, ay] = [points[i].x, points[i].y];
+					const [bx, by] = [points[j].x, points[j].y];
+					const distance = pointLineDistance(x, y, ax, ay, bx, by);
+
+					if (distance < threshold) {
+							closePairs.push([points[i], points[j]]);
+					}
+			}
+	}
+
+	return closePairs;
+}
+function drawCircle(canvas, cx, cy, radius, color) {
+	const ctx = canvas.getContext('2d');
+	ctx.beginPath();
+	ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+	ctx.fillStyle = color;
+	ctx.fill();
+}
+function drawLine(canvas, x1, y1, x2, y2, stroke = 1) {
+	const ctx = canvas.getContext('2d');
+	ctx.beginPath();
+	ctx.moveTo(x1, y1);
+	ctx.lineTo(x2, y2);
+	ctx.strokeStyle = '#000';
+	ctx.lineWidth = stroke;
+	ctx.stroke();
 }
 function drawPoints(dParent, points) {
 	return points.map(p => placeCircle(dParent, p.x, p.y, valf(p.sz, 20), valf(p.bg, rColor())));
@@ -39,15 +79,41 @@ function getCenter(elem) {
 		y: rect.top - containerRect.top + rect.height / 2
 	};
 }
+function getLinePixels(x1, y1, x2, y2) {
+	const pixels = [];
+	const dx = Math.abs(x2 - x1);
+	const dy = Math.abs(y2 - y1);
+	const sx = (x1 < x2) ? 1 : -1;
+	const sy = (y1 < y2) ? 1 : -1;
+	let err = dx - dy;
+
+	while (true) {
+			pixels.push({ x: x1, y: y1 });
+
+			if (Math.round(x1) === Math.round(x2) && Math.round(y1) === Math.round(y2)) break;
+
+			const e2 = 2 * err;
+			if (e2 > -dy) {
+					err -= dy;
+					x1 += sx;
+			}
+			if (e2 < dx) {
+					err += dx;
+					y1 += sy;
+			}
+	}
+
+	return pixels;
+}
 function groupByProperty(list, prop) {
 	const groups = {};
 
 	list.forEach(obj => {
-			const key = obj[prop];
-			if (!groups[key]) {
-					groups[key] = [];
-			}
-			groups[key].push(obj);
+		const key = obj[prop];
+		if (!groups[key]) {
+			groups[key] = [];
+		}
+		groups[key].push(obj);
 	});
 
 	return Object.values(groups);
@@ -95,7 +161,7 @@ function placeCirclesRandom(dParent, n, sz, color, rand = 0.2) {
 function generateRepeatedColors(n, repeat, colorList) {
 	const colors = [];
 	console.log(colorList)
-	let max = Math.ceil(n/repeat); console.log(max)
+	let max = Math.ceil(n / repeat); console.log(max)
 	for (let i = 0; i < max; i++) {
 		const color = colorList[i % colorList.length]; console.log(color)
 		for (let j = 0; j < repeat; j++) {
@@ -116,11 +182,13 @@ function generateRandomPointsRound(n, w, h, rand = 0.8) {
 	const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Approx. 137.5 degrees in radians
 	const points = [];
 	for (let i = 1; i < n + 1; i++) {
-		const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * rand/4;
+		const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * rand / 4;
 		const distance = Math.sqrt(i / n);
 		let x = radx + distance * radx * Math.cos(angle); // Calculate x and y within the ellipse
 		let y = rady + distance * rady * Math.sin(angle);
-		points.push({ x, y });
+		// points.push({ x, y });
+		points.push({ x: Math.round(x), y: Math.round(y) });
+
 	}
 	return points;
 }
@@ -138,7 +206,7 @@ function generateRandomPointsRect(n, w, h, rand = 0) {
 				let dy = rand * (Math.random() - 0.5) * ySpacing; if (coin()) dy = -dy;
 				const x = (j + 1) * xSpacing + dx;
 				const y = (i + 1) * ySpacing + dy;
-				points.push({ x: x, y: y });
+				points.push({ x: Math.round(x), y: Math.round(y) });
 			}
 		}
 	}
