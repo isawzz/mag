@@ -9,55 +9,62 @@ function mArea(padding, dParent, styles = {}, opts = {}) {
 }
 function findClosePairs(points, x, y, threshold = 3) {
 	function pointLineDistance(px, py, ax, ay, bx, by) {
-			const A = px - ax;
-			const B = py - ay;
-			const C = bx - ax;
-			const D = by - ay;
+		const A = px - ax;
+		const B = py - ay;
+		const C = bx - ax;
+		const D = by - ay;
 
-			const dot = A * C + B * D;
-			const len_sq = C * C + D * D;
-			let param = (len_sq !== 0) ? dot / len_sq : -1;
+		const dot = A * C + B * D;
+		const len_sq = C * C + D * D;
+		let param = (len_sq !== 0) ? dot / len_sq : -1;
 
-			let xx, yy;
+		let xx, yy;
 
-			if (param < 0) {
-					xx = ax;
-					yy = ay;
-			} else if (param > 1) {
-					xx = bx;
-					yy = by;
-			} else {
-					xx = ax + param * C;
-					yy = ay + param * D;
-			}
+		if (param < 0) {
+			xx = ax;
+			yy = ay;
+		} else if (param > 1) {
+			xx = bx;
+			yy = by;
+		} else {
+			xx = ax + param * C;
+			yy = ay + param * D;
+		}
 
-			const dx = px - xx;
-			const dy = py - yy;
-			return Math.sqrt(dx * dx + dy * dy);
+		const dx = px - xx;
+		const dy = py - yy;
+		return Math.sqrt(dx * dx + dy * dy);
 	}
 
 	const closePairs = [];
 
 	for (let i = 0; i < points.length; i++) {
-			for (let j = i + 1; j < points.length; j++) {
-					const [ax, ay] = [points[i].x, points[i].y];
-					const [bx, by] = [points[j].x, points[j].y];
-					const distance = pointLineDistance(x, y, ax, ay, bx, by);
+		for (let j = i + 1; j < points.length; j++) {
+			const [ax, ay] = [points[i].x, points[i].y];
+			const [bx, by] = [points[j].x, points[j].y];
+			const distance = pointLineDistance(x, y, ax, ay, bx, by);
 
-					if (distance < threshold) {
-							closePairs.push([points[i], points[j]]);
-					}
+			if (distance < threshold) {
+				closePairs.push([points[i], points[j]]);
 			}
+		}
 	}
 
 	return closePairs;
 }
-function drawCircle(canvas, cx, cy, radius, color) {
+function drawCircleOnCanvas(canvas, cx, cy, sz, color) {
 	const ctx = canvas.getContext('2d');
 	ctx.beginPath();
-	ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+	ctx.arc(cx, cy, sz / 2, 0, 2 * Math.PI);
 	ctx.fillStyle = color;
 	ctx.fill();
+}
+function drawEllipseOnCanvas(canvas, cx, cy, w, h, color = 'orange', stroke = 0, border = 'red') {
+	const ctx = canvas.getContext('2d');
+	ctx.beginPath();
+	ctx.ellipse(cx, cy, w / 2, h / 2, 0, 0, 2 * Math.PI);
+	if (stroke > 0) { ctx.strokeStyle = border; ctx.lineWidth = stroke; ctx.stroke(); }
+	if (color) { ctx.fillStyle = color; ctx.fill(); }
 }
 function drawLine(canvas, x1, y1, x2, y2, stroke = 1) {
 	const ctx = canvas.getContext('2d');
@@ -88,19 +95,19 @@ function getLinePixels(x1, y1, x2, y2) {
 	let err = dx - dy;
 
 	while (true) {
-			pixels.push({ x: x1, y: y1 });
+		pixels.push({ x: x1, y: y1 });
 
-			if (Math.round(x1) === Math.round(x2) && Math.round(y1) === Math.round(y2)) break;
+		if (Math.round(x1) === Math.round(x2) && Math.round(y1) === Math.round(y2)) break;
 
-			const e2 = 2 * err;
-			if (e2 > -dy) {
-					err -= dy;
-					x1 += sx;
-			}
-			if (e2 < dx) {
-					err += dx;
-					y1 += sy;
-			}
+		const e2 = 2 * err;
+		if (e2 > -dy) {
+			err -= dy;
+			x1 += sx;
+		}
+		if (e2 < dx) {
+			err += dx;
+			y1 += sy;
+		}
 	}
 
 	return pixels;
@@ -160,10 +167,10 @@ function placeCirclesRandom(dParent, n, sz, color, rand = 0.2) {
 }
 function generateRepeatedColors(n, repeat, colorList) {
 	const colors = [];
-	console.log(colorList)
-	let max = Math.ceil(n / repeat); console.log(max)
+	//console.log(colorList)
+	let max = Math.ceil(n / repeat); //console.log(max)
 	for (let i = 0; i < max; i++) {
-		const color = colorList[i % colorList.length]; console.log(color)
+		const color = colorList[i % colorList.length]; //console.log(color)
 		for (let j = 0; j < repeat; j++) {
 			colors.push(color);
 		}

@@ -74,10 +74,10 @@ function placeCircles(canvas, n) {
 		const x = col * cellWidth + (Math.random() * (cellWidth - 2 * radius) + radius);
 		const y = row * cellHeight + (Math.random() * (cellHeight - 2 * radius) + radius);
 
-		drawCircle(ctx, x, y, radius);
+		drawCircleOnCanvas(ctx, x, y, radius);
 	}
 }
-function drawCircle(ctx, x, y, radius) {
+function drawCircleOnCanvas(ctx, x, y, radius) {
 	ctx.beginPath();
 	ctx.arc(x, y, radius, 0, 2 * Math.PI);
 	ctx.fillStyle = 'blue';
