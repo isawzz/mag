@@ -52,12 +52,79 @@ function findClosePairs(points, x, y, threshold = 3) {
 
 	return closePairs;
 }
+function findIsolatedPairs(nodes, threshold = 3) {
+	function pointLineDistance(px, py, ax, ay, bx, by) {
+			const A = px - ax;
+			const B = py - ay;
+			const C = bx - ax;
+			const D = by - ay;
+
+			const dot = A * C + B * D;
+			const len_sq = C * C + D * D;
+			let param = (len_sq !== 0) ? dot / len_sq : -1;
+
+			let xx, yy;
+
+			if (param < 0) {
+					xx = ax;
+					yy = ay;
+			} else if (param > 1) {
+					xx = bx;
+					yy = by;
+			} else {
+					xx = ax + param * C;
+					yy = ay + param * D;
+			}
+
+			const dx = px - xx;
+			const dy = py - yy;
+			return Math.sqrt(dx * dx + dy * dy);
+	}
+
+	const isolatedPairs = [],obstaclePairs = [];
+
+	for (let i = 0; i < nodes.length; i++) {
+			for (let j = i + 1; j < nodes.length; j++) {
+				if (nodes[i].bg != nodes[j].bg) continue;
+					const [ax, ay] = [nodes[i].x, nodes[i].y];
+					const [bx, by] = [nodes[j].x, nodes[j].y];
+					let isIsolated = true;
+
+					for (let k = 0; k < nodes.length; k++) {
+							if (k === i || k === j) continue;
+
+							const [px, py] = [nodes[k].x, nodes[k].y];
+							const distance = pointLineDistance(px, py, ax, ay, bx, by);
+
+							if (distance < threshold) {
+									isIsolated = false;
+									break;
+							}
+					}
+
+					if (isIsolated) {
+							isolatedPairs.push([nodes[i], nodes[j]]);
+					}else{
+							obstaclePairs.push([nodes[i], nodes[j]]);}
+			}
+	}
+
+	return {isolatedPairs,obstaclePairs}; //return isolatedPairs;
+}
 function drawCircleOnCanvas(canvas, cx, cy, sz, color) {
 	const ctx = canvas.getContext('2d');
 	ctx.beginPath();
 	ctx.arc(cx, cy, sz / 2, 0, 2 * Math.PI);
 	ctx.fillStyle = color;
 	ctx.fill();
+}
+function drawCircleOnDiv(dParent, cx, cy, sz, bg = 'red') {
+	let o = { cx, cy, x:cx-sz/2,y:cy-sz/2, sz, bg };
+	let [w, h] = [sz, sz];
+	o.div = mDom(dParent, { w, h, position: 'absolute', round: true, x: cx - sz / 2, y: cy - sz / 2, bg });
+	//o.div = mDom(dParent, { position: 'absolute', round: true, top: cx - sz / 2, left: cy - sz / 2, bg });
+	//o.div = mDom(dParent, { position: 'absolute', round: true, top: 100, left: 0, w:sz, h:sz, bg });
+	return o;
 }
 function drawEllipseOnCanvas(canvas, cx, cy, w, h, color = 'orange', stroke = 0, border = 'red') {
 	const ctx = canvas.getContext('2d');
@@ -78,9 +145,10 @@ function drawLine(canvas, x1, y1, x2, y2, stroke = 1) {
 function drawPoints(dParent, points) {
 	return points.map(p => placeCircle(dParent, p.x, p.y, valf(p.sz, 20), valf(p.bg, rColor())));
 }
-function getCenter(elem) {
+function getCenter(elem,relto) {
 	const rect = elem.getBoundingClientRect();
-	const containerRect = mBy('container').getBoundingClientRect();
+	if (nundef(relto)) relto=elem.parentNode;
+	const containerRect = relto.getBoundingClientRect();
 	return {
 		x: rect.left - containerRect.left + rect.width / 2,
 		y: rect.top - containerRect.top + rect.height / 2

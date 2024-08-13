@@ -14,3 +14,28 @@ function lacunaCircles(w = 800, h = 400, n = 49, neach = 7, sz = 10) {
 	for (const p of points) { drawCircleOnCanvas(cv, p.x, p.y, p.sz, p.bg); }
 	return { d, cv, points };
 }
+function lacunaCirclesDiv(w = 800, h = 400, n = 49, neach = 7, sz = 10) {
+	let d = clearFlex();
+	let rand = .8;
+	let [d1, cv] = mArea(30, d, { w, h, bg: '#eee', position: 'relative' });
+	cv.remove();
+	let clist = lacunaColors();
+	let points = generateRandomPointsRect(n, w, h, rand);
+	let colors = generateRepeatedColors(n, neach, clist);	arrShuffle(colors);
+	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; }
+	points = points.map(p => drawCircleOnDiv(d1, p.x, p.y, p.sz, p.bg));
+	//for (const p of points) { p.div = drawCircleOnDiv(d1, p.x, p.y, p.sz, p.bg); }
+	return { d, points };
+}
+function mLacunaCirles(dParent,n=49,neach=7,sz=10,rand=.8) {
+	let [w,h]=[mGetStyle(dParent,'w'),mGetStyle(dParent,'h')];
+	let clist = lacunaColors();
+	let points = generateRandomPointsRect(n, w, h, rand);
+	let colors = generateRepeatedColors(n, neach, clist);	arrShuffle(colors);
+	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; }
+	//points = points.map(p => drawCircleOnDiv(dParent, p.x, p.y, p.sz, p.bg));
+	return points;
+}
+
+
+
