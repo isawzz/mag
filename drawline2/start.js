@@ -6,14 +6,13 @@ async function test19() {
 	let d = clearDiv();
 	let [w, h, dx, dy, sz] = [900, 400, 50, 120, 20];
 	let [dParent, cv] = mArea(10, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
-	let points = mLacunaCirles(dParent, 6, 2, sz, .6);
+	let points = mLacunaCirles(dParent, 6, 3, sz, .6);
 	Items = drawPoints(dParent, points);
 	let result = findIsolatedPairs(points, sz); //console.log(result);
 	let pixelsByPair = [];
 	let di = {};
 	let allPixels = [];
 	for (const pair of result.isolatedPairs) {
-
 		let [p1, p2] = [pair[0], pair[1]];
 		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
 		[x1, y1, x2, y2] = [x1, y1, x2, y2].map(x => x + sz / 2);

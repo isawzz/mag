@@ -69,14 +69,14 @@ function drawLineOnCanvas(canvas, x1, y1, x2, y2, stroke = 1) {
 	ctx.lineWidth = stroke;
 	ctx.stroke();
 }
-function drawPoints(dParent, points) {
+function _drawPoints(dParent, points) {
 	return points.map(p => placeCircle(dParent, p.x, p.y, valf(p.sz, 20), valf(p.bg, rColor())));
 }
 function drawPoints(dParent,points){
 	let items=[];
 	//console.log('points',points);
 	for(const p of points){
-		let d1=p.div=mDom(dParent,{left:p.x,top:p.y,w:p.sz,h:p.sz,position:'absolute',bg:p.bg},{id:p.id});
+		let d1=p.div=mDom(dParent,{left:p.x,top:p.y,w:p.sz,h:p.sz,position:'absolute',bg:p.bg},{html:p.id,id:p.id});
 		let p1=getRect(d1); p1.x+=p.sz/2;//p1.y+=sz/2; 
 		p.center = p1;
 		Items[p.id]=p;
@@ -306,7 +306,7 @@ function generateRandomPointsRect(n, w, h, rand = 0) {
 	const points = [];
 	let { rows, cols } = divideRectangleIntoGrid(w, h, n);
 	const xSpacing = w / (cols + 1);
-	const ySpacing = h / (rows + 1); console.log(xSpacing, ySpacing);
+	const ySpacing = h / (rows + 1); //console.log(xSpacing, ySpacing);
 	// let dmin = 10;
 	// let x,y,xfix,yfix,xlast=-dmin,ylast=-dmin;
 	for (let i = 0; i < rows; i++) {
