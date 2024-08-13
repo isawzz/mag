@@ -1,3 +1,31 @@
+
+function _alertOnPointHover(canvas, points, threshold = 2) {
+	canvas.addEventListener('mousemove', (ev) => {
+		const rect = canvas.getBoundingClientRect();
+		const mouseX = ev.clientX - rect.left;
+		const mouseY = ev.clientY - rect.top;
+
+		for (let i = 0; i < points.length; i++) {
+			const point = points[i];
+			const dx = mouseX - point.x;
+			const dy = mouseY - point.y;
+
+			// Check if the mouse is within the threshold distance of the point
+			if (Math.sqrt(dx * dx + dy * dy) < threshold) {
+				console.log(`Mouse over point (${point.x}, ${point.y})`);
+				//break;  // Stop checking other points after finding a match
+			}
+		}
+	});
+}
+function _mArea(padding, dParent, styles = {}, opts = {}) {
+	addKeys({ padding, wbox: true, position: 'relative' }, styles)
+	let d0 = mDom(dParent, styles);
+	let d = mDom(d0, { w100: true, h100: true, box: true, position: 'relative' }, opts);
+	let [w, h] = [mGetStyle(d, 'w'), mGetStyle(d, 'h')];
+	let cv = mDom(d, { position: 'absolute', top: 0, left: 0, w100: true, h100: true}, { tag: 'canvas', id: 'canvas1', width: w, height: h })
+	return [d, cv];
+}
 function nodejs(){
 	app.get('/cityweb_BROKEN', async (req, res) => {
 		let { city } = req.query;

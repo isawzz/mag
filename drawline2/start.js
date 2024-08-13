@@ -1,54 +1,163 @@
 
 onload = start;
-async function start() { await test17_simple(); }
+async function start() { await test19(); }
 
-async function test17_simple(){
-	let d=clearDiv();
-	let [w, h, dx, dy, sz] = [800, 400, 50, 120, 30];
-	let dParent=mDom(d,{w,h,position:'absolute',left:dx,top:dy,bg:'yellow'});
-	let points = mLacunaCirles(dParent,4,2,sz);
+async function test19() {
+	let d = clearDiv();
+	let [w, h, dx, dy, sz] = [900, 400, 50, 120, 20];
+	let [dParent, cv] = mArea(10, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
+	let points = mLacunaCirles(dParent, 6, 2, sz, .6);
+	Items = drawPoints(dParent, points);
+	let result = findIsolatedPairs(points, sz); //console.log(result);
+	let pixelsByPair = [];
+	let di = {};
+	let allPixels = [];
+	for (const pair of result.isolatedPairs) {
 
-	for(const p of points){
-		let d1=p.div=mDom(dParent,{left:p.x,top:p.y,w:p.sz,h:p.sz,position:'absolute',bg:p.bg},{id:getUID()});
-		let p1=getRect(d1); p1.x+=sz/2;//p1.y+=sz/2; 
-		p.center = p1;
-		Items[d1.id]=p;
+		let [p1, p2] = [pair[0], pair[1]];
+		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
+		[x1, y1, x2, y2] = [x1, y1, x2, y2].map(x => x + sz / 2);
+		let pixels = getLinePixels(x1, y1, x2, y2); //console.log('pixels', pixels);
+		//pixelsByPair.push({ x1, y1, x2, y2, p1, p2, pixels }); //console.log('pixels', pixels);
+
+		for (const pix of pixels) {
+			allPixels.push(pix);
+			let l=lookup(di, [pix.x, pix.y]);
+			lookupAddIfToList(di, [pix.x, pix.y], p1.id)
+			lookupAddIfToList(di, [pix.x, pix.y], p2.id)
+			if (l) console.log(pix.x,pix.y,lookup(di, [pix.x, pix.y]));
+		}
+
+		drawLineOnCanvas(cv, x1, y1, x2, y2, 2);
 	}
-	for(let i=0;i<points.length-1;i++){
-		for(let j=i+1;j<points.length;j++){
+
+	//console.log(di);
+	alertOnPointHover(dParent, di);
+	return { d, cv, points, pixelsByPair, isolatedPairs: result.isolatedPairs, obstaclePairs: result.obstaclePairs };
+
+}
+async function test18() {
+	let d = clearDiv();
+	let [w, h, dx, dy, sz] = [800, 400, 50, 120, 30];
+	let dParent = mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
+	let points = mLacunaCirles(dParent, 4, 2, sz);
+	Items = drawPoints(dParent, points)
+	let result = findIsolatedPairs(points, 10); console.log(result);
+	//console.log(result);
+	return;
+	let pixelsByPair = [];
+	for (const pair of result.isolatedPairs) {
+
+		let [p1, p2] = [pair[0], pair[1]];
+		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
+		let pixels = getLinePixels(x1, y1, x2, y2); //console.log('pixels', pixels);
+		pixelsByPair.push({ x1, y1, x2, y2, p1, p2, pixels }); //console.log('pixels', pixels);
+		drawLineOnCanvas(cv, x1, y1, x2, y2, 2);
+	}
+	return { d, cv, points, pixelsByPair, isolatedPairs: result.isolatedPairs, obstaclePairs: result.obstaclePairs };
+
+}
+async function test17_simple() {
+	var counter = 0;
+	function drawFullLine(o1, o2, height, color) {
+		let [p1, p2] = [o1.center, o2.center];
+		const line = document.createElement('div');// mDom(d);
+
+		// Calculate the distance and angle between the points
+		const distance = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+		const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI);
+
+		// Style the line
+		line.style.position = 'absolute';
+		line.style.transformOrigin = '0 0';
+		line.style.transform = `rotate(${angle}deg)`;
+		line.style.height = `${height}px`; //'2px';
+		//line.style.border = 'solid black 11px';
+		line.style.width = `${distance}px`;
+		line.style.backgroundColor = color;
+		line.style.left = `${p1.x}px`;
+		line.style.top = `${p1.y}px`;
+		line.setAttribute('endpoints', `${o1.div.id},${o2.div.id}`);
+
+		// Add mouseover event
+		line.addEventListener('mouseover', () => {
+			// line.style.backgroundColor = 'red';
+			console.log('mouseover', counter++);
+			let endpoints = line.getAttribute('endpoints');//console.log(endpoints);
+			let ep = endpoints.split(',');
+			//console.log(ep);
+			for (let i = 0; i < ep.length; i++) {
+				let id = ep[i];
+				mStyle(id, { rounding: 0 });
+				//mBy(ep[i]).style.backgroundColor = 'red';
+			}
+		});
+
+		line.addEventListener('mouseout', () => {
+			console.log('OUT', counter++);
+			let endpoints = line.getAttribute('endpoints');//console.log(endpoints);
+			let ep = endpoints.split(',');
+			//console.log(ep);
+			for (let i = 0; i < ep.length; i++) {
+				let id = ep[i];
+				mStyle(id, { rounding: '50%' });
+				//mBy(id).style.backgroundColor = Items[id].bg;
+
+			}
+			// line.style.backgroundColor = color;
+		});
+
+		// Append the line to the body or a specific container
+		document.body.appendChild(line);
+
+		return line;
+	}
+	let d = clearDiv();
+	let [w, h, dx, dy, sz] = [800, 400, 50, 120, 30];
+	let dParent = mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
+	let points = mLacunaCirles(dParent, 4, 2, sz);
+
+	for (const p of points) {
+		let d1 = p.div = mDom(dParent, { left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg }, { id: getUID() });
+		let p1 = getRect(d1); p1.x += sz / 2;//p1.y+=sz/2; 
+		p.center = p1;
+		Items[d1.id] = p;
+	}
+	for (let i = 0; i < points.length - 1; i++) {
+		for (let j = i + 1; j < points.length; j++) {
 			// let p1=//{x:x1,y:y1};
 			// let p2=getRect(points[j].div); p2.x+=sz/2;p2.y+=sz/2 //{x:x2,y:y2};
-			drawFullLine(points[i] , points[j], sz, 'black'); //getCenter(divs[i],dParent), getCenter(divs[j],dParent));
+			drawFullLine(points[i], points[j], sz, 'black'); //getCenter(divs[i],dParent), getCenter(divs[j],dParent));
 			console.log(points[i]);//return;
 		}
 
 	}
 	//let result=findPairsByProp(points,'bg'); console.log(result); //return;
 }
-async function test16_simple(){
-	let d=clearDiv();
+async function test16_simple() {
+	let d = clearDiv();
 	let [w, h, dx, dy, sz] = [800, 400, 50, 20, 30];
-	let dParent=mDom(d,{w,h,position:'absolute',left:dx,top:dy,bg:'yellow'});
-	let points = mLacunaCirles(dParent,4,2,sz);
+	let dParent = mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
+	let points = mLacunaCirles(dParent, 4, 2, sz);
 
 	let divs = [];
-	for(const p of points){
-		let d1=mDom(dParent,{left:p.x,top:p.y,w:p.sz,h:p.sz,position:'absolute',bg:p.bg});
+	for (const p of points) {
+		let d1 = mDom(dParent, { left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg });
 		divs.push(d1);
 	}
-	for(let i=0;i<divs.length-1;i++){
-		for(let j=i+1;j<divs.length;j++){
-			let p1=getRect(divs[i]); p1.x+=sz/2;p1.y+=sz/2//{x:x1,y:y1};
-			let p2=getRect(divs[j]); p2.x+=sz/2;p2.y+=sz/2 //{x:x2,y:y2};
-			drawInteractiveLine(dParent, p1 , p2); //getCenter(divs[i],dParent), getCenter(divs[j],dParent));
+	for (let i = 0; i < divs.length - 1; i++) {
+		for (let j = i + 1; j < divs.length; j++) {
+			let p1 = getRect(divs[i]); p1.x += sz / 2; p1.y += sz / 2//{x:x1,y:y1};
+			let p2 = getRect(divs[j]); p2.x += sz / 2; p2.y += sz / 2 //{x:x2,y:y2};
+			drawInteractiveLine(dParent, p1, p2); //getCenter(divs[i],dParent), getCenter(divs[j],dParent));
 		}
 
 	}
 	//let result=findPairsByProp(points,'bg'); console.log(result); //return;
 }
-function muell(){
-	let buck = groupByProperty(points, 'bg');	console.log(buck);
-	let result=findPairsByProp(points,'bg'); console.log(result); //return;
+function muell() {
+	let buck = groupByProperty(points, 'bg'); console.log(buck);
+	let result = findPairsByProp(points, 'bg'); console.log(result); //return;
 	for (const pair of result) {
 		let [p1, p2] = [pair[0], pair[1]];
 		// let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
@@ -57,60 +166,60 @@ function muell(){
 		drawInteractiveLine(d, getCenter(p1.div), getCenter(p2.div)); return;
 	}
 }
-async function test15_simple(){
-	let d=clearDiv();
+async function test15_simple() {
+	let d = clearDiv();
 	let [w, h] = [800, 400];
-	let dParent=mDom(d,{w,h,position:'absolute',left:20,top:20,bg:'yellow'});
-	let d1=mDom(dParent,{left:10,top:10,w:20,h:20,position:'absolute',bg:'red'});
-	let d2=mDom(dParent,{left:100,top:100,w:20,h:20,position:'absolute',bg:'blue'});
+	let dParent = mDom(d, { w, h, position: 'absolute', left: 20, top: 20, bg: 'yellow' });
+	let d1 = mDom(dParent, { left: 10, top: 10, w: 20, h: 20, position: 'absolute', bg: 'red' });
+	let d2 = mDom(dParent, { left: 100, top: 100, w: 20, h: 20, position: 'absolute', bg: 'blue' });
 
-	let p1=getCenter(d1,d),p2=getCenter(d2,d); //p1={x:0,y:0},p2={x:100,y:100};
-	console.log(p1,p2);
+	let p1 = getCenter(d1, d), p2 = getCenter(d2, d); //p1={x:0,y:0},p2={x:100,y:100};
+	console.log(p1, p2);
 	// Draw the interactive line
-	drawInteractiveLine(dParent,p1, p2);
+	drawInteractiveLine(dParent, p1, p2);
 }
 
-async function test14_simple(){
-	let d0=document.body; d0.innerHTML='';mStyle(d0,{padding:0,margin:0,position:'relative'});
+async function test14_simple() {
+	let d0 = document.body; d0.innerHTML = ''; mStyle(d0, { padding: 0, margin: 0, position: 'relative' });
 
 	//let d=mDiv(d0)
 	//mIfNotRelative(d);
-	let d=d0;
-	let dParent=mDom(d,{w:400,h:400,position:'absolute',left:10,top:100});
-	let d1=mDom(dParent,{left:0,top:0,w:20,h:20,position:'absolute',bg:'red'});
-	let d2=mDom(dParent,{left:100,top:100,w:20,h:20,position:'absolute',bg:'blue'});
+	let d = d0;
+	let dParent = mDom(d, { w: 400, h: 400, position: 'absolute', left: 10, top: 100 });
+	let d1 = mDom(dParent, { left: 0, top: 0, w: 20, h: 20, position: 'absolute', bg: 'red' });
+	let d2 = mDom(dParent, { left: 100, top: 100, w: 20, h: 20, position: 'absolute', bg: 'blue' });
 
-	let p1=getCenter(d1,d),p2=getCenter(d2,d); //p1={x:0,y:0},p2={x:100,y:100};
-	console.log(p1,p2)
+	let p1 = getCenter(d1, d), p2 = getCenter(d2, d); //p1={x:0,y:0},p2={x:100,y:100};
+	console.log(p1, p2)
 	// Draw the interactive line
-	drawInteractiveLine(dParent,p1, p2);
+	drawInteractiveLine(dParent, p1, p2);
 }
 async function test13_linediv() {
 	let [w, h] = [800, 400];
 	let { d, points } = lacunaCirclesDiv(w, h, 4, 2, 20);
 	console.log(d);
-	let result=findPairsByProp(points,'bg'); console.log(result); //return;
+	let result = findPairsByProp(points, 'bg'); console.log(result); //return;
 	//let pixelsByPair = [];
 	for (const pair of result) {
 		let [p1, p2] = [pair[0], pair[1]];
 		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
 		//let pixels = getLinePixels(x1, y1, x2, y2); //console.log('pixels', pixels);
 		//pixelsByPair.push({x1,y1,x2,y2,p1,p2,pixels}); //console.log('pixels', pixels);
-		drawInteractiveLine(d, p1,p2); 
+		drawInteractiveLine(d, p1, p2);
 	}
 }
 
 async function test12_lines() {
-	let {d,cv,points,pixelsByPair,isolatedPairs,obstaclePairs} = await test11_lines();	
+	let { d, cv, points, pixelsByPair, isolatedPairs, obstaclePairs } = await test11_lines();
 	console.log(pixelsByPair);
 
 	//d.onmousemove=ev=>testMouseMove(ev, pixelsByPair);
 }
 async function test11_lines() {
 	let [w, h] = [800, 400];
-	let [x, y] = [w/2, h/2];
+	let [x, y] = [w / 2, h / 2];
 	let { d, cv, points } = lacunaCircles(w, h, 49, 7, 20);
-	let result=findIsolatedPairs(points,10);
+	let result = findIsolatedPairs(points, 10);
 	//console.log(result);
 	let pixelsByPair = [];
 	for (const pair of result.isolatedPairs) {
@@ -118,14 +227,14 @@ async function test11_lines() {
 		let [p1, p2] = [pair[0], pair[1]];
 		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
 		let pixels = getLinePixels(x1, y1, x2, y2); //console.log('pixels', pixels);
-		pixelsByPair.push({x1,y1,x2,y2,p1,p2,pixels}); //console.log('pixels', pixels);
-		drawLine(cv, x1, y1, x2, y2, 2); 
+		pixelsByPair.push({ x1, y1, x2, y2, p1, p2, pixels }); //console.log('pixels', pixels);
+		drawLineOnCanvas(cv, x1, y1, x2, y2, 2);
 	}
-	return {d,cv,points,pixelsByPair,isolatedPairs:result.isolatedPairs,obstaclePairs:result.obstaclePairs};
+	return { d, cv, points, pixelsByPair, isolatedPairs: result.isolatedPairs, obstaclePairs: result.obstaclePairs };
 }
 async function test10_lines() {
 	let [w, h] = [800, 400];
-	let [x, y] = [w/2, h/2];
+	let [x, y] = [w / 2, h / 2];
 	let { d, cv, points } = lacunaCircles(w, h);
 	drawEllipseOnCanvas(cv, x, y, 20, 20, 'violet');
 	let buck = groupByProperty(points, 'bg');
@@ -136,7 +245,7 @@ async function test10_lines() {
 		let [p1, p2] = [pair[0], pair[1]];
 		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
 		let pixels = getLinePixels(x1, y1, x2, y2);
-		drawLine(cv, x1, y1, x2, y2, 2); console.log('pixels', pixels);
+		drawLineOnCanvas(cv, x1, y1, x2, y2, 2); console.log('pixels', pixels);
 	}
 }
 async function test9_ellipse() {
@@ -170,7 +279,7 @@ async function test9_bufferZone() {
 		let [p1, p2] = [pair[0], pair[1]];
 		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
 		let pixels = getLinePixels(x1, y1, x2, y2);
-		drawLine(cv1, x1, y1, x2, y2, 2); console.log('pixels', pixels); return;
+		drawLineOnCanvas(cv1, x1, y1, x2, y2, 2); console.log('pixels', pixels); return;
 
 	}
 	return;
@@ -181,7 +290,7 @@ async function test9_bufferZone() {
 				let [p1, p2] = [pts[i], pts[j]];
 				let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
 				let pixels = getLinePixels(x1, y1, x2, y2);
-				drawLine(cv1, x1, y1, x2, y2, 2); console.log('pixels', pixels); return;
+				drawLineOnCanvas(cv1, x1, y1, x2, y2, 2); console.log('pixels', pixels); return;
 			}
 		}
 		return;
@@ -221,7 +330,7 @@ async function test8_bufferZone() {
 		let [p1, p2] = [pair[0], pair[1]];
 		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
 		let pixels = getLinePixels(x1, y1, x2, y2);
-		drawLine(cv1, x1, y1, x2, y2, 2); console.log('pixels', pixels); return;
+		drawLineOnCanvas(cv1, x1, y1, x2, y2, 2); console.log('pixels', pixels); return;
 
 	}
 	return;
@@ -232,7 +341,7 @@ async function test8_bufferZone() {
 				let [p1, p2] = [pts[i], pts[j]];
 				let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
 				let pixels = getLinePixels(x1, y1, x2, y2);
-				drawLine(cv1, x1, y1, x2, y2, 2); console.log('pixels', pixels); return;
+				drawLineOnCanvas(cv1, x1, y1, x2, y2, 2); console.log('pixels', pixels); return;
 			}
 		}
 		return;
