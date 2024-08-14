@@ -1,7 +1,88 @@
 
 onload = start;
-async function start() { await test19(); }
+async function start() { await test21_pairs(); }
 
+async function test21_pairs() {
+	let d = clearDiv();
+	let [w, h, dx, dy, sz] = [900, 400, 50, 120, 20];
+	let [dParent, cv] = mArea(10, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
+	let points = DA.points = mLacunaCirles(dParent, 49, 7, sz, .6);
+
+	DA.info={dParent,cv,w,h,sz,points};
+
+	lacunaCalculate(dParent,cv,w,h,sz,points);
+}
+function lacunaCalculate(dParent,cv,w,h,sz,points) {
+	Items = drawPoints(dParent, points); console.log(Items)
+	let result = findIsolatedPairs(points, sz); //console.log(result);
+	let pixelsByPair = [];
+	let di = {};
+	let allPixels = [];
+	for (const pair of result.isolatedPairs) {
+		let [p1, p2] = [pair[0], pair[1]];
+		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
+		[x1, y1, x2, y2] = [x1, y1, x2, y2].map(x => x + sz / 2);
+		let pixels = getLinePixels(x1, y1, x2, y2); //console.log('pixels', pixels);
+		//pixelsByPair.push({ x1, y1, x2, y2, p1, p2, pixels }); //console.log('pixels', pixels);
+
+		for (const pix of pixels) {
+			allPixels.push(pix);
+			let key = getPixelKey(pix);
+			let l=lookup(di, [key]);
+			lookupAddIfToList(di, [key], 	`${p1.id},${p2.id}`)
+			//lookupAddIfToList(di, [key], p2.id)
+			//if (l) console.log(pix.x,pix.y,lookup(di, [key]));
+		}
+
+		drawLineOnCanvas(cv, x1, y1, x2, y2, 2);
+	}
+
+	let di1=DA.di=clusterize(di); //console.log(di1,Object.keys(di1)); return;
+
+	//console.log(di);
+	dParent.onmousemove=alertOnPointHoverPairHandler;
+	dParent.onclick=alertOnPointClickPairHandler;
+	// alertOnPointHoverPair(dParent, di1);
+	// alertOnPointClickPair(dParent, di1);
+
+}
+
+async function test20() {
+	let d = clearDiv();
+	let [w, h, dx, dy, sz] = [900, 400, 50, 120, 20];
+	let [dParent, cv] = mArea(10, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
+	let points = mLacunaCirles(dParent, 49, 7, sz, .6);
+	Items = drawPoints(dParent, points); console.log(Items)
+	let result = findIsolatedPairs(points, sz); //console.log(result);
+	let pixelsByPair = [];
+	let di = {};
+	let allPixels = [];
+	for (const pair of result.isolatedPairs) {
+		let [p1, p2] = [pair[0], pair[1]];
+		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
+		[x1, y1, x2, y2] = [x1, y1, x2, y2].map(x => x + sz / 2);
+		let pixels = getLinePixels(x1, y1, x2, y2); //console.log('pixels', pixels);
+		//pixelsByPair.push({ x1, y1, x2, y2, p1, p2, pixels }); //console.log('pixels', pixels);
+
+		for (const pix of pixels) {
+			allPixels.push(pix);
+			let key = getPixelKey(pix);
+			let l=lookup(di, [key]);
+			lookupAddIfToList(di, [key], p1.id)
+			lookupAddIfToList(di, [key], p2.id)
+			//if (l) console.log(pix.x,pix.y,lookup(di, [key]));
+		}
+
+		drawLineOnCanvas(cv, x1, y1, x2, y2, 2);
+	}
+
+	let di1=clusterize(di); //console.log(di1,Object.keys(di1)); return;
+
+	//console.log(di);
+	alertOnPointHover(dParent, di1);
+	alertOnPointClick(dParent, di1);
+
+}
 async function test19() {
 	let d = clearDiv();
 	let [w, h, dx, dy, sz] = [900, 400, 50, 120, 20];

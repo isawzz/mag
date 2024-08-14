@@ -1,4 +1,39 @@
 
+function alertOnPointHover(elem, di, threshold = 2) {
+	elem.addEventListener('mousemove', (ev) => {
+		const rect = elem.getBoundingClientRect();
+		const mouseX = ev.clientX - rect.left;
+		const mouseY = ev.clientY - rect.top;
+
+		// let key = getXYKey(mouseX, mouseY);
+
+		let [{mx1,mx2},{my1,my2}]=[roundToNearestMultiples(mouseX,10),roundToNearestMultiples(mouseY,10)];
+		for(const x of range(mx1,mx2)){
+			for(const y of range(my1,my2)){
+				key = getXYKey(x,y);
+				let entry = lookup(di, [key]);
+				if (entry) {
+					console.log(`Mouse over point (${mouseX}, ${mouseY})`, entry);
+				}
+			}
+		}
+
+
+		// for (const x in di) {
+		// 	for (const y in di[x]) {
+		// 		const point = { x, y };
+		// 		const dx = mouseX - point.x;
+		// 		const dy = mouseY - point.y;
+
+		// 		// Check if the mouse is within the threshold distance of the point
+		// 		if (Math.sqrt(dx * dx + dy * dy) < threshold) {
+		// 			console.log(`Mouse over point (${point.x}, ${point.y})`);
+		// 			//break;  // Stop checking other points after finding a match
+		// 		}
+		// 	}
+		// }
+	});
+}
 function _alertOnPointHover(canvas, points, threshold = 2) {
 	canvas.addEventListener('mousemove', (ev) => {
 		const rect = canvas.getBoundingClientRect();

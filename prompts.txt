@@ -1,4 +1,10 @@
 
+_________________________ hotspots 10x10 ___________________________
+I have a dictionary di that assigns a list of strings to every pixel in a div.
+I would like to make a new dictionary that will group pixels into 10x10 squares, and assign to each square the union of all values of the pixels in that square in the original dictionary.
+write a js function clusterize(di,clusterSize) that returns the new dictionary
+
+js function that given an integer x and a number n, rounds n to the next lower multiple of x, and the next higher multiple of x
 _________________________ calc lines between flowers ___________________________
 js function that, given n circles {x,y,size} and a specific position {x1,y1} calculates all straight lines between 2 circles that cross the given position and are not interrupted by another circle.
 the function should return all pairs of circles that meet the requirement

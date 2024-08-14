@@ -1,10 +1,167 @@
 
+function alertOnPointHover(elem, di, threshold = 2) {
+	elem.addEventListener('mousemove', (ev) => {
+		const rect = elem.getBoundingClientRect();
+		const mouseX = ev.clientX - rect.left;
+		const mouseY = ev.clientY - rect.top;
+
+		let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
+		let mx1 = xs.lower;
+		let mx2 = xs.higher;
+		let my1 = ys.lower;
+		let my2 = ys.higher;
+
+		stopAnimatingPoints();
+		//console.log('HAAAAAAAAAAAAllloo',mx1,mx2,my1,my2)
+		if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
+			DA.mousePoint = { x: mouseX, y: mouseY };
+			key = getXYKey(mx1, my1);
+			let entry = lookup(di, [key]);
+			if (entry) {
+				startAnimatingPoints(entry)
+			}
+		}
+	});
+}
+function alertOnPointClick(elem, di, threshold = 2) {
+	elem.addEventListener('click', (ev) => {
+		const rect = elem.getBoundingClientRect();
+		const mouseX = ev.clientX - rect.left;
+		const mouseY = ev.clientY - rect.top;
+
+		let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
+		let mx1 = xs.lower;
+		let mx2 = xs.higher;
+		let my1 = ys.lower;
+		let my2 = ys.higher;
+
+		stopAnimatingPoints();
+
+		if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
+			DA.mousePoint = { x: mouseX, y: mouseY };
+			key = getXYKey(mx1, my1);
+			let entry = lookup(di, [key]);
+			if (entry) {
+
+				DA.pairInfo = entry;
+				console.log(`Mouse over point (${mx1} (${mouseX}),${my1} (${mouseY}))`, entry);
+				for (const id of entry) {
+					mClass(id, ani)
+					//mStyle(id,{border:'1px solid black'});
+				}
+			}
+		}
+
+		// for(const x of range(mx1,mx2)){
+		// 	for(const y of range(my1,my2)){
+		// 		key = getXYKey(x,y);
+		// 		let entry = lookup(di, [key]);
+		// 		if (entry) {
+		// 			console.log(`Mouse over point (${mouseX}, ${mouseY})`, entry);
+		// 		}
+		// 	}
+		// }
+	});
+}
+function alertOnPointHoverPair(elem, di, threshold = 2) {
+	elem.addEventListener('mousemove', (ev) => {
+		const rect = elem.getBoundingClientRect();
+		const mouseX = ev.clientX - rect.left;
+		const mouseY = ev.clientY - rect.top;
+
+		let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
+		let mx1 = xs.lower;
+		let mx2 = xs.higher;
+		let my1 = ys.lower;
+		let my2 = ys.higher;
+
+		stopAnimatingPairs();
+		//console.log('HAAAAAAAAAAAAllloo',mx1,mx2,my1,my2)
+		if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
+			DA.mousePoint = { x: mouseX, y: mouseY };
+			key = getXYKey(mx1, my1);
+			let entry = lookup(di, [key]);
+			if (entry) {
+				startAnimatingPairs(entry)
+			}
+		}
+	});
+}
+function alertOnPointClickPair(elem, di, threshold = 2) {
+	elem.addEventListener('click', (ev) => {
+		const rect = elem.getBoundingClientRect();
+		const mouseX = ev.clientX - rect.left;
+		const mouseY = ev.clientY - rect.top;
+
+		let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
+		let mx1 = xs.lower;
+		let mx2 = xs.higher;
+		let my1 = ys.lower;
+		let my2 = ys.higher;
+
+		stopAnimatingPairs();
+
+		if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
+			DA.mousePoint = { x: mouseX, y: mouseY };
+			key = getXYKey(mx1, my1);
+			let entry = lookup(di, [key]);
+			if (entry) {
+
+				DA.pairInfo = entry;
+
+				if (entry.length == 1) {
+					//remove the pair in entry
+					console.log(`pair ${entry[0]} is removed`);
+					lacunaRemovePair(entry[0]);
+				} else {
+					//let user choose which pair to keep!
+					console.log(`user will choose pair from`, entry);
+				}
+			}
+		}
+
+		// for(const x of range(mx1,mx2)){
+		// 	for(const y of range(my1,my2)){
+		// 		key = getXYKey(x,y);
+		// 		let entry = lookup(di, [key]);
+		// 		if (entry) {
+		// 			console.log(`Mouse over point (${mouseX}, ${mouseY})`, entry);
+		// 		}
+		// 	}
+		// }
+	});
+}
 function clearDiv(styles = {}) {
 	addKeys({padding:0,margin:0,position:'relative'},styles);
 	let d0=document.body; 
 	d0.innerHTML='';
 	mStyle(d0,styles);
   return d0;
+}
+function clusterize(di, sz = 10) {
+	const clustered = {};
+
+	// Iterate over each pixel in the original dictionary
+	for (const key in di) {
+		const [x, y] = key.split(',').map(Number);
+		const clusterX = Math.floor(x / sz) * sz;
+		const clusterY = Math.floor(y / sz) * sz;
+		const clusterKey = `${clusterX},${clusterY}`;
+
+		if (!clustered[clusterKey]) {
+			clustered[clusterKey] = new Set();
+		}
+
+		// Add all values of the pixel to the corresponding cluster
+		di[key].forEach(value => clustered[clusterKey].add(value));
+	}
+
+	// Convert the sets back to arrays
+	for (const key in clustered) {
+		clustered[key] = Array.from(clustered[key]);
+	}
+
+	return clustered;
 }
 function drawCircleOnCanvas(canvas, cx, cy, sz, color) {
 	const ctx = canvas.getContext('2d');
@@ -76,10 +233,10 @@ function drawPoints(dParent,points){
 	let items=[];
 	//console.log('points',points);
 	for(const p of points){
-		let d1=p.div=mDom(dParent,{left:p.x,top:p.y,w:p.sz,h:p.sz,position:'absolute',bg:p.bg},{html:p.id,id:p.id});
+		let d1=p.div=mDom(dParent,{left:p.x,top:p.y,w:p.sz,h:p.sz,position:'absolute',bg:p.bg,align:'center',fg:'contrast'},{html:p.id.substring(1),id:p.id});
 		let p1=getRect(d1); p1.x+=p.sz/2;//p1.y+=sz/2; 
 		p.center = p1;
-		Items[p.id]=p;
+		items[p.id]=p;
 	}
 	return items;
 
@@ -370,6 +527,12 @@ function getLinePixels(x1, y1, x2, y2) {
 
 	return pixels;
 }
+function getPixelKey(pix) { return getXYKey(pix.x, pix.y); }
+
+function getXYKey(x, y) { return [x, y]; }
+
+function getXYKey(x, y) { return `${x},${y}`; }
+
 function groupByProperty(list, prop) {
 	const groups = {};
 
@@ -428,6 +591,8 @@ function mLacunaCirles(dParent,n=49,neach=7,sz=10,rand=.7) {
 	//points = points.map(p => drawCircleOnDiv(dParent, p.x, p.y, p.sz, p.bg));
 	return points;
 }
+function mRemoveStyle(d, styles) { for (const k of styles) d.style[k] = null; }
+
 function placeCircle(dParent, cx, cy, sz, bg = 'red') {
 	let o = { cx, cy, sz };
 	let [w, h] = [sz, sz];
@@ -467,6 +632,55 @@ function placeCirclesRandom(dParent, n, sz, color, rand = 0.2) {
 		circles.push(o);
 	}
 	return circles;
+}
+function roundToNearestMultiples(n, x = 10) {
+	const lower = Math.floor(n / x) * x;
+	const higher = Math.ceil(n / x) * x;
+	return { lower, higher };
+}
+function stopAnimatingPairs() {
+	let ani = 'pulseInfinite'
+	if (nundef(DA.pairInfo)) DA.pairInfo = [];
+
+	for (const p of DA.pairInfo) {
+		console.log('p', p)
+		let ids = p.split(',');
+		for (const id of ids) {
+			let o = Items[id]; 
+			mClassRemove(id, ani)
+		}
+		//o.div.style.border = 'none';
+	}
+}
+function startAnimatingPairs(pairlist) {
+	let ani = 'pulseInfinite'
+	DA.pairInfo = pairlist;
+	//console.log(`Mouse over point (${mx1} (${mouseX}),${my1} (${mouseY}))`, entry);
+	for (const pair of pairlist) {
+		let ids = pair.split(',');
+		for (const id of ids) {
+			let o = Items[id]; 
+			mClass(id, ani)
+		}
+	}
+}
+function stopAnimatingPoints() {
+	let ani = 'pulseInfinite'
+	if (nundef(DA.pairInfo)) DA.pairInfo = [];
+	for (const p of DA.pairInfo) {
+		let o = Items[p]; console.log(o);
+		mClassRemove(p, ani)
+		//o.div.style.border = 'none';
+	}
+}
+function startAnimatingPoints(idlist) {
+	let ani = 'pulseInfinite'
+	DA.pairInfo = idlist;
+	//console.log(`Mouse over point (${mx1} (${mouseX}),${my1} (${mouseY}))`, entry);
+	for (const id of idlist) {
+		mClass(id, ani)
+		//mStyle(id,{border:'1px solid black'});
+	}
 }
 function testMouseMove(ev, pixelsByPair, ctx) {
 	const mouseX = ev.clientX;
