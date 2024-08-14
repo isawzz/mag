@@ -1,6 +1,6 @@
 
 onload = start;
-async function start() { await test22(); }
+async function start() { await loadAssets();await test22(); }
 
 async function test22(){
 	lacunaPresent();

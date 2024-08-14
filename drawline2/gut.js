@@ -595,9 +595,9 @@ function lacunaCalculate() {
 		drawLineOnCanvas(cv, x1, y1, x2, y2, 2);
 	}
 
-	console.log(Object.keys(di).length);
+	//console.log(Object.keys(di).length);
 	let di1 = DA.info.di = clusterize(di);
-	console.log(Object.keys(di1).length); //return;
+	//console.log(Object.keys(di1).length); //return;
 
 	//console.log(di);
 	dParent.onmousemove=alertOnPointHoverPairHandler;
@@ -668,8 +668,6 @@ function lacunaRemovePair(pair) {
 		DA.info.points = DA.info.points.filter(x => x.id != id);//remove from points
 		delete Items[id];//remove from items
 	}
-	DA.info.dParent.onclick = null; //delete event handlers from dParent
-	DA.info.dParent.onmousemove = null;
 	let canvas = DA.info.cv; //clear DA.info.cv ctx
 	let ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
