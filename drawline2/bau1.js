@@ -1,21 +1,31 @@
 
-function lacunaRemovePair(pair) {
-	let ids = pair.split(',');
-	for (const id of ids) {
-		let o = Items[id];
-		o.div.remove();
-	}
-
-	DA.entry=[];
-	//recalculate lines
-	let {dParent,cv,w,h,sz,points}=DA.info;
-
-	points = points.filter(x=>!ids.includes(x.id));
-	DA.points = points;
-	lacunaCalculate(dParent,cv,w,h,sz,points);
-
-	console.log('points', points);
-
+function mGather(dAnchor, styles = {}, opts = {}) {
+	return new Promise((resolve, _) => {
+		let [content, type] = [valf(opts.content, 'name'), valf(opts.type, 'text')]; //defaults
+		let dbody = document.body;
+		let dDialog = mDom(dbody, { bg: '#00000040', box: true, w: '100vw', h: '100vh' }, { tag: 'dialog', id: 'dDialog' });
+		let d = mDom(dDialog);
+		let funcName = `uiGadgetType${capitalize(type)}`; //console.log(funcName)
+		let uiFunc = window[funcName];
+		let dx = uiFunc(d, content, x => { dDialog.remove(); resolve(x) }, styles, opts);
+		if (isdef(opts.title)) mInsert(dx, mCreateFrom(`<h2>Details for ${opts.title}</h2>`))
+		dDialog.addEventListener('mouseup', ev => {
+			if (opts.type != 'select' && isPointOutsideOf(dx, ev.clientX, ev.clientY)) {
+				resolve(null);
+				dDialog.remove();
+			}
+		});
+		dDialog.addEventListener('keydown', ev => {
+			if (ev.key === 'Escape') {
+				dDialog.remove();
+				console.log('RESOLVE NULL ESCAPE');
+				resolve(null);
+			}
+		});
+		dDialog.showModal();
+		if (isdef(dAnchor)) mAnchorTo(dx, toElem(dAnchor), opts.align);
+		else { mStyle(d, { h: '100vh' }); mCenterCenterFlex(d); }
+	});
 }
 
 

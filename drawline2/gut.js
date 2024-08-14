@@ -131,12 +131,35 @@ function alertOnPointClickPair(elem, di, threshold = 2) {
 		// }
 	});
 }
+function alertOnPointHoverPairHandler(ev) {
+	let [dParent, di] = [DA.info.dParent, DA.info.di];
+	const rect = dParent.getBoundingClientRect();
+	const mouseX = ev.clientX - rect.left;
+	const mouseY = ev.clientY - rect.top;
+
+	let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
+	let mx1 = xs.lower;
+	let mx2 = xs.higher;
+	let my1 = ys.lower;
+	let my2 = ys.higher;
+
+	stopAnimatingPairs();
+	//console.log('HAAAAAAAAAAAAllloo',mx1,mx2,my1,my2)
+	if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
+		DA.mousePoint = { x: mouseX, y: mouseY };
+		key = getXYKey(mx1, my1);
+		let entry = lookup(di, [key]); //console.log(key, entry)
+		if (entry) {
+			startAnimatingPairs(entry)
+		}
+	}
+}
 function clearDiv(styles = {}) {
-	addKeys({padding:0,margin:0,position:'relative'},styles);
-	let d0=document.body; 
-	d0.innerHTML='';
-	mStyle(d0,styles);
-  return d0;
+	addKeys({ padding: 0, margin: 0, position: 'relative' }, styles);
+	let d0 = document.body;
+	d0.innerHTML = '';
+	mStyle(d0, styles);
+	return d0;
 }
 function clusterize(di, sz = 10) {
 	const clustered = {};
@@ -229,14 +252,14 @@ function drawLineOnCanvas(canvas, x1, y1, x2, y2, stroke = 1) {
 function _drawPoints(dParent, points) {
 	return points.map(p => placeCircle(dParent, p.x, p.y, valf(p.sz, 20), valf(p.bg, rColor())));
 }
-function drawPoints(dParent,points){
-	let items=[];
+function drawPoints(dParent, points) {
+	let items = [];
 	//console.log('points',points);
-	for(const p of points){
-		let d1=p.div=mDom(dParent,{left:p.x,top:p.y,w:p.sz,h:p.sz,position:'absolute',bg:p.bg,align:'center',fg:'contrast'},{html:p.id.substring(1),id:p.id});
-		let p1=getRect(d1); p1.x+=p.sz/2;//p1.y+=sz/2; 
+	for (const p of points) {
+		let d1 = p.div = mDom(dParent, { left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html: p.id.substring(1), id: p.id });
+		let p1 = getRect(d1); p1.x += p.sz / 2;//p1.y+=sz/2; 
 		p.center = p1;
-		items[p.id]=p;
+		items[p.id] = p;
 	}
 	return items;
 
@@ -426,13 +449,13 @@ function generateRandomPointsRound(n, w, h, rand = 0.8) {
 }
 function generateRandomPointsRect(n, w, h, rand = 0) {
 	const points = [];
-	let { rows, cols } = divideRectangleIntoGrid(w, h*.8, n);
+	let { rows, cols } = divideRectangleIntoGrid(w, h * .8, n);
 	// const rows = Math.floor(Math.sqrt(n));
 	// const cols = Math.ceil(n / rows);
 	const xSpacing = w / (cols + 1);
 	const ySpacing = h / (rows + 1); console.log(xSpacing, ySpacing);
 	let dmin = 10;
-	let x,y,xfix,yfix,xlast=-dmin,ylast=-dmin;
+	let x, y, xfix, yfix, xlast = -dmin, ylast = -dmin;
 	for (let i = 0; i < rows; i++) {
 		yfix = (i + .75) * ySpacing;
 		for (let j = 0; j < cols; j++) {
@@ -448,12 +471,12 @@ function generateRandomPointsRect(n, w, h, rand = 0) {
 				// let [x,y]=[j*xSpacing,i*ySpacing]
 				// const x = (j + .75) * xSpacing;
 				// const y = (i + .75) * ySpacing;
-				x=xfix+dx; if (x>xlast && x-xlast<dmin) x+=dmin;
-				y=yfix+dy; if (y>ylast && y-ylast<dmin) y+=dmin;
-				xlast=x;
+				x = xfix + dx; if (x > xlast && x - xlast < dmin) x += dmin;
+				y = yfix + dy; if (y > ylast && y - ylast < dmin) y += dmin;
+				xlast = x;
 				points.push({ x: Math.round(x), y: Math.round(y) });
 			}
-			ylast=y
+			ylast = y
 		}
 	}
 
@@ -479,8 +502,8 @@ function generateRandomPointsRect(n, w, h, rand = 0) {
 				// const x = (j + 1) * xSpacing;
 				// const y = (i + 1) * ySpacing;
 				// let [x,y]=[j*xSpacing,i*ySpacing]
-				const x = (j + .75) * xSpacing +dx;
-				const y = (i + .75) * ySpacing +dy;
+				const x = (j + .75) * xSpacing + dx;
+				const y = (i + .75) * ySpacing + dy;
 				// x=xfix+dx; if (x>xlast && x-xlast<dmin) x+=dmin;
 				// y=yfix+dy; if (y>ylast && y-ylast<dmin) y+=dmin;
 				// xlast=x;
@@ -546,6 +569,54 @@ function groupByProperty(list, prop) {
 
 	return Object.values(groups);
 }
+function lacunaCalculate() {
+
+	let {dParent,cv,w,h,sz,points}=DA.info;
+	let result = findIsolatedPairs(points, sz); //console.log(result);
+	let pixelsByPair = [];
+	let di = {};
+	let allPixels = [];
+	for (const pair of result.isolatedPairs) {
+		let [p1, p2] = [pair[0], pair[1]];
+		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
+		[x1, y1, x2, y2] = [x1, y1, x2, y2].map(x => x + sz / 2);
+		let pixels = getLinePixels(x1, y1, x2, y2); //console.log('pixels', pixels);
+		//pixelsByPair.push({ x1, y1, x2, y2, p1, p2, pixels }); //console.log('pixels', pixels);
+
+		for (const pix of pixels) {
+			allPixels.push(pix);
+			let key = getPixelKey(pix);
+			let l = lookup(di, [key]);
+			lookupAddIfToList(di, [key], `${p1.id},${p2.id}`)
+			//lookupAddIfToList(di, [key], p2.id)
+			//if (l) console.log(pix.x,pix.y,lookup(di, [key]));
+		}
+
+		drawLineOnCanvas(cv, x1, y1, x2, y2, 2);
+	}
+
+	console.log(Object.keys(di).length);
+	let di1 = DA.info.di = clusterize(di);
+	console.log(Object.keys(di1).length); //return;
+
+	//console.log(di);
+	dParent.onmousemove=alertOnPointHoverPairHandler;
+	dParent.onclick = alertOnPointClickPairHandler;
+	// alertOnPointHoverPair(dParent, di1);
+	// alertOnPointClickPair(dParent, di1);
+
+}
+function lacunaColor(name) {
+	let clist = { red: "#E63946", green: "#06D6A0", blue: "#118AB2", cyan: "#0F4C75", magenta: "#D81159", yellow: "#FFD166", orange: "#F4A261", purple: "#9D4EDD", pink: "#FF80AB", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080" };
+	return clist[name];
+}
+function lacunaColorName(val) {
+	let clist = { red: "#E63946", green: "#06D6A0", blue: "#118AB2", cyan: "#0F4C75", magenta: "#D81159", yellow: "#FFD166", orange: "#F4A261", purple: "#9D4EDD", pink: "#FF80AB", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080" };
+	for(const k in clist){
+		if (val == clist[k]) return k;
+	}
+	return 'unknown';
+}
 function lacunaColors() {
 	let clist = { red: "#E63946", green: "#06D6A0", blue: "#118AB2", cyan: "#0F4C75", magenta: "#D81159", yellow: "#FFD166", orange: "#F4A261", purple: "#9D4EDD", pink: "#FF80AB", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080" };
 	return Object.values(clist);
@@ -556,7 +627,7 @@ function lacunaCircles(w = 800, h = 400, n = 49, neach = 7, sz = 10) {
 	let [d1, cv] = mArea(30, d, { w, h, bg: '#eee', position: 'relative' });
 	let clist = lacunaColors();
 	let points = generateRandomPointsRect(n, w, h, rand);
-	let colors = generateRepeatedColors(n, neach, clist);	arrShuffle(colors);
+	let colors = generateRepeatedColors(n, neach, clist); arrShuffle(colors);
 	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; }
 	for (const p of points) { drawCircleOnCanvas(cv, p.x, p.y, p.sz, p.bg); }
 	return { d, cv, points };
@@ -568,11 +639,41 @@ function lacunaCirclesDiv(w = 800, h = 400, n = 49, neach = 7, sz = 10) {
 	cv.remove();
 	let clist = lacunaColors();
 	let points = generateRandomPointsRect(n, w, h, rand);
-	let colors = generateRepeatedColors(n, neach, clist);	arrShuffle(colors);
+	let colors = generateRepeatedColors(n, neach, clist); arrShuffle(colors);
 	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; }
 	points = points.map(p => drawCircleOnDiv(d1, p.x, p.y, p.sz, p.bg));
 	//for (const p of points) { p.div = drawCircleOnDiv(d1, p.x, p.y, p.sz, p.bg); }
 	return { d, points };
+}
+function lacunaPresent() {
+	let d = clearDiv();
+	let [w, h, sz] = [900, 400, 20];
+	let [dParent, cv] = mArea(10, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
+
+	let points = mLacunaCirles(dParent, 49, 7, sz, .6);
+
+	Items = drawPoints(dParent, points); //console.log(Items)
+
+	//console.log(points[0], Items[points[0].id]);
+	dParent.onclick = ev => { for (const el of arrChildren(dParent)) { mRemove(el); } DA.points = arrTake(DA.points, DA.points.length - 2); Items = drawPoints(dParent, DA.points); }
+
+	DA.info={dParent,cv,w,h,sz,points};
+	lacunaCalculate();
+}
+function lacunaRemovePair(pair) {
+	let ids = pair.split(',');
+	for (const id of ids) {
+		let o = Items[id];//remove the div
+		o.div.remove();
+		DA.info.points = DA.info.points.filter(x => x.id != id);//remove from points
+		delete Items[id];//remove from items
+	}
+	DA.info.dParent.onclick = null; //delete event handlers from dParent
+	DA.info.dParent.onmousemove = null;
+	let canvas = DA.info.cv; //clear DA.info.cv ctx
+	let ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	lacunaCalculate();
 }
 function mArea(padding, dParent, styles = {}, opts = {}) {
 	addKeys({ padding, wbox: true, position: 'relative' }, styles)
@@ -582,12 +683,12 @@ function mArea(padding, dParent, styles = {}, opts = {}) {
 	let cv = mDom(d, { position: 'absolute', top: 0, left: 0, w100: true, h100: true, 'pointer-events': 'none' }, { tag: 'canvas', id: 'canvas1', width: w, height: h })
 	return [d, cv];
 }
-function mLacunaCirles(dParent,n=49,neach=7,sz=10,rand=.7) {
-	let [w,h]=[mGetStyle(dParent,'w'),mGetStyle(dParent,'h')];
+function mLacunaCirles(dParent, n = 49, neach = 7, sz = 10, rand = .7) {
+	let [w, h] = [mGetStyle(dParent, 'w'), mGetStyle(dParent, 'h')];
 	let clist = lacunaColors();
 	let points = generateRandomPointsRect(n, w, h, rand);
-	let colors = generateRepeatedColors(n, neach, clist);	arrShuffle(colors);
-	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; points[i].id=getUID(); }
+	let colors = generateRepeatedColors(n, neach, clist); arrShuffle(colors);
+	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; points[i].id = getUID(); }
 	//points = points.map(p => drawCircleOnDiv(dParent, p.x, p.y, p.sz, p.bg));
 	return points;
 }
@@ -643,10 +744,11 @@ function stopAnimatingPairs() {
 	if (nundef(DA.pairInfo)) DA.pairInfo = [];
 
 	for (const p of DA.pairInfo) {
-		console.log('p', p)
+		//console.log('p', p)
 		let ids = p.split(',');
 		for (const id of ids) {
-			let o = Items[id]; 
+			let o = Items[id];
+			if (nundef(o)) continue;
 			mClassRemove(id, ani)
 		}
 		//o.div.style.border = 'none';
@@ -659,7 +761,7 @@ function startAnimatingPairs(pairlist) {
 	for (const pair of pairlist) {
 		let ids = pair.split(',');
 		for (const id of ids) {
-			let o = Items[id]; 
+			let o = Items[id];
 			mClass(id, ani)
 		}
 	}
