@@ -1,8 +1,63 @@
 
 onload = start;
-async function start() { await loadAssets();await test22(); }
+async function start() { await loadAssets(); await test26(); }
 
-async function test22(){
+async function test26() {
+	let [w, h, sz, margin] = [700, 400, 20, 30];
+
+	let points = lacunaGeneratePointsMargin(w, h, margin, 6, 3, sz, .6); console.log(jsCopy(points[0]));
+
+	let d = clearDiv();
+	let dParent=mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' });
+	console.log(dParent);
+
+	Items = drawPoints(dParent, points); //console.log(Items)
+	let info = DA.info = { dParent, w, h, sz, points };
+
+	// for (let i = 0; i < 2; i++) {
+	// 	await mSleep(2000);
+	// 	mStyle(dParent,{margin:rNumber(10,50)});
+	// 	drawPoints(dParent, points);console.log(points[0]);
+	// }
+
+	let result = findIsolatedPairs(points, sz); console.log(result);
+
+}
+async function test25_mArea(){
+	let [w, h, sz] = [600, 400, 20];
+	let d=clearDiv();mClear(d); mStyle(d,{margin:rNumber(10,50)});
+	let [dParent, cv] = mArea(0, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
+
+}
+async function test24() {
+	let [w, h, sz] = [900, 400, 20];
+	let points = lacunaGeneratePoints(w, h, 6, 3, sz, .6); console.log(jsCopy(points[0]));
+
+	let d = clearDiv();
+	points = laDrawPoints(d, points, w, h, sz); console.log(points[0]);
+
+	for (let i = 0; i < 10; i++) {
+		await mSleep(2000);
+		points = laDrawPoints(d, points, w, h, sz); console.log(points[0]);
+	}
+
+	//hier hab ich schon DA.info!
+	let result = findIsolatedPairs(points, sz); //console.log(result);
+
+
+	//lacunaPresent1(points,w,h,sz);
+
+}
+
+async function test23() {
+	let [w, h, sz] = [900, 400, 20];
+	let points = lacunaGeneratePoints(w, h, 6, 3, sz, .6);
+	console.log(points[0]);
+
+	lacunaPresent1(points, w, h, sz);
+
+}
+async function test22() {
 	lacunaPresent();
 }
 async function test21_pairs() {
@@ -10,14 +65,14 @@ async function test21_pairs() {
 	let [w, h, sz] = [900, 400, 20];
 	let [dParent, cv] = mArea(10, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
 
-	let points = mLacunaCirles(dParent, 49, 7, sz, .6);
+	let points = mLacunaCirles(dParent, 49, 7, sz, .6); console.log(points); return;
 
 	Items = drawPoints(dParent, points); //console.log(Items)
 
 	//console.log(points[0], Items[points[0].id]);
 	dParent.onclick = ev => { for (const el of arrChildren(dParent)) { mRemove(el); } DA.points = arrTake(DA.points, DA.points.length - 2); Items = drawPoints(dParent, DA.points); }
 
-	DA.info={dParent,cv,w,h,sz,points};
+	DA.info = { dParent, cv, w, h, sz, points };
 	lacunaCalculate();
 }
 

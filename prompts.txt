@@ -5,6 +5,8 @@ I would like to make a new dictionary that will group pixels into 10x10 squares,
 write a js function clusterize(di,clusterSize) that returns the new dictionary
 
 js function that given an integer x and a number n, rounds n to the next lower multiple of x, and the next higher multiple of x
+
+js function that given 2 points p1={x1,y1} and p2={x2,y2} and a number d, returns a series of points along a straight line between p1 and p2 in equidistant distance of n
 _________________________ calc lines between flowers ___________________________
 js function that, given n circles {x,y,size} and a specific position {x1,y1} calculates all straight lines between 2 circles that cross the given position and are not interrupted by another circle.
 the function should return all pairs of circles that meet the requirement

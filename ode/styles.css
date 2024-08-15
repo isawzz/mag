@@ -805,6 +805,10 @@ fieldset .disabled {
   animation: pulse_animation 800ms ease-in-out 0s infinite alternate;
 }
 
+.pulseFastInfinite {
+  animation: pulse_animation 400ms ease-in-out 0s infinite alternate;
+}
+
 .rubberBand {
   -webkit-animation-name: kfrubberBand;
   animation-name: kfrubberBand;

@@ -1,4 +1,77 @@
 
+function lacunaPresent1(points, w, h, sz) {
+
+	let d = clearDiv();
+	let [dParent, cv] = mArea(10, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
+	Items = drawPoints(dParent, points); //console.log(Items)
+
+	let info = DA.info = { dParent, cv, w, h, sz, points };
+
+	let result = findIsolatedPairs(points, sz); //console.log(result);
+	let di = {};
+	let allPixels = [];
+	for (const pair of result.isolatedPairs) {
+		let [p1, p2] = [pair[0], pair[1]];
+		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
+		[x1, y1, x2, y2] = [x1, y1, x2, y2].map(x => x + sz / 2);
+		let pixels = getLinePixels(x1, y1, x2, y2); //console.log('pixels', pixels);
+		//pixelsByPair.push({ x1, y1, x2, y2, p1, p2, pixels }); //console.log('pixels', pixels);
+
+		for (const pix of pixels) {
+			allPixels.push(pix);
+			let key = getPixelKey(pix);
+			let l = lookup(di, [key]);
+			lookupAddIfToList(di, [key], `${p1.id},${p2.id}`)
+			//lookupAddIfToList(di, [key], p2.id)
+			//if (l) console.log(pix.x,pix.y,lookup(di, [key]));
+		}
+
+		drawLineOnCanvas(cv, x1, y1, x2, y2, 2);
+	}
+
+	//console.log(Object.keys(di).length);
+	let di1 = DA.info.di = clusterize(di,10);
+	//console.log(Object.keys(di1).length); //return;
+
+	//console.log(di);
+	dParent.onmousemove = alertOnPointHoverPairHandler;
+	dParent.onclick = alertOnPointClickPairHandler;
+	// alertOnPointHoverPair(dParent, di1);
+	// alertOnPointClickPair(dParent, di1);
+
+}
+
+function lacunaRemovePair(pair) {
+	let { dParent, cv, w, h, sz, points } = DA.info;
+
+	let ids = pair.split(',');
+	for (const id of ids) {
+		let o = Items[id];//remove the div
+		o.div.remove();
+		points = points.filter(x => x.id != id);//remove from points
+		delete Items[id];//remove from items
+	}
+
+	mRemove(cv);
+	mRemove(dParent);
+
+	lacunaPresent1(points, w, h, sz);
+	return;
+
+	let canvas = cv; //clear DA.info.cv ctx
+	let ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	//stopAnimatingPairs();
+
+	for (const id in Items) {
+		let d = mBy(id);
+		mClassRemove(d, 'pulseInfinite');
+		mStyle(d, { cursor: 'default' });
+		d.onclick = null;
+	}
+
+	lacunaPresent1();
+}
 function _alertOnPointHover(canvas, points, threshold = 2) {
 	canvas.addEventListener('mousemove', (ev) => {
 		const rect = canvas.getBoundingClientRect();
