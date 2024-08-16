@@ -306,7 +306,7 @@ function drawPoints(dParent, points) {
 	let items = [];
 	//console.log('points',points);
 	for (const p of points) {
-		let d1 = p.div = mDom(dParent, { cursor:'default',left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html: p.id.substring(1), id: p.id });
+		let d1 = p.div = mDom(dParent, { round:true, cursor:'default',left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html: p.id.substring(1), id: p.id });
 		let rect = getRect(d1); 
 		//p.x = p1.x; p.y = p1.y;
 		p.cx = p.x+p.sz/2; p.cy = p.y+p.sz/2;

@@ -1,18 +1,58 @@
 
 onload = start;
-async function start() { await loadAssets(); await test26(); }
+async function start() { await loadAssets(); await test28(); }
 
+async function test28() {
+	let [w, h, sz, margin, n, neach] = [700, 400, 20, 30, 9, 3];
+	let points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); console.log(jsCopy(points[0]));
+	let d = clearDiv();
+	let dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' });
+	Items = drawPoints(dParent, points); //console.log(Items)
+	let info = DA.info = { dParent, w, h, sz, points, n, neach };
+	let result = findIsolatedPairs(points, sz); console.log(result);
+	let hotspots=[];
+	for(const pair of result.isolatedPairs) { 
+		let ids=pair.split(',');
+		let line = getEquidistantPoints(Items[ids[0]], Items[ids[1]], sz);
+		line.map(x=>hotspots.push(x));
+	}
+
+	hotspots.map(x=>x.sz=sz,x=>x.bg='red');
+	DA.hotspots = drawPoints(dParent,hotspots);
+}
+async function test27() {
+	let p1 = { x: 0, y: 0, bg: '#06D6A0', sz: 20, id: getUID() };
+	let p2 = { x: 100, y: 100, bg: '#06D6A0', sz: 20, id: getUID() };
+	let points = getEquidistantPoints(p1, p2, 10);
+	console.log(points);
+
+	for (const p of points) { p.bg = 'blue'; p.sz = 20; p.id = getUID(); }
+
+	// points.push(p1);
+	// points.push(p2);
+
+	let [w, h, sz, margin, n, neach] = [700, 400, 20, 30, 9, 3];
+	let d = clearDiv();
+	let dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' });
+	Items = drawPoints(dParent, points); //console.log(Items)
+
+	for (const p of points) {
+		let div = p.div;
+		div.onclick = () => { div.remove(); points = points.filter(x => x.id != p.id) }
+	}
+
+}
 async function test26() {
-	let [w, h, sz, margin] = [700, 400, 20, 30];
+	let [w, h, sz, margin, n, neach] = [700, 400, 20, 30, 9, 3];
 
-	let points = lacunaGeneratePointsMargin(w, h, margin, 6, 3, sz, .6); console.log(jsCopy(points[0]));
+	let points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); console.log(jsCopy(points[0]));
 
 	let d = clearDiv();
-	let dParent=mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' });
-	console.log(dParent);
+	let dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' });
+	//console.log(dParent);
 
 	Items = drawPoints(dParent, points); //console.log(Items)
-	let info = DA.info = { dParent, w, h, sz, points };
+	let info = DA.info = { dParent, w, h, sz, points, n, neach };
 
 	// for (let i = 0; i < 2; i++) {
 	// 	await mSleep(2000);
@@ -20,12 +60,12 @@ async function test26() {
 	// 	drawPoints(dParent, points);console.log(points[0]);
 	// }
 
-	let result = findIsolatedPairs(points, sz); console.log(result);
+	let result = findIsolatedPairs(points, sz); //console.log(result);
 
 }
-async function test25_mArea(){
+async function test25_mArea() {
 	let [w, h, sz] = [600, 400, 20];
-	let d=clearDiv();mClear(d); mStyle(d,{margin:rNumber(10,50)});
+	let d = clearDiv(); mClear(d); mStyle(d, { margin: rNumber(10, 50) });
 	let [dParent, cv] = mArea(0, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
 
 }

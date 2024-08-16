@@ -26,17 +26,19 @@ function getLinePixels1(x1, y1, x2, y2) {
 
 	return pixels;
 }
-function getEquidistantPoints(p1, p2, d=10) {
+function getEquidistantPoints(p1, p2, d=10, includeEnds=false) {
 	const points = [];
-	const dx = p2.x1 - p1.x1;
-	const dy = p2.y1 - p1.y1;
+	const dx = p2.x - p1.x;
+	const dy = p2.y - p1.y;
 	const distance = Math.sqrt(dx * dx + dy * dy);
 	const numPoints = Math.floor(distance / d);
 
-	for (let i = 0; i <= numPoints; i++) {
+	let istart=includeEnds?0:1;
+	let iend=includeEnds?numPoints-1:numPoints;
+	for (let i = istart; i <= iend; i++) {
 			const t = i / numPoints;
-			const x = p1.x1 + t * dx;
-			const y = p1.y1 + t * dy;
+			const x = p1.x + t * dx;
+			const y = p1.y + t * dy;
 			points.push({ x, y });
 	}
 
