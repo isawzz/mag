@@ -75,30 +75,30 @@ var P;
 var S = {};
 var T = null;
 var Z;
-async function _closureFromProject(dir='odf') {
+async function _closureFromProject(dir = 'odf',files=null) {
   S.type = detectSessionType();
   initCodingUI();
   let text, css, project;
   let glitches = ['startsWith', 'endsWith'];
   text = '<please call closureFromProject>', css = '';
-  [text, css, project] = await closureFromProject(dir, glitches, ['_integrate','downloadAsText']); 
+  [text, css, project] = await closureFromProject(dir, glitches, ['_integrate', 'downloadAsText'],files);
   AU.ta.value = text;
   AU.css.value = css;
 }
-async function _integrate(pathLarge,pathNew){
+async function _integrate(pathLarge, pathNew) {
   let keys;
   S.type = detectSessionType();
   initCodingUI();
   let bykey = await getCodeDictByKey(pathLarge);
   let bykeyNew = await getCodeDictByKey(pathNew);
-  copyKeys(bykeyNew,bykey);
+  copyKeys(bykeyNew, bykey);
   keys = Object.keys(bykey);
   keys.sort();
   let text = '';
-  for (const k of keys) { 
-    let s=bykey[k].code;
-    if (!s.includes('\n')) {console.log('oneliner',s); s+='\n';}
-    text += s + '\n'; 
+  for (const k of keys) {
+    let s = bykey[k].code;
+    if (!s.includes('\n')) { console.log('oneliner', s); s += '\n'; }
+    text += s + '\n';
   }
   AU.ta.value = text;
 }
@@ -111,14 +111,14 @@ function _minimizeCode(di, symlist = ['start'], nogo = []) {
     jQuery: true, init: true,
     Number: true, sat: true, step: true, PI: true
   };
-  console.log('di',di)
-  console.log('tbd',tbd)
+  console.log('di', di)
+  console.log('tbd', tbd)
   while (!isEmpty(tbd)) {
-    if (++i > MAX) {console.log('MAX reached');break;}
-    let sym = tbd[0]; 
+    if (++i > MAX) { console.log('MAX reached'); break; }
+    let sym = tbd[0];
     if (isdef(visited[sym])) { tbd.shift(); continue; }
     visited[sym] = true;
-    let o = di[sym]; 
+    let o = di[sym];
     if (nundef(o)) { tbd.shift(); continue; }
     let text = o.code;
     let words = toWords(text, true);
@@ -176,21 +176,23 @@ function capitalize(s) {
   if (typeof s !== 'string') return '';
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
-async function closureFromProject(project, ignoreList=[], addList=[]) {
+async function closureFromProject(project, ignoreList = [], addList = [], files = null) {
   console.log('HAAAAAAAAAAAAALLLLLLLLLLLOOOOOOOOOOOO')
   let globlist = await codeParseFile('../basejs/allghuge.js');
   let funclist = await codeParseFile('../basejs/allfhuge.js');
-  let list = globlist.concat(funclist); 
+  let list = globlist.concat(funclist);
   let bykey = list2dict(list, 'key');
-  DA.diglobal = Object.keys(bykey); 
+  DA.diglobal = Object.keys(bykey);
   let bytype = {};
   for (const k in bykey) { let o = bykey[k]; lookupAddIfToList(bytype, [o.type], o); }
   let htmlFile = `../${project}/index.html`;
   let html = await route_path_text(htmlFile);
   html = removeCommentLines(html, '<!--', '-->');
   let dirhtml = `../${project}`;
-  let files = extractFilesFromHtml(html, htmlFile);
-  files = files.filter(x => !x.includes('../all') && !x.includes('/test'));
+  if (!files) {
+    files = extractFilesFromHtml(html, htmlFile);
+    files = files.filter(x => !x.includes('../all') && !x.includes('/test'));
+  }
   console.log('files', files)
   let olist = [];
   for (const path of files) {
@@ -213,7 +215,7 @@ async function closureFromProject(project, ignoreList=[], addList=[]) {
       dupltext += oold.oldcode + '\n' + oold.code + '\n';
       DA.duplicates.push(k);
     } else {
-      bykey[k] = onew; 
+      bykey[k] = onew;
       lookupAddIfToList(bytype, [onew.type], onew);
       list.push(onew);
     }
@@ -225,7 +227,7 @@ async function closureFromProject(project, ignoreList=[], addList=[]) {
   let nogos = valf(knownNogos[project], [])
   nogos = nogos.concat(ignoreList);
   let byKeyMinimized = _minimizeCode(bykey, seed, nogos);
-  ['start','rest'].map(x=>delete byKeyMinimized[x]);
+  ['start', 'rest'].map(x => delete byKeyMinimized[x]);
   for (const k in byKeyMinimized) {
     let code = byKeyMinimized[k].code;
     let lines = code.split('\n');
@@ -239,11 +241,11 @@ async function closureFromProject(project, ignoreList=[], addList=[]) {
   let funckeys = list.filter(x => isdef(byKeyMinimized[x.key]) && x.type == 'function').map(x => x.key); //in order of appearance!
   funckeys = sortCaseInsensitive(funckeys);
   let closuretext = '', justproject = '';
-  console.log('DA.diglobal',DA.diglobal)
+  console.log('DA.diglobal', DA.diglobal)
   for (const k of cvckeys) { closuretext += byKeyMinimized[k].code + '\n'; }
-  for (const k of funckeys) { 
-    closuretext += byKeyMinimized[k].code + '\n'; 
-    if (DA.duplicates.includes(k) || !DA.diglobal.includes(k)) justproject += byKeyMinimized[k].code + '\n'; 
+  for (const k of funckeys) {
+    closuretext += byKeyMinimized[k].code + '\n';
+    if (DA.duplicates.includes(k) || !DA.diglobal.includes(k)) justproject += byKeyMinimized[k].code + '\n';
   }
   cssfiles = extractFilesFromHtml(html, htmlFile, 'css');
   cssfiles.unshift('../basejs/myclasses.css');
@@ -252,7 +254,7 @@ async function closureFromProject(project, ignoreList=[], addList=[]) {
   let t = replaceAllSpecialChars(tcss, '\t', '  ');
   let lines = t.split('\r\n');
   if (lines.length <= 2) lines = t.split('\n');
-  let allkeys = [], newlines = []; 
+  let allkeys = [], newlines = [];
   let di = {};
   let testresult = '';
   for (const line of lines) {
@@ -367,7 +369,7 @@ function codeParseBlocks(text) {
 async function codeParseFile(path) {
   let text = await route_path_text(path);
   let olist = codeParseBlocks(text);
-  return olist; 
+  return olist;
 }
 function coin(percent = 50) { return Math.random() * 100 < percent; }
 function colorFrom(cAny, a, allowHsl = false) {
@@ -707,7 +709,7 @@ function fisherYates(arr) {
 }
 function get_keys(o) { return Object.keys(o); }
 function get_values(o) { return Object.values(o); }
-async function getCodeDictByKey(path){
+async function getCodeDictByKey(path) {
   let list = await codeParseFile(path); console.log(list)
   let bykey = list2dict(list, 'key');
   return bykey;
@@ -1189,8 +1191,8 @@ function initCodingUI() {
   let [dtitle, dta] = mRows100(dTable, 'auto 1fr', 2);
   mDiv(dtitle, { padding: 10, fg: 'white', fz: 24 }, null, 'OUTPUT:');
   mFlex(dta);
-  AU.ta = mTextArea100(dta, { w:'50%', fz: 20, padding: 10, family: 'opensans' });
-  AU.css = mTextArea100(dta, { w:'50%', fz: 20, padding: 10, family: 'opensans' });
+  AU.ta = mTextArea100(dta, { w: '50%', fz: 20, padding: 10, family: 'opensans' });
+  AU.css = mTextArea100(dta, { w: '50%', fz: 20, padding: 10, family: 'opensans' });
 }
 function isdef(x) { return x !== null && x !== undefined; }
 function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
@@ -1390,7 +1392,7 @@ function mStyle(elem, styles, unit = 'px') {
   if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
   if (isdef(styles.round)) { elem.style.setProperty('border-radius', '50%'); }
   for (const k in styles) {
-    if (['round','box'].includes(k)) continue;
+    if (['round', 'box'].includes(k)) continue;
     let val = styles[k];
     let key = k;
     if (isdef(STYLE_PARAMS[k])) key = STYLE_PARAMS[k];
