@@ -1,4 +1,24 @@
 
+function getDistanceBetweenPoints(p1,p2) {
+	if (isString(p1)) p1=Items[p1];
+	if (isString(p2)) p2=Items[p2];
+	return getDistanceBetweenCenters(p1.div, p2.div);
+}
+function getDistanceBetweenCenters(div1, div2) {
+	const rect1 = div1.getBoundingClientRect();
+	const rect2 = div2.getBoundingClientRect();
+
+	const centerX1 = rect1.left + rect1.width / 2;
+	const centerY1 = rect1.top + rect1.height / 2;
+
+	const centerX2 = rect2.left + rect2.width / 2;
+	const centerY2 = rect2.top + rect2.height / 2;
+
+	const dx = centerX2 - centerX1;
+	const dy = centerY2 - centerY1;
+
+	return Math.sqrt(dx * dx + dy * dy);
+}
 function getLinePixels1(x1, y1, x2, y2) {
 	[x1,y2,x2,y2]=[x1,y2,x2,y2].map(x=>Math.round(x));//ensure termination!
 	const pixels = [];

@@ -21,6 +21,9 @@ async function test29() {
 			p.end=ids[1];
 			p.id=getUID();
 			hotspots.push(p);
+
+			console.log(p)
+
 		}
 		//line.map(x=>hotspots.push({p1:ids[0],p2:ids[1],p:x));
 	}
@@ -28,10 +31,28 @@ async function test29() {
 	console.log('hotspots',hotspots);
 	DA.hotspots = drawPoints(dParent,hotspots);
 	console.log(DA.hotspots);
+
+	for(let i=0;i<hotspots.length-1;i++){
+		let p1=hotspots[i];
+		for(let j=i+1;j<hotspots.length;j++){
+			let p2=hotspots[j];
+			let dist=getDistanceBetweenPoints(p1,p2);
+			console.log(p1,p2,dist);
+			if (dist<sz){
+				p1.bg='blue';mStyle(p1.div,{bg:'blue'});
+				p2.bg='blue';mStyle(p2.div,{bg:'blue'});
+			}
+		}
+	}
+
 	for(const p of hotspots){
 		let d=p.div;
 		d.onclick=ev=>lacunaHighlightEndpoints(ev,p)
 	}
+
+
+
+
 
 }
 async function test28() {
