@@ -1,4 +1,20 @@
 
+function checkHotspots(ev){
+	let [x,y]=[ev.clientX, ev.clientY];
+	let els=document.elementFromPoint(x,y);
+	console.log('elements',els);
+}
+
+
+
+
+
+
+
+
+
+
+
 function placeMaxerlHere(ev) {
 	if (!DA.hotspotsActive) return;
 	DA.hotspotsActive = false;
