@@ -306,7 +306,9 @@ function drawPoints(dParent, points) {
 	let items = [];
 	//console.log('points',points);
 	for (const p of points) {
-		let d1 = p.div = mDom(dParent, { round:true, cursor:'default',left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html: p.id.substring(1), id: p.id });
+		let d1 = p.div = mDom(dParent, { round:true, left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html: p.id.substring(1), id: p.id });
+		//mClass(d1,'cursorDefault');
+		d1.style.cursor = 'default';
 		let rect = getRect(d1); 
 		//p.x = p1.x; p.y = p1.y;
 		p.cx = p.x+p.sz/2; p.cy = p.y+p.sz/2;
@@ -672,7 +674,7 @@ function lacunaColorName(val) {
 	return 'unknown';
 }
 function lacunaColors() {
-	let clist = { red: "#E63946", green: "#06D6A0", blue: "#118AB2", cyan: "#0F4C75", magenta: "#D81159", yellow: "#FFD166", orange: "#F4A261", purple: "#9D4EDD", pink: "#FF80AB", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080" };
+	let clist = { red: 'crimson', green: "#00ff00", blue: "#0000ff", cyan: "#00ffff", yellow: "#FFD166", pink: "#FF80AB", orange: "#F4A261", purple: "#9D4EDD", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080", magenta: "#D81159" };
 	return Object.values(clist);
 }
 function lacunaCircles(w = 800, h = 400, n = 49, neach = 7, sz = 10) {
@@ -725,52 +727,6 @@ function lacunaPresent() {
 
 	DA.info = { dParent, cv, w, h, sz, points };
 	lacunaCalculate();
-}
-function lacunaRemovePair(pair) {
-	let { dParent, cv, w, h, sz, points } = DA.info;
-
-	let ids = pair.split(',');
-	for (const id of ids) {
-		let o = Items[id];//remove the div
-		o.div.remove();
-		points = points.filter(x => x.id != id);//remove from points
-		delete Items[id];//remove from items
-	}
-
-	mRemove(cv);
-	mRemove(dParent);
-
-	lacunaPresent1(points, w, h, sz);
-}
-function lacunaSelectPair(pairs) {
-	showMessage('select the pair you want to keep');
-	let divs = Array.from(document.querySelectorAll('.pulseFastInfinite')); //console.log(divs)
-	for (const div of divs) {
-		mStyle(div, { cursor: 'pointer' })
-		div.onclick = ev => lacunaSelectPoint(div, divs);
-	}
-}
-function lacunaSelectPoint(div, divs) {
-	console.log(div.id);
-	let id = div.id;
-	addIf(DA.selectedPairIds, id);
-	let poss = DA.pairInfo.filter(x => x.includes(id));
-	assertion(poss.length >= 1, 'no pair selected')
-	if (poss.length == 1) {
-		lacunaRemovePair(poss[0]);
-	} else if (DA.selectedPairIds.length == 2) {
-		lacunaRemovePair(DA.selectedPairIds.join(','));
-	} else {
-		//console.log(divs)
-		divs.map(x=>mClassRemove(x, 'pulseFastInfinite'));
-		possids = [];
-		for(const pair of poss){
-			possids = possids.concat(pair.split(','));
-		}
-		possids.map(x=>mClass(x, 'pulseFastInfinite'));
-		mRemoveClass(div, 'pulseFastInfinite');
-		lacunaSelectPair(poss);
-	}
 }
 function mArea(padding, dParent, styles = {}, opts = {}) {
 	addKeys({ padding, wbox: true, position: 'relative' }, styles)

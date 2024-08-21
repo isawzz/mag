@@ -1,4 +1,62 @@
 
+function lacunaSelectPair(ev, pairs, p) {
+	//console.log('___click',p);
+	//console.log(p.pairs);
+	//p is a start or end point that has been clicked
+	//pairs is the list of pairs that are currently highlighted
+
+	//if p is included in more than 1 pair of pairs, select the corresponding other endpoints
+	let poss = pairs.filter(x => x.includes(p.id));
+	if (poss.length > 1) {
+		let ids = [];
+		for (const pair of poss) {
+			let [pstart, pend] = pair.split(',').map(x => mBy(x));
+			mClassRemove(pstart, 'pulseFastInfinite');
+			mClassRemove(pend, 'pulseFastInfinite');
+			ids = ids.concat(pair.split(','));
+		}
+		ids = ids.filter(x => x != p.id);
+		ids.map(x => mClass(mBy(x), 'pulseFastInfinite'));
+		return;
+	}
+
+	//if p is included in only 1 pair of pairs, select it and remove both points and the line between
+
+	
+	for (const pair of p.pairs) {
+		//highlight the end points corresponding to this pair
+		let [pstart, pend] = pair.split(',').map(x => mBy(x));
+		mClass(pstart, 'pulseFastInfinite');
+		mClass(pend, 'pulseFastInfinite');
+	}
+}
+
+
+function mist(){
+	for(const k in linesByPair){
+		let line=linesByPair[k];
+		let allOtherPairs=Object.keys(linesByPair).filter(x=>x!==k);
+		for(let i=0;i<line.length-1;i++){
+			//compare this point to all points of all other lines
+			let p1=line[i];
+			for(const kOther of allOtherPairs){
+				for(const p2 of kOther){
+					let dist=getDistanceBetweenPoints(p1,p2);
+					console.log(p1,p2,dist);
+					if (dist<sz){
+						p1.bg='blue';mStyle(p1.div,{bg:'blue'});
+						p2.bg='blue';mStyle(p2.div,{bg:'blue'});
+						addIf(p2.pairs,k);
+						addIf()
+						//for(const 1addIf(p1.pairs,p2.id);
+						//p1.pairs.push()
+					}
+				}
+			}
+		}
+	}
+
+}
 function lacunaPresent1(points, w, h, sz) {
 
 	let d = clearDiv();

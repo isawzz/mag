@@ -5011,8 +5011,8 @@ function lookup(dict, keys) {
 }
 function lookupAddIfToList(dict, keys, val) {
   let lst = lookup(dict, keys);
-  if (isList(lst) && lst.includes(val)) return;
-  lookupAddToList(dict, keys, val);
+  if (isList(lst) && lst.includes(val)) return lst;
+  return lookupAddToList(dict, keys, val);
 }
 function lookupAddToList(dict, keys, val) {
   let d = dict;

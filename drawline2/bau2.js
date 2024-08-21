@@ -1,4 +1,46 @@
 
+function generateHotspots(dParent, points, result, sz) {
+	let hotspots=[];
+	let linesByPair={};
+	for(const pair of result.isolatedPairs) { 
+		let ids=pair.map(x=>x.id); //split(',');
+		let key=ids.join(',');
+		let line = getEquidistantPoints(Items[ids[0]], Items[ids[1]], sz/2);
+		for(const p of line){
+			p.bg='transparent';
+			p.sz=sz;
+			p.start=ids[0];
+			p.end=ids[1];
+			p.id=getUID();
+			p.pairs=[key];
+			hotspots.push(p);
+			//console.log(p)
+
+		}
+		linesByPair[key]=line;
+		//line.map(x=>hotspots.push({p1:ids[0],p2:ids[1],p:x));
+	}
+	// console.log('hotspots',hotspots);
+	DA.hotspots = drawPoints(dParent,hotspots);
+	hotspots.map(x=>mStyle(x.div,{opacity:0}))
+	console.log(DA.hotspots);
+
+	for(const p1 of hotspots){
+		for(const p2 of hotspots){
+			let dist=getDistanceBetweenPoints(p1,p2);
+			if (dist<sz/3){
+				if (p1.start==p2.start && p1.end==p2.end) continue; //console.log(p1,p2,dist,=)
+				if (p1.start==p2.end && p1.end==p2.start) continue; //console.log(p1,p2,dist,=)
+				let newlist = new Set(p1.pairs.concat(p2.pairs));
+				p1.pairs=Array.from(newlist);
+				p2.pairs=Array.from(newlist);
+				// p1.bg='blue';mStyle(p1.div,{bg:'blue'});
+				// p2.bg='blue';mStyle(p2.div,{bg:'blue'});
+			}
+		}
+	}
+	return [hotspots,linesByPair];
+}
 function getDistanceBetweenPoints(p1,p2) {
 	if (isString(p1)) p1=Items[p1];
 	if (isString(p2)) p2=Items[p2];
@@ -63,6 +105,30 @@ function getEquidistantPoints(p1, p2, d=10, includeEnds=false) {
 	}
 
 	return points;
+}
+function lacunaHighlightEndpoints(ev, p) {
+	//console.log('___click',p.x,p.y);
+	//console.log(p.pairs);
+	if (!DA.hotspotsActive) return;
+	for (const pair of p.pairs) {
+		//highlight the end points corresponding to this pair
+		let [pStart, pEnd] = pair.split(',').map(x => mBy(x));
+		mClass(pStart, 'pulseFastInfinite');
+		mClass(pEnd, 'pulseFastInfinite');
+		//pStart.div.onclick = ev => lacunaSelectPair(ev, p.pairs, pStart)
+		//pEnd.div.onclick = ev => lacunaSelectPair(ev, p.pairs, pEnd)
+	}
+}
+function lacunaUnHighlightEndpoints(ev, p) {
+	//console.log('___click',p.x,p.y);
+	//console.log(p.pairs);
+	if (!DA.hotspotsActive) return;
+	for (const pair of p.pairs) {
+		//highlight the end points corresponding to this pair
+		let [pstart, pend] = pair.split(',').map(x => mBy(x));
+		mClassRemove(pstart, 'pulseFastInfinite');
+		mClassRemove(pend, 'pulseFastInfinite');
+	}
 }
 function laDrawPoints(d,points,w,h,sz){
 	mClear(d); mStyle(d,{margin:rNumber(10,50)});
