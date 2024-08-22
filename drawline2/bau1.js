@@ -14,6 +14,12 @@ function checkHotspots(ev){
 	let [x,y]=[ev.clientX, ev.clientY];
 	let els=allElementsFromPoint(x,y);
 	console.log('elements',els);
+
+	for(const elem of els){
+		let id=elem.id;
+		if (isdef())
+	}
+
 }
 function showTimeSince(t,msg='now'){
 	let tNew=getNow();

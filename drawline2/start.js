@@ -14,6 +14,8 @@ async function test32() {
 	let [hotspots,linesByPair] = generateHotspots(dParent, result.isolatedPairs, sz, 'green'); 
 	DA.pairs=linesByPair;
 	DA.hot=list2dict(hotspots,'id'); 
+
+	dParent.onclick = checkHotspots;
 }
 
 async function test31_perftest() {
