@@ -1,5 +1,7 @@
 
 _________________________ hotspots 10x10 ___________________________
+js function that sorts a list of pairs of points {x,y} by least x in a pair
+
 js function that returns the distance between the center points of 2 divs
 
 I have a dictionary di that assigns a list of strings to every pixel in a div.

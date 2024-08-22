@@ -1,13 +1,24 @@
 
+
+function sortByLeastX(olist) {
+	return olist.sort((a, b) => {
+			// Find the minimum x value in each pair
+			const minX_A = Math.min(a.xStart, a[1].x);
+			const minX_B = Math.min(b[0].x, b[1].x);
+
+			// Sort by the minimum x value
+			return minX_A - minX_B;
+	});
+}
 function checkHotspots(ev){
 	let [x,y]=[ev.clientX, ev.clientY];
 	let els=allElementsFromPoint(x,y);
 	console.log('elements',els);
 }
-function showTimeSince(t){
+function showTimeSince(t,msg='now'){
 	let tNew=getNow();
 	let ms=tNew-t;
-	console.log(ms);
+	console.log(msg+':',ms);
 	return tNew;
 }
 

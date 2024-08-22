@@ -434,13 +434,17 @@ function findIsolatedPairs(nodes, threshold = 3) {
 				}
 			}
 
+			let pair=nodes[i].x<=nodes[j].x?[nodes[i],nodes[j]]:[nodes[j],nodes[i]]; //console.log(pair[0].x,pair[1].x);
+			assertion(pair[0].x<=pair[1].x,"NOT SORTED!!!!!!!!!!!!!!!!");
 			if (isIsolated) {
-				isolatedPairs.push([nodes[i], nodes[j]]);
+				isolatedPairs.push(pair); //[nodes[i], nodes[j]]);
 			} else {
-				obstaclePairs.push([nodes[i], nodes[j]]);
+				obstaclePairs.push(pair); //[nodes[i], nodes[j]]);
 			}
 		}
 	}
+
+	
 
 	return { isolatedPairs, obstaclePairs }; //return isolatedPairs;
 }
