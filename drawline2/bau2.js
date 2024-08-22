@@ -1,5 +1,6 @@
 
-function generateHotspots(dParent, points, result, sz) {
+function generateHotspots(dParent, points, result, sz=20, color='red') {
+	let t=getNow();
 	let hotspots=[];
 	let linesByPair={};
 	for(const pair of result.isolatedPairs) { 
@@ -7,7 +8,7 @@ function generateHotspots(dParent, points, result, sz) {
 		let key=ids.join(',');
 		let line = getEquidistantPoints(Items[ids[0]], Items[ids[1]], sz/2);
 		for(const p of line){
-			p.bg='transparent';
+			p.bg=color;
 			p.sz=sz;
 			p.start=ids[0];
 			p.end=ids[1];
@@ -23,7 +24,7 @@ function generateHotspots(dParent, points, result, sz) {
 	// console.log('hotspots',hotspots);
 	DA.hotspots = drawPoints(dParent,hotspots);
 	hotspots.map(x=>mStyle(x.div,{opacity:0}))
-	console.log(DA.hotspots);
+	//console.log(DA.hotspots);
 
 	for(const p1 of hotspots){
 		for(const p2 of hotspots){

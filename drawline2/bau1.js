@@ -1,10 +1,15 @@
 
 function checkHotspots(ev){
 	let [x,y]=[ev.clientX, ev.clientY];
-	let els=document.elementFromPoint(x,y);
+	let els=allElementsFromPoint(x,y);
 	console.log('elements',els);
 }
-
+function showTimeSince(t){
+	let tNew=getNow();
+	let ms=tNew-t;
+	console.log(ms);
+	return tNew;
+}
 
 
 

@@ -130,6 +130,8 @@ function mPopup(dParent, styles = {}, opts = {}) {
 	mButtonX(popup);
 	return popup;
 }
+function msElapsedSince(msStart) { return Date.now() - msStart; }
+
 function mTable(dParent, headers, showheaders, styles = { mabottom: 0 }, className = 'table') {
 	let d = mDiv(dParent); mClass(dParent,'table_container')
 	let t = mCreate('table');
