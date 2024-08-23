@@ -190,62 +190,55 @@ function getEquidistantPoints(p1, p2, d = 10, includeEnds = false) {
 
 	return points;
 }
-function lacunaHighlightEndpoints(ev, p) {
-	//console.log('___click',p.x,p.y);
-	//console.log(p.pairs);
-	if (!DA.hotspotsActive) return;
-	for (const pair of p.pairs) {
-		//highlight the end points corresponding to this pair
-		let [pStart, pEnd] = pair.split(',').map(x => mBy(x));
-		mClass(pStart, 'pulseFastInfinite');
-		mClass(pEnd, 'pulseFastInfinite');
-		//pStart.div.onclick = ev => lacunaSelectPair(ev, p.pairs, pStart)
-		//pEnd.div.onclick = ev => lacunaSelectPair(ev, p.pairs, pEnd)
-	}
-}
-function lacunaUnHighlightEndpoints(ev, p) {
-	//console.log('___click',p.x,p.y);
-	//console.log(p.pairs);
-	if (!DA.hotspotsActive) return;
-	for (const pair of p.pairs) {
-		//highlight the end points corresponding to this pair
-		let [pstart, pend] = pair.split(',').map(x => mBy(x));
-		mClassRemove(pstart, 'pulseFastInfinite');
-		mClassRemove(pend, 'pulseFastInfinite');
-	}
-}
-function laDrawPoints(d, points, w, h, sz) {
-	mClear(d); mStyle(d, { margin: rNumber(10, 50) });
-	let [dParent, cv] = mArea(0, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
-	Items = drawPoints(dParent, points); //console.log(Items)
-	let info = DA.info = { dParent, cv, w, h, sz, points };
-	return points;
-}
-function lacunaPresent1(points, w, h, sz) {
-	let d = clearDiv();
-	let [dParent, cv] = mArea(10, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
-	Items = drawPoints(dParent, points); //console.log(Items)
-	let info = DA.info = { dParent, cv, w, h, sz, points };
+function highlightHotspots(ev){
+	let [x,y]=[ev.clientX, ev.clientY];
+	let els=allElementsFromPoint(x,y);
 
-	let result = findIsolatedPairs(points, sz); //console.log(result);
-	let di = {};
-	let allPixels = [];
-	for (const pair of result.isolatedPairs) {
-		let [p1, p2] = [pair[0], pair[1]];
-		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
-		[x1, y1, x2, y2] = [x1, y1, x2, y2].map(x => x + sz / 2);
-		let pixels = getLinePixels(x1, y1, x2, y2); //console.log('pixels', pixels);
-		for (const pix of pixels) {
-			allPixels.push(pix);
-			let key = getPixelKey(pix);
-			let l = lookup(di, [key]);
-			lookupAddIfToList(di, [key], `${p1.id},${p2.id}`)
-		}
-		drawLineOnCanvas(cv, x1, y1, x2, y2, 2);
+	let endpoints = [],possiblePairs=[];
+	for(const elem of els){
+		let p=DA.hotspotDict[elem.id];
+		if (isdef(p)){
+			//console.log('hotspot',p);
+			addIf(endpoints,p.start);
+			addIf(endpoints,p.end);
+			let pair=[p.start,p.end];pair.sort();
+			addIf(possiblePairs,pair.join(','));
+		}	
 	}
-	let di1 = DA.info.di = clusterize(di, 10);	//console.log(Object.keys(di1).length); //return;
-	dParent.onmousemove = alertOnPointHoverPairHandler;
-	dParent.onclick = alertOnPointClickPairHandler;
+
+	stopPulsing(endpoints);
+	startPulsing(endpoints);
+	DA.endpoints = endpoints;
+	DA.possiblePairs = possiblePairs; 
+	//console.log('endpoints', DA.endpoints);
+	//console.log('possiblePairs', DA.possiblePairs);
+	//for(const p of DA.possiblePairs) console.log('possiblePair', p.join(','));
+}
+function lacunaMakeSelectable(){
+	for(const id of DA.endpoints){
+		//let p=Items[id];
+		let div=mBy(id); //console.log(id,div)
+		mClass(div,'selectable')
+		//mStyle(div,{cursor:'pointer',border:'5px solid yellow'});
+		div.onclick = ev=>selectPoint(ev);
+	}
+}
+function lacunaUnselectable(id){
+	let div=mBy(id); console.log('unselecting',id)
+	//mStyle(div,{cursor:'default',border:''});
+	mClassRemove(div,'selectable');
+	div.onclick = null;
+}
+function startPulsing(idlist){
+	idlist.map(x=>Items[x].div.classList.add('pulseFastInfinite'));
+}
+function stopPulsing(idExcept=[]){
+	let drem=document.querySelectorAll('.pulseFastInfinite');
+	for(const d of drem){
+		if (idExcept.includes(d.id)) continue;
+		d.classList.remove('pulseFastInfinite');
+	}
+	
 }
 
 

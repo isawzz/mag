@@ -1,30 +1,86 @@
 
 
-function sortByLeastX(olist) {
-	return olist.sort((a, b) => {
-			// Find the minimum x value in each pair
-			const minX_A = Math.min(a.xStart, a[1].x);
-			const minX_B = Math.min(b[0].x, b[1].x);
-
-			// Sort by the minimum x value
-			return minX_A - minX_B;
-	});
-}
-function checkHotspots(ev){
-	let [x,y]=[ev.clientX, ev.clientY];
-	let els=allElementsFromPoint(x,y);
-	console.log('elements',els);
-
-	for(const elem of els){
-		let id=elem.id;
-		if (isdef())
+function placeYourMeeple(ev) {
+	stopPulsing();
+	//console.log(DA.endpoints);
+	d = mBy('dCanvas');
+	d.onmousemove = null;
+	d.onclick = null;
+	//remove all hotpoints!!!
+	//console.log('hotpoints', DA.hotspotDict); //DA.hotpoints
+	for (const p of DA.hotspotList) {
+		mStyle(p.div, { z: 0 })
+	}
+	for (const p of DA.points) {
+		//console.log('div',p.div);
+		p.div.style.zIndex = 1000;
+		//mStyle(p.div,{z:10});
 	}
 
+	x = ev.clientX - d.offsetLeft - DA.sz / 2;
+	y = ev.clientY - d.offsetTop - DA.sz / 2;
+
+	let pMeeple = { x, y, sz: 25, bg: 'red', id: getUID() };
+	drawPoints(d, [pMeeple]);
+	
+	lacunaMakeSelectable();
 }
-function showTimeSince(t,msg='now'){
-	let tNew=getNow();
-	let ms=tNew-t;
-	console.log(msg+':',ms);
+function selectPoint(ev) {
+	//console.log('hallo!!!!!!!!!!!!!!!!')
+	let id = evToId(ev);
+	let p = Items[id];
+	console.log('selecting point', p.id);
+	lookupAddIfToList(DA, ['selectedPoints'], id);
+
+	assertion(DA.selectedPoints.length >= 1, "WTF");
+	if (DA.selectedPoints.length == 1) {
+		//make unselectable all endpoints that do not have this endpoint
+		let eps = [];
+		console.log('possiblePairs', DA.possiblePairs);
+		for (const pair of DA.possiblePairs.map(x => x.split(',').map(x => Items[x]))) {
+			let p1 = pair[0];
+			let p2 = pair[1];
+			if (p1.id != id && p2.id != id) continue;
+			if (p1.id == id) addIf(eps, p2.id); else addIf(eps, p1.id);
+		}
+
+		let unselect = DA.endpoints.filter(x => !eps.includes(x));
+		unselect.map(x => lacunaUnselectable(x));
+		//eps contains the ids of the endpoints that are not selected but connected to selected point
+		DA.endpoints = eps; console.log('endpoints remaining', DA.endpoints);
+		if (DA.endpoints.length < 2) {
+			DA.selectedPoints.push(DA.endpoints[0]);
+			lacunaMoveCompleted(DA.selectedPoints);
+		}
+	} else {
+		assertion(DA.selectedPoints.length == 2, "WTF2!!!!!!!!!!!!!");
+		lacunaMoveCompleted(DA.selectedPoints);
+	}
+}
+function lacunaMoveCompleted(idlist) {
+	DA.endpoints.map(x => lacunaUnselectable(x));
+	showMessage("Move completed, removing",idlist);
+	let p1 = Items[idlist[0]];
+	let p2 = Items[idlist[1]];
+	delete Items[p1.id];
+	delete Items[p2.id];
+	mRemove(p1.div);
+	mRemove(p2.div);
+	DA.points = DA.points.filter(x => x.id != p1.id && x.id != p2.id);
+
+	for (const p of DA.hotspotList) {
+		mRemove(p.div);
+	}
+
+	let ch=arrChildren(DA.dParent);console.log('ch',ch.length,'points',DA.points.length);
+	DA.dParent.onclick=lacunaStartMove;
+
+}
+
+function showTimeSince(t, msg = 'now') {
+	let tNew = getNow();
+	let ms = tNew - t;
+	console.log(msg + ':', ms);
 	return tNew;
 }
 
@@ -37,102 +93,9 @@ function showTimeSince(t,msg='now'){
 
 
 
-function placeMaxerlHere(ev) {
-	if (!DA.hotspotsActive) return;
-	DA.hotspotsActive = false;
-
-	let p = null, d = null, x = 0, y = 0;
-	evNoBubble(ev);
-	if (isdef(DA.hot[ev.target.id])) {
-		p = DA.hot[ev.target.id];
-		d = p.div.parentNode;
-		x = ev.clientX - d.offsetLeft - DA.sz / 2;;
-		y = ev.clientY - d.offsetTop - DA.sz / 2;;
-	} else {
-		d = ev.target;
-		x = ev.clientX - d.offsetLeft - DA.sz / 2;
-		y = ev.clientY - d.offsetTop - DA.sz / 2;
-	}
-
-	console.log('placeMaxerlHere:', x, y)
-	if (isdef(Items[d.id])) {
-		p = Items[d.id];
-		d = d.parentNode;
-		x -= d.OffsetLeft;
-		y -= d.OffsetTop;
-	}
-	console.log('set maxerl:', x, y, d)
-	drawPoints(d, [{ x, y, sz: 20, bg: 'red', id: getUID() }]);
-
-	let eps = Array.from(document.getElementsByClassName('pulseFastInfinite')); console.log(eps);
-
-	if (isEmpty(eps)) return;
-	//showMessage('click on an endpoint');
-	for(const ep of eps) {
-		ep.onclick = ev => lacunaSelectPoint(ep, eps);
-		//mClassRemove(ep, 'pulseFastInfinite');
-		//mStyle(ep,{border:'5px solid red'});
-		//mClass(ep,'cursorGrab');
-		ep.style.cursor='grab';
-		//mStyle(ep, {cursor:'hand !important'});
-		console.log('ep',ep)
-	}
-	//hier muss alle pulseFastInfinite entfernt werden.
-	//eps.map(x=>mClassRemove(x, 'pulseFastInfinite'));
-
-	//jetzt muessen die mouse events deactivated werden!
 
 
-}
-function lacunaSelectPoint(div, divs) {
-	console.log('click!!!',div.id);
-	let id = div.id;
-	let list = lookupAddIfToList(DA,['selectedPairIds'],id); console.log(list);
-	if (list.length == 2) {
-		lacunaRemovePair(list.join(','));
-	} else {
-		console.log('select another point')
-	}
-}
-function lacunaRemovePair(pair) {
-	let { dParent, cv, w, h, sz, points } = DA.info;
-
-	let ids = pair.split(',');
-	for (const id of ids) {
-		let o = Items[id];//remove the div
-		o.div.remove();
-		points = points.filter(x => x.id != id);//remove from points
-		delete Items[id];//remove from items
-	}
-
-	mRemove(cv);
-	mRemove(dParent);
-
-	lacunaPresent1(points, w, h, sz);
-}
-
-function mist(){
-	addIf(DA.selectedPairIds, id);
-	let poss = DA.pairInfo.filter(x => x.includes(id));
-	assertion(poss.length >= 1, 'no pair selected')
-	if (poss.length == 1) {
-		lacunaRemovePair(poss[0]);
-	} else if (DA.selectedPairIds.length == 2) {
-		lacunaRemovePair(DA.selectedPairIds.join(','));
-	} else {
-		//console.log(divs)
-		divs.map(x=>mClassRemove(x, 'pulseFastInfinite'));
-		possids = [];
-		for(const pair of poss){
-			possids = possids.concat(pair.split(','));
-		}
-		possids.map(x=>mClass(x, 'pulseFastInfinite'));
-		mRemoveClass(div, 'pulseFastInfinite');
-		lacunaSelectPair(poss);
-	}
-}
-
-function lacunaSelectPair(ev,pdiv,divs) {
+function lacunaSelectPair(ev, pdiv, divs) {
 	//showMessage('select the pair you want to keep');
 	//let divs = Array.from(document.querySelectorAll('.pulseFastInfinite')); //console.log(divs)
 	for (const div of divs) {

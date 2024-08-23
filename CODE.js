@@ -1,4 +1,34 @@
 
+function mist(){
+	addIf(DA.selectedPairIds, id);
+	let poss = DA.pairInfo.filter(x => x.includes(id));
+	assertion(poss.length >= 1, 'no pair selected')
+	if (poss.length == 1) {
+		lacunaRemovePair(poss[0]);
+	} else if (DA.selectedPairIds.length == 2) {
+		lacunaRemovePair(DA.selectedPairIds.join(','));
+	} else {
+		//console.log(divs)
+		divs.map(x=>mClassRemove(x, 'pulseFastInfinite'));
+		possids = [];
+		for(const pair of poss){
+			possids = possids.concat(pair.split(','));
+		}
+		possids.map(x=>mClass(x, 'pulseFastInfinite'));
+		mRemoveClass(div, 'pulseFastInfinite');
+		lacunaSelectPair(poss);
+	}
+}
+function sortByLeastX(olist) {
+	return olist.sort((a, b) => {
+			// Find the minimum x value in each pair
+			const minX_A = Math.min(a.xStart, a[1].x);
+			const minX_B = Math.min(b[0].x, b[1].x);
+
+			// Sort by the minimum x value
+			return minX_A - minX_B;
+	});
+}
 function lacunaSelectPair(ev, pairs, p) {
 	//console.log('___click',p);
 	//console.log(p.pairs);
@@ -30,8 +60,6 @@ function lacunaSelectPair(ev, pairs, p) {
 		mClass(pend, 'pulseFastInfinite');
 	}
 }
-
-
 function mist(){
 	for(const k in linesByPair){
 		let line=linesByPair[k];

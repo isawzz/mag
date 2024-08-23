@@ -5,32 +5,42 @@ async function start() { await loadAssets(); await test32(); }
 async function test32() {
 	let [w, h, sz, margin, n, neach] = [700, 400, 20, 30, 49, 7];
 	DA.sz = sz;
-	let points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
+	let points = DA.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
 	let d = clearDiv();
-	let dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' });
+	let dParent = DA.dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' }, { id: 'dCanvas' });
 	Items = drawPoints(dParent, points); //console.log(Items)
-	let info = DA.info = { dParent, w, h, sz, points, n, neach };
-	let result = findIsolatedPairs(points, sz/1.5); //console.log(result);
-	let [hotspots,linesByPair] = generateHotspots(dParent, result.isolatedPairs, sz, 'green'); 
-	DA.pairs=linesByPair;
-	DA.hot=list2dict(hotspots,'id'); 
 
-	dParent.onclick = checkHotspots;
+	lacunaStartMove();
+}
+function lacunaStartMove(){
+	let t = getNow();
+	DA={dParent:DA.dParent,points:DA.points,sz:DA.sz};
+
+	let [points,dParent,sz] = [DA.points,DA.dParent,DA.sz]; 
+	let result = findIsolatedPairs(points, sz / 1.5); //console.log(result);
+	DA.isolatedPairs = result.isolatedPairs;
+	let [hotspots, linesByPair] = generateHotspots(dParent, result.isolatedPairs, sz, 'transparent');
+	DA.pairs = linesByPair; //console.log(DA.pairs)
+	DA.hotspotList = hotspots;
+	DA.hotspotDict = list2dict(hotspots, 'id');
+
+	dParent.onmousemove = highlightHotspots;
+	dParent.onclick = placeYourMeeple;
+	t = showTimeSince(t, 'move')
 }
 
 async function test31_perftest() {
-	let ms0=0;let ms1=0;
-	let t=getNow();let ms;
-	for(const i of range(10)){
+	let ms0 = 0; let ms1 = 0;
+	let t = getNow(); let ms;
+	for (const i of range(10)) {
 		test31_nooutput(generateHotspots);
 	}
-	t=showTimeSince(t,'bessere')
-	for(const i of range(10)){
+	t = showTimeSince(t, 'bessere')
+	for (const i of range(10)) {
 		test31_nooutput(generateHotspotsNOY);
 	}
-	showTimeSince(t,'bessere')
+	showTimeSince(t, 'bessere')
 }
-
 async function test31_nooutput(hotspotFunc) {
 	let [w, h, sz, margin, n, neach] = [700, 400, 20, 30, 49, 7];
 	DA.sz = sz;
@@ -39,33 +49,32 @@ async function test31_nooutput(hotspotFunc) {
 	let dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' });
 	Items = drawPoints(dParent, points); //console.log(Items)
 	let info = DA.info = { dParent, w, h, sz, points, n, neach };
-	let result = findIsolatedPairs(points, sz/1.5); //console.log(result);
-	let [hotspots,linesByPair] = hotspotFunc(dParent, result.isolatedPairs, sz, 'green'); 
-	DA.pairs=linesByPair;
-	DA.hot=list2dict(hotspots,'id'); 
+	let result = findIsolatedPairs(points, sz / 1.5); //console.log(result);
+	let [hotspots, linesByPair] = hotspotFunc(dParent, result.isolatedPairs, sz, 'green');
+	DA.pairs = linesByPair;
+	DA.hotspotDict = list2dict(hotspots, 'id');
 }
 async function test31(hotspotFunc) {
-	let t=getNow();let ms;
+	let t = getNow(); let ms;
 	let [w, h, sz, margin, n, neach] = [700, 400, 20, 30, 49, 7];
 	DA.sz = sz;
 	let points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); console.log(jsCopy(points[0]));
 	let d = clearDiv();
-	t = showTimeSince(t,'generate points')
+	t = showTimeSince(t, 'generate points')
 	let dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' });
 	Items = drawPoints(dParent, points); //console.log(Items)
-	t = showTimeSince(t,'draw points')
+	t = showTimeSince(t, 'draw points')
 	let info = DA.info = { dParent, w, h, sz, points, n, neach };
-	let result = findIsolatedPairs(points, sz/1.5); console.log(result);
-	t = showTimeSince(t,'findIsolatedPairs');
+	let result = findIsolatedPairs(points, sz / 1.5); console.log(result);
+	t = showTimeSince(t, 'findIsolatedPairs');
 	console.log(result.isolatedPairs)
-	let [hotspots,linesByPair] = hotspotFunc(dParent, result.isolatedPairs, sz, 'green'); 
-	t = showTimeSince(t,'generateHotSpots')
-	DA.pairs=linesByPair;
-	DA.hot=list2dict(hotspots,'id'); console.log(DA.hot);
-	t=showTimeSince(t); 
-	dParent.onclick = checkHotspots;
+	let [hotspots, linesByPair] = hotspotFunc(dParent, result.isolatedPairs, sz, 'green');
+	t = showTimeSince(t, 'generateHotSpots')
+	DA.pairs = linesByPair;
+	DA.hotspotDict = list2dict(hotspots, 'id'); console.log(DA.hotspotDict);
+	t = showTimeSince(t);
+	dParent.onclick = highlightHotspots;
 }
-
 async function test30() {
 	let [w, h, sz, margin, n, neach] = [700, 400, 20, 30, 49, 7];
 	DA.sz = sz;
@@ -76,7 +85,7 @@ async function test30() {
 	let info = DA.info = { dParent, w, h, sz, points, n, neach };
 	let result = findIsolatedPairs(points, sz / 1.5); console.log(result);
 	let [hotspots, linesByPair] = generateHotspots(dParent, points, result, sz); DA.pairs = linesByPair;
-	DA.hot = list2dict(hotspots, 'id');
+	DA.hotspotDict = list2dict(hotspots, 'id');
 
 	for (const p of hotspots) {
 		let d = p.div;
@@ -234,7 +243,6 @@ async function test24() {
 	//lacunaPresent1(points,w,h,sz);
 
 }
-
 async function test23() {
 	let [w, h, sz] = [900, 400, 20];
 	let points = lacunaGeneratePoints(w, h, 6, 3, sz, .6);
@@ -261,7 +269,6 @@ async function test21_pairs() {
 	DA.info = { dParent, cv, w, h, sz, points };
 	lacunaCalculate();
 }
-
 async function test20() {
 	let d = clearDiv();
 	let [w, h, dx, dy, sz] = [900, 400, 50, 120, 20];
@@ -473,7 +480,6 @@ async function test15_simple() {
 	// Draw the interactive line
 	drawInteractiveLine(dParent, p1, p2);
 }
-
 async function test14_simple() {
 	let d0 = document.body; d0.innerHTML = ''; mStyle(d0, { padding: 0, margin: 0, position: 'relative' });
 
@@ -503,7 +509,6 @@ async function test13_linediv() {
 		drawInteractiveLine(d, p1, p2);
 	}
 }
-
 async function test12_lines() {
 	let { d, cv, points, pixelsByPair, isolatedPairs, obstaclePairs } = await test11_lines();
 	console.log(pixelsByPair);
