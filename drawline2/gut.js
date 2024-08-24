@@ -302,11 +302,11 @@ function _drawPoints(dParent, points) {
 	return items;
 
 }
-function drawPoints(dParent, points) {
+function drawPoints(dParent, points, addLabel=true) {
 	let items = [];
 	//console.log('points',points);
 	for (const p of points) {
-		let d1 = p.div = mDom(dParent, { round:true, left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html: p.id.substring(1), id: p.id });
+		let d1 = p.div = mDom(dParent, { round:true, left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html: addLabel?p.id.substring(1):'', id: p.id });
 		//mClass(d1,'cursorDefault');
 		d1.style.cursor = 'default';
 		let rect = getRect(d1); 
@@ -338,6 +338,70 @@ function divideRectangleIntoGrid(w, h, n) {
 	}
 
 	return { rows: bestRows, cols: bestCols };
+}
+function filterIsolatedPairs(pairs, blockers, threshold = 10) {
+
+	console.log(pairs, blockers);
+	let newPairs = [];
+	for (const pair of pairs) {
+		const [ax, ay] = [pair[0].x, pair[0].y];
+		const [bx, by] = [pair[1].x, pair[1].y];
+		let isIsolated = true;
+		//console.log('blockers',blockers)
+		for (const blocker of blockers) {
+			const [px, py] = [blocker.x, blocker.y];
+
+			// let bg=rColor();
+			// let ptest=[{x:px,y:py,bg,sz:5},{x:ax,y:ay,bg,sz:5},{x:bx,y:by,bg,sz:5}];
+			// drawPoints(DA.dParent,ptest,false)
+
+			const distance = pointToLineDistance(px, py, ax, ay, bx, by); //console.log('distance', distance);
+
+			if (distance < threshold) {
+				isIsolated = false;
+				break;
+			}
+		}
+
+		if (isIsolated) {
+			newPairs.push(pair);
+		}
+	}
+	return newPairs;
+	const isolatedPairs = [], obstaclePairs = [];
+
+	for (let i = 0; i < nodes.length; i++) {
+		for (let j = i + 1; j < nodes.length; j++) {
+			if (nodes[i].bg != nodes[j].bg) continue;
+			const [ax, ay] = [nodes[i].x, nodes[i].y];
+			const [bx, by] = [nodes[j].x, nodes[j].y];
+			let isIsolated = true;
+
+			for (let k = 0; k < nodes.length; k++) {
+				if (k === i || k === j) continue;
+
+				const [px, py] = [nodes[k].x, nodes[k].y];
+				const distance = pointLineDistance(px, py, ax, ay, bx, by);
+
+				if (distance < threshold) {
+					isIsolated = false;
+					break;
+				}
+			}
+
+			let pair = nodes[i].x <= nodes[j].x ? [nodes[i], nodes[j]] : [nodes[j], nodes[i]]; //console.log(pair[0].x,pair[1].x);
+			assertion(pair[0].x <= pair[1].x, "NOT SORTED!!!!!!!!!!!!!!!!");
+			if (isIsolated) {
+				isolatedPairs.push(pair); //[nodes[i], nodes[j]]);
+			} else {
+				obstaclePairs.push(pair); //[nodes[i], nodes[j]]);
+			}
+		}
+	}
+
+
+
+	return { isolatedPairs, obstaclePairs }; //return isolatedPairs;
 }
 function findClosePairs(points, x, y, threshold = 3) {
 	function pointLineDistance(px, py, ax, ay, bx, by) {
@@ -472,6 +536,132 @@ function findPairsByProp(objects, prop) {
 
 	return pairs;
 }
+function generateHotspotsNOY(dParent, pointPairs, sz = 20, color = 'red') {
+	//let t = getNow();
+	let hotspots = [];
+	let linesByPair = {};
+	for (const pair of pointPairs) {
+		let ids = pair.map(x => x.id); //split(',');
+		let key = ids.join(',');
+		let [pStart, pEnd] = [Items[ids[0]], Items[ids[1]]]; //console.log(pStart.x,pEnd.x)
+		let line = getEquidistantPoints(pStart, pEnd, sz / 2);
+		for (const p of line) {
+			p.bg = color;
+			p.sz = sz;
+			p.start = ids[0];
+			p.end = ids[1];
+			p.startX = pStart.x;
+			p.endX = pEnd.x;
+			p.id = getUID();
+			p.pairs = [key];
+			hotspots.push(p);
+			//console.log(p)
+
+		}
+		linesByPair[key] = line;
+		//line.map(x=>hotspots.push({p1:ids[0],p2:ids[1],p:x));
+	}
+	//t = showTimeSince(t, 'lines')
+
+	// console.log('hotspots',hotspots);
+	DA.hotspots = drawPoints(dParent, hotspots);
+	hotspots.map(x => mStyle(x.div, { opacity: 0 }))
+	//console.log(DA.hotspots);
+	//t = showTimeSince(t, 'line drawing')
+
+	let [c1, c2, c3, c4, c5, c6] = [0, 0, 0, 0, 0, 0];
+	for (const p1 of hotspots) {
+		assertion(p1.startX <= p1.endX, "NOT SORTED!!!!!")
+		for (const p2 of hotspots) {
+			if (p1 == p2) { c3++; continue; }
+			if (p1.startX > p2.endX) { c1++; continue; }
+			if (p2.startX > p1.endX) { c2++; continue; }
+			if (p1.start == p2.start && p1.end == p2.end) { c4++; continue; }
+			if (p1.start == p2.end && p1.end == p2.start) { c5++; continue; }
+			c6++;
+			let dist = getDistanceBetweenPoints(p1, p2);
+			if (dist < sz / 3) {
+				let newlist = new Set(p1.pairs.concat(p2.pairs));
+				p1.pairs = Array.from(newlist);
+				p2.pairs = Array.from(newlist);
+				// p1.bg='blue';mStyle(p1.div,{bg:'blue'});
+				// p2.bg='blue';mStyle(p2.div,{bg:'blue'});
+			}
+		}
+	}
+	//console.log('perf',hotspots.length,c1,c2,c3,c4,c5,'durch:',c6);
+	//t = showTimeSince(t, `distanceBetweenPoints N=${hotspots.length}`)
+	return [hotspots, linesByPair];
+}
+function generateHotspots(dParent, pointPairs, sz = 20, color = 'red') {
+	let t = getNow();
+	let hotspots = [];
+	let linesByPair = {};
+	for (const pair of pointPairs) {
+		let ids = pair.map(x => x.id); //split(',');
+		let key = ids.join(',');
+		let [pStart, pEnd] = [Items[ids[0]], Items[ids[1]]]; //console.log(pStart.x,pEnd.x)
+		let line = getEquidistantPoints(pStart, pEnd, sz / 2);
+		for (const p of line) {
+			p.bg = color;
+			p.sz = sz;
+			p.start = ids[0];
+			p.end = ids[1];
+			p.startX = pStart.x;
+			p.endX = pEnd.x;
+			p.startY = pStart.y;
+			p.endY = pEnd.y;
+			p.id = getUID();
+			p.pairs = [key];
+			hotspots.push(p);
+			//console.log(p)
+
+		}
+		linesByPair[key] = line;
+		//line.map(x=>hotspots.push({p1:ids[0],p2:ids[1],p:x));
+	}
+	//t = showTimeSince(t, 'lines')
+
+	// console.log('hotspots',hotspots);
+	DA.hotspots = drawPoints(dParent, hotspots);
+	if (color == 'transparent') hotspots.map(x => mStyle(x.div, { opacity: 0 }))
+	//console.log(DA.hotspots);
+	//t = showTimeSince(t, 'line drawing')
+
+	let [c1, c2, c3, c4, c5, c6] = [0, 0, 0, 0, 0, 0];
+	for (const p1 of hotspots) {
+		assertion(p1.startX <= p1.endX, "NOT SORTED!!!!!")
+		for (const p2 of hotspots) {
+			if (p1 == p2) { c3++; continue; }
+			if (p1.startX > p2.endX) { c1++; continue; }
+			if (p2.startX > p1.endX) { c2++; continue; }
+			if (p1.start == p2.start && p1.end == p2.end) { c4++; continue; }
+			if (p1.start == p2.end && p1.end == p2.start) { c5++; continue; }
+
+			let miny1 = Math.min(p1.startY, p1.endY);
+			let maxy1 = Math.max(p1.startY, p1.endY);
+			let miny2 = Math.min(p2.startY, p2.endY);
+			let maxy2 = Math.max(p2.startY, p2.endY);
+
+			if (miny1 > maxy2 || miny2 > maxy1) { c5++; continue; }
+
+			c6++;
+			let dist = getDistanceBetweenPoints(p1, p2);
+			if (dist < sz / 3) {
+				let newlist = new Set(p1.pairs.concat(p2.pairs));
+				p1.pairs = Array.from(newlist);
+				p2.pairs = Array.from(newlist);
+				if (color != 'transparent') {
+					p1.bg = 'blue'; mStyle(p1.div, { bg: 'blue' });
+					p2.bg = 'blue'; mStyle(p2.div, { bg: 'blue' });
+				}
+			}
+		}
+	}
+	//console.log('perf',hotspots.length,c1,c2,c3,c4,c5,'durch:',c6);
+	//t = showTimeSince(t, `distanceBetweenPoints N=${hotspots.length}`)
+	return [hotspots, linesByPair];
+}
 function generateRepeatedColors(n, repeat, colorList) {
 	const colors = [];
 	//console.log(colorList)
@@ -583,6 +773,71 @@ function getCenter(elem, relto) {
 		y: rect.top - containerRect.top + rect.height / 2
 	};
 }
+function getDistanceBetweenPoints(p1, p2) {
+	if (isString(p1)) p1 = Items[p1];
+	if (isString(p2)) p2 = Items[p2];
+	return getDistanceBetweenCenters(p1.div, p2.div);
+}
+function getDistanceBetweenCenters(div1, div2) {
+	const rect1 = div1.getBoundingClientRect();
+	const rect2 = div2.getBoundingClientRect();
+
+	const centerX1 = rect1.left + rect1.width / 2;
+	const centerY1 = rect1.top + rect1.height / 2;
+
+	const centerX2 = rect2.left + rect2.width / 2;
+	const centerY2 = rect2.top + rect2.height / 2;
+
+	const dx = centerX2 - centerX1;
+	const dy = centerY2 - centerY1;
+
+	return Math.sqrt(dx * dx + dy * dy);
+}
+function getLinePixels1(x1, y1, x2, y2) {
+	[x1, y2, x2, y2] = [x1, y2, x2, y2].map(x => Math.round(x));//ensure termination!
+	const pixels = [];
+	const dx = Math.abs(x2 - x1);
+	const dy = Math.abs(y2 - y1);
+	const sx = (x1 < x2) ? 1 : -1;
+	const sy = (y1 < y2) ? 1 : -1;
+	let err = dx - dy;
+
+	while (true) {
+		pixels.push({ x: x1, y: y1 });
+
+		if (Math.round(x1) === Math.round(x2) && Math.round(y1) === Math.round(y2)) break;
+
+		const e2 = 2 * err;
+		if (e2 > -dy) {
+			err -= dy;
+			x1 += sx;
+		}
+		if (e2 < dx) {
+			err += dx;
+			y1 += sy;
+		}
+	}
+
+	return pixels;
+}
+function getEquidistantPoints(p1, p2, d = 10, includeEnds = false) {
+	const points = [];
+	const dx = p2.x - p1.x;
+	const dy = p2.y - p1.y;
+	const distance = Math.sqrt(dx * dx + dy * dy);
+	const numPoints = Math.floor(distance / d);
+
+	let istart = includeEnds ? 0 : 1;
+	let iend = includeEnds ? numPoints : numPoints - 1;
+	for (let i = istart; i <= iend; i++) {
+		const t = i / numPoints;
+		const x = p1.x + t * dx;
+		const y = p1.y + t * dy;
+		points.push({ x, y });
+	}
+
+	return points;
+}
 function getLinePixels(x1, y1, x2, y2) {
 	[x1,y2,x2,y2]=[x1,y2,x2,y2].map(x=>Math.round(x));//ensure termination!
 	const pixels = [];
@@ -628,6 +883,30 @@ function groupByProperty(list, prop) {
 	});
 
 	return Object.values(groups);
+}
+function highlightHotspots(ev){
+	let [x,y]=[ev.clientX, ev.clientY];
+	let els=allElementsFromPoint(x,y);
+
+	let endpoints = [],possiblePairs=[];
+	for(const elem of els){
+		let p=DA.hotspotDict[elem.id];
+		if (isdef(p)){
+			//console.log('hotspot',p);
+			addIf(endpoints,p.start);
+			addIf(endpoints,p.end);
+			let pair=[p.start,p.end];pair.sort();
+			addIf(possiblePairs,pair.join(','));
+		}	
+	}
+
+	stopPulsing(endpoints);
+	startPulsing(endpoints);
+	DA.endpoints = endpoints;
+	DA.possiblePairs = possiblePairs; 
+	//console.log('endpoints', DA.endpoints);
+	//console.log('possiblePairs', DA.possiblePairs);
+	//for(const p of DA.possiblePairs) console.log('possiblePair', p.join(','));
 }
 function lacunaCalculate() {
 
@@ -717,6 +996,34 @@ function lacunaGeneratePointsMargin(w,h, margin,n = 49, neach = 7, sz = 10, rand
 	for (let i = 0; i < n; i++) { points[i].x += margin; points[i].y += margin; }
 	return points;
 }
+function lacunaMakeSelectable(){
+	for(const id of DA.endpoints){
+		//let p=Items[id];
+		let div=mBy(id); //console.log(id,div)
+		mClass(div,'selectable')
+		//mStyle(div,{cursor:'pointer',border:'5px solid yellow'});
+		div.onclick = ev=>selectPoint(ev);
+	}
+}
+function lacunaMoveCompleted(idlist) {
+	DA.endpoints.map(x => lacunaUnselectable(x));
+	showMessage("Move completed, removing",idlist);
+	let p1 = Items[idlist[0]];
+	let p2 = Items[idlist[1]];
+	delete Items[p1.id];
+	delete Items[p2.id];
+	mRemove(p1.div);
+	mRemove(p2.div);
+	DA.points = DA.points.filter(x => x.id != p1.id && x.id != p2.id);
+
+	for (const p of DA.hotspotList) {
+		mRemove(p.div);
+	}
+
+	let ch=arrChildren(DA.dParent);console.log('ch',ch.length,'points',DA.points.length);
+	DA.dParent.onclick=lacunaStartMove;
+
+}
 function lacunaPresent() {
 	let d = clearDiv();
 	let [w, h, sz] = [900, 400, 20];
@@ -731,6 +1038,20 @@ function lacunaPresent() {
 
 	DA.info = { dParent, cv, w, h, sz, points };
 	lacunaCalculate();
+}
+function lacunaSelectPair(ev, pdiv, divs) {
+	//showMessage('select the pair you want to keep');
+	//let divs = Array.from(document.querySelectorAll('.pulseFastInfinite')); //console.log(divs)
+	for (const div of divs) {
+		mStyle(div, { cursor: 'pointer' })
+		div.onclick = ev => lacunaSelectPoint(div, divs);
+	}
+}
+function lacunaUnselectable(id){
+	let div=mBy(id); console.log('unselecting',id)
+	//mStyle(div,{cursor:'default',border:''});
+	mClassRemove(div,'selectable');
+	div.onclick = null;
 }
 function mArea(padding, dParent, styles = {}, opts = {}) {
 	addKeys({ padding, wbox: true, position: 'relative' }, styles)
@@ -791,10 +1112,122 @@ function placeCirclesRandom(dParent, n, sz, color, rand = 0.2) {
 	}
 	return circles;
 }
+function placeYourMeeple(ev) {
+	stopPulsing();
+	//console.log(DA.endpoints);
+	d = mBy('dCanvas');
+	d.onmousemove = null;
+	d.onclick = null;
+	//remove all hotpoints!!!
+	//console.log('hotpoints', DA.hotspotDict); //DA.hotpoints
+	for (const p of DA.hotspotList) {
+		mStyle(p.div, { z: 0 })
+	}
+	for (const p of DA.points) {
+		//console.log('div',p.div);
+		p.div.style.zIndex = 1000;
+		//mStyle(p.div,{z:10});
+	}
+
+	let sz=30;
+	x = ev.clientX - d.offsetLeft;// - DA.sz / 2;
+	y = ev.clientY - d.offsetTop;// - DA.sz / 2;
+
+	let pMeeple = { x:x-sz/2, y:y-sz/2, sz, bg: 'black', id: getUID() };
+	drawPoints(d, [pMeeple], false); 
+
+	DA.meeples.push(pMeeple);  console.log('DA.meeples', DA.meeples);
+	
+	lacunaMakeSelectable();
+}
+function pointLineDistance(px, py, ax, ay, bx, by) {
+	const A = px - ax;
+	const B = py - ay;
+	const C = bx - ax;
+	const D = by - ay;
+
+	const dot = A * C + B * D;
+	const len_sq = C * C + D * D;
+	let param = (len_sq !== 0) ? dot / len_sq : -1;
+
+	let xx, yy;
+
+	if (param < 0) {
+		xx = ax;
+		yy = ay;
+	} else if (param > 1) {
+		xx = bx;
+		yy = by;
+	} else {
+		xx = ax + param * C;
+		yy = ay + param * D;
+	}
+
+	const dx = px - xx;
+	const dy = py - yy;
+	return Math.sqrt(dx * dx + dy * dy);
+}
+function pointToLineDistance(x, y, x1, y1, x2, y2) {
+	// Calculate the numerator of the distance formula
+	const numerator = Math.abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1);
+	
+	// Calculate the denominator of the distance formula
+	const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
+	
+	// Calculate the distance
+	const distance = numerator / denominator;
+	
+	return distance;
+}
 function roundToNearestMultiples(n, x = 10) {
 	const lower = Math.floor(n / x) * x;
 	const higher = Math.ceil(n / x) * x;
 	return { lower, higher };
+}
+function selectPoint(ev) {
+	//console.log('hallo!!!!!!!!!!!!!!!!')
+	let id = evToId(ev);
+	let p = Items[id];
+	console.log('selecting point', p.id);
+	lookupAddIfToList(DA, ['selectedPoints'], id);
+
+	assertion(DA.selectedPoints.length >= 1, "WTF");
+	if (DA.selectedPoints.length == 1) {
+		//make unselectable all endpoints that do not have this endpoint
+		let eps = [];
+		console.log('possiblePairs', DA.possiblePairs);
+		for (const pair of DA.possiblePairs.map(x => x.split(',').map(x => Items[x]))) {
+			let p1 = pair[0];
+			let p2 = pair[1];
+			if (p1.id != id && p2.id != id) continue;
+			if (p1.id == id) addIf(eps, p2.id); else addIf(eps, p1.id);
+		}
+
+		let unselect = DA.endpoints.filter(x => !eps.includes(x));
+		unselect.map(x => lacunaUnselectable(x));
+		//eps contains the ids of the endpoints that are not selected but connected to selected point
+		DA.endpoints = eps; console.log('endpoints remaining', DA.endpoints);
+		if (DA.endpoints.length < 2) {
+			DA.selectedPoints.push(DA.endpoints[0]);
+			lacunaMoveCompleted(DA.selectedPoints);
+		}
+	} else {
+		assertion(DA.selectedPoints.length == 2, "WTF2!!!!!!!!!!!!!");
+		lacunaMoveCompleted(DA.selectedPoints);
+	}
+}
+function showPairs(pairlist) {
+	let s='';
+	for(const pair of pairlist){
+		s+=`${pair[0].id},${pair[1].id} `; //pair[0].id+','+pair[1].id;
+	}
+	return s;
+}
+function showTimeSince(t, msg = 'now') {
+	let tNew = getNow();
+	let ms = tNew - t;
+	console.log(msg + ':', ms);
+	return tNew;
 }
 function stopAnimatingPairs() {
 	let ani = 'pulseFastInfinite'
@@ -840,6 +1273,17 @@ function startAnimatingPoints(idlist) {
 		mClass(id, ani)
 		//mStyle(id,{border:'1px solid black'});
 	}
+}
+function startPulsing(idlist){
+	idlist.map(x=>Items[x].div.classList.add('pulseFastInfinite'));
+}
+function stopPulsing(idExcept=[]){
+	let drem=document.querySelectorAll('.pulseFastInfinite');
+	for(const d of drem){
+		if (idExcept.includes(d.id)) continue;
+		d.classList.remove('pulseFastInfinite');
+	}
+	
 }
 function testMouseMove(ev, pixelsByPair, ctx) {
 	const mouseX = ev.clientX;

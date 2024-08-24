@@ -105,8 +105,8 @@ games:
       playmode: bot,human
     options:
       gamemode: solo,multi
-  crazu:
-    friendly: Crazu
+  lacuna:
+    friendly: lacuna
     logo: accordion
     color: water
     ploptions:

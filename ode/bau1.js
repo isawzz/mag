@@ -1,5 +1,5 @@
 
-function crazu() {
+function lacuna() {
 	function setup(table) {
 		let fen = {};
 		for (const name in table.players) {
@@ -29,7 +29,7 @@ function crazu() {
 		let fen = table.fen;
 		mStyle(dTable, { padding: 50, wmin: 800, hmin: 600 });
 
-		placeCircles1(dTable, 30)
+		//placeCircles1(dTable, 30)
 
 		//let canvas = mCanvas(dTable,{w:650,h:500,bg:'#00000020'}); //mDom(dTable,{w:700,h:500},{tag:'canvas'});
 		//placeCircles(canvas,70);
@@ -48,41 +48,5 @@ function crazu() {
 	return { setup, present, stats, activate };
 }
 
-function placeCircles(canvas, n) {
-	// // Example usage
-	// const canvas = document.getElementById('canvas');
-	// placeCircles(canvas, 20);
-
-	const ctx = canvas.getContext('2d');
-	const width = canvas.width;
-	const height = canvas.height;
-
-	const rows = Math.floor(Math.sqrt(n));
-	const cols = Math.ceil(n / rows);
-
-	const cellWidth = width / cols;
-	const cellHeight = height / rows;
-
-	const radius = Math.min(cellWidth, cellHeight) / 5;
-
-	ctx.clearRect(0, 0, width, height);
-
-	for (let i = 0; i < n; i++) {
-		const row = Math.floor(i / cols);
-		const col = i % cols;
-
-		const x = col * cellWidth + (Math.random() * (cellWidth - 2 * radius) + radius);
-		const y = row * cellHeight + (Math.random() * (cellHeight - 2 * radius) + radius);
-
-		drawCircleOnCanvas(ctx, x, y, radius);
-	}
-}
-function drawCircleOnCanvas(ctx, x, y, radius) {
-	ctx.beginPath();
-	ctx.arc(x, y, radius, 0, 2 * Math.PI);
-	ctx.fillStyle = 'blue';
-	ctx.fill();
-	ctx.stroke();
-}
 
 

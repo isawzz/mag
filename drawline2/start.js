@@ -3,23 +3,35 @@ onload = start;
 async function start() { await loadAssets(); await test32(); }
 
 async function test32() {
-	let [w, h, sz, margin, n, neach] = [700, 400, 20, 30, 49, 7];
+	let [w, h, sz, margin, n, neach] = [900, 600, 20, 30, 49, 7];
 	DA.sz = sz;
 	let points = DA.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
 	let d = clearDiv();
 	let dParent = DA.dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' }, { id: 'dCanvas' });
 	Items = drawPoints(dParent, points); //console.log(Items)
+	DA.meeples = [];
 
 	lacunaStartMove();
 }
-function lacunaStartMove(){
+function showPairs(pairlist) {
+	let s='';
+	for(const pair of pairlist){
+		s+=`${pair[0].id},${pair[1].id} `; //pair[0].id+','+pair[1].id;
+	}
+	return s;
+}
+function lacunaStartMove() {
 	let t = getNow();
-	DA={dParent:DA.dParent,points:DA.points,sz:DA.sz};
+	DA = { meeples: DA.meeples, dParent: DA.dParent, points: DA.points, sz: DA.sz };
 
-	let [points,dParent,sz] = [DA.points,DA.dParent,DA.sz]; 
-	let result = findIsolatedPairs(points, sz / 1.5); //console.log(result);
-	DA.isolatedPairs = result.isolatedPairs;
-	let [hotspots, linesByPair] = generateHotspots(dParent, result.isolatedPairs, sz, 'transparent');
+	let [points, dParent, sz] = [DA.points, DA.dParent, DA.sz];
+	let result = findIsolatedPairs(points, sz); //console.log(result);
+
+	console.log('isolated', showPairs(result.isolatedPairs), result.isolatedPairs.length);
+	let isolated = DA.isolatedPairs = filterIsolatedPairs(result.isolatedPairs, DA.meeples,15);
+	console.log('isolated', showPairs(isolated), isolated.length);
+
+	let [hotspots, linesByPair] = generateHotspots(dParent, isolated, sz, 'transparent');
 	DA.pairs = linesByPair; //console.log(DA.pairs)
 	DA.hotspotList = hotspots;
 	DA.hotspotDict = list2dict(hotspots, 'id');

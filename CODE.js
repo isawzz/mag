@@ -1,4 +1,371 @@
 
+//#region ode anfang von lacuna
+function placeCircles(canvas, n) {
+	// // Example usage
+	// const canvas = document.getElementById('canvas');
+	// placeCircles(canvas, 20);
+
+	const ctx = canvas.getContext('2d');
+	const width = canvas.width;
+	const height = canvas.height;
+
+	const rows = Math.floor(Math.sqrt(n));
+	const cols = Math.ceil(n / rows);
+
+	const cellWidth = width / cols;
+	const cellHeight = height / rows;
+
+	const radius = Math.min(cellWidth, cellHeight) / 5;
+
+	ctx.clearRect(0, 0, width, height);
+
+	for (let i = 0; i < n; i++) {
+		const row = Math.floor(i / cols);
+		const col = i % cols;
+
+		const x = col * cellWidth + (Math.random() * (cellWidth - 2 * radius) + radius);
+		const y = row * cellHeight + (Math.random() * (cellHeight - 2 * radius) + radius);
+
+		drawCircleOnCanvas(ctx, x, y, radius);
+	}
+}
+function drawCircleOnCanvas(ctx, x, y, radius) {
+	ctx.beginPath();
+	ctx.arc(x, y, radius, 0, 2 * Math.PI);
+	ctx.fillStyle = 'blue';
+	ctx.fill();
+	ctx.stroke();
+}
+function mCanvas(dParent, styles = {}, bstyles = {}, play = null, pause = null, origin = 'tl') {
+  let cv = mCreate('canvas');
+  mAppend(toElem(dParent), cv);
+  addKeys({ w: 500, h: 500, bg: '#222', rounding: 10 }, styles);
+  mStyle(cv, styles);
+  let [w, h] = [cv.width, cv.height] = [styles.w, styles.h];
+	return cv;
+}
+
+function siebenVonJederFarbe() {
+	let colors = {
+		"Red": "#E63946",
+		"Green": "#06D6A0",
+		"Blue": "#118AB2",
+		"Cyan": "#0F4C75",
+		"Magenta": "#D81159",
+		"Yellow": "#FFD166",
+		"Orange": "#F4A261",
+		"Purple": "#9D4EDD",
+		"Pink": "#FF80AB",
+		"Brown": "#8D6E63",
+		"Lime": "#A7FF83",
+		"Indigo": "#3A0CA3",
+		"Violet": "#B5838D",
+		"Gold": "#F5C518",
+		"Teal": "#008080"
+	}
+	let list = [];
+	for (const c of rChoose(Object.values(colors), 7)) {
+		for (const i of range(7)) list.push(c);
+	}
+	arrShuffle(list);
+
+	return list;
+}
+
+function rPositions(width,height, n) {
+	const rows = Math.floor(Math.sqrt(n));
+	const cols = Math.ceil(n / rows);
+	const cellWidth = width / cols;
+	const cellHeight = height / rows;
+	const radius = Math.min(cellWidth, cellHeight) / 5;
+
+	let list=[];
+	for (let i = 0; i < n; i++) {
+		const row = Math.floor(i / cols);
+		const col = i % cols;
+		const x = col * cellWidth + (Math.random() * (cellWidth - 2 * radius) + radius);
+		const y = row * cellHeight + (Math.random() * (cellHeight - 2 * radius) + radius);
+		list.push({x,y});
+	}
+	return {list,radius};
+}
+
+function placeCircles1(container, n) {
+	const width = container.clientWidth;
+	const height = container.clientHeight;
+	const radius = Math.min(width, height) / 2;
+
+	const circleRadius = 10; // Radius of the circles to be placed
+	const minDistance = circleRadius * 3; // Minimum distance between circles
+	const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Approx. 137.5 degrees in radians
+
+	// Clear existing circles
+	while (container.firstChild) {
+			container.removeChild(container.firstChild);
+	}
+
+	const circles = [];
+
+	// Generate points with slight randomness for more varied distribution
+	for (let i = 0; i < n; i++) {
+			let valid = false;
+			let x, y;
+
+			while (!valid) {
+					const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
+					const distance = radius * Math.sqrt(i / n) + (Math.random() - 0.5) * radius * 0.1;
+
+					x = radius + distance * Math.cos(angle);
+					y = radius + distance * Math.sin(angle);
+
+					valid = true;
+					for (const circle of circles) {
+							const dx = circle.x - x;
+							const dy = circle.y - y;
+							if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
+									valid = false;
+									break;
+							}
+					}
+			}
+
+			circles.push({ x, y });
+
+			// Create and position the circle
+			const circle = document.createElement('div');
+			circle.classList.add('circle');
+			circle.style.width = `${circleRadius * 2}px`;
+			circle.style.height = `${circleRadius * 2}px`;
+			circle.style.left = `${x - circleRadius}px`;
+			circle.style.top = `${y - circleRadius}px`;
+			container.appendChild(circle);
+	}
+}
+
+function placeCircles1(container, n) {
+	const width = container.clientWidth;
+	const height = container.clientHeight;
+	const radiusX = width / 2;
+	const radiusY = height / 2;
+
+	const circleRadius = 10; // Radius of the circles to be placed
+	const minDistance = circleRadius * 2; // Minimum distance between circles
+	const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // Approx. 137.5 degrees in radians
+
+	// Clear existing circles
+	while (container.firstChild) {
+			container.removeChild(container.firstChild);
+	}
+
+	const circles = [];
+
+	// Generate points with slight randomness for more varied distribution
+	for (let i = 0; i < n; i++) {
+			let valid = false;
+			let x, y;
+
+			while (!valid) {
+					const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
+					const distance = Math.sqrt(i / n);
+
+					// Calculate x and y within the ellipse
+					x = radiusX + distance * radiusX * Math.cos(angle);
+					y = radiusY + distance * radiusY * Math.sin(angle);
+
+					valid = true;
+					for (const circle of circles) {
+							const dx = circle.x - x;
+							const dy = circle.y - y;
+							if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
+									valid = false;
+									break;
+							}
+					}
+			}
+
+			circles.push({ x, y });
+
+			// Create and position the circle
+			const circle = document.createElement('div');
+			circle.classList.add('circle');
+			circle.style.width = `${circleRadius * 2}px`;
+			circle.style.height = `${circleRadius * 2}px`;
+			circle.style.left = `${x - circleRadius}px`;
+			circle.style.top = `${y - circleRadius}px`;
+			container.appendChild(circle);
+	}
+}
+
+
+//#endregion
+
+//#region bau4 von august 24 24
+
+
+
+
+function arrSort(arr) {
+  return arr.sort((a, b) => {
+    // Convert both elements to strings for comparison
+    const aStr = a.toString();
+    const bStr = b.toString();
+
+    // Use localeCompare to handle string comparison
+    return aStr.localeCompare(bStr, undefined, { numeric: true });
+  });
+}
+async function mPostYaml(o,path){
+	return await mPostRoute('postYaml',{o,path});
+}
+function trimToAlphanum(str,allow_=true) {
+  return str.replace(/^[^a-zA-Z0-9_]+|[^a-zA-Z0-9_]+$/g, '');
+}
+function normalizeString(s, sep = '_', keep = []) {
+  s = s.toLowerCase().trim();
+  let res = '';
+  for (let i = 0; i < s.length; i++) { if (isAlphaNum(s[i]) || keep.includes(s[i])) res += s[i]; else if (last(res)!=sep) res += sep; }
+  return res;
+}
+function replaceAllSpecialCharsFromList(str, list, sBy, removeConsecutive=true) { 
+	for(const sSub of list){
+		str=replaceAllSpecialChars(str,sSub,sBy);
+	}
+	if (removeConsecutive){
+		let sresult='';
+		while(str.length>0){
+			let sSub=str.substring(0,sBy.length);
+			str = stringAfter(str,sSub);
+			if (sSub == sBy && sresult.endsWith(sBy)) continue;
+			sresult += sSub;
+			if (str.length<sBy.length) {sresult+=str;break;}
+		}
+		str=sresult;
+	}
+	return str;
+}
+function superTrim(s){
+	// Remove all tab or newline characters and trim spaces
+	s = s.replace(/[\t\n]/g, ' ').trim();
+
+	// Replace multiple consecutive spaces with a single space
+	s = s.replace(/\s\s+/g, ' ');
+
+	// Remove the last semicolon if present
+	if (s.endsWith(';')) {
+		s = s.slice(0, -1);
+	}
+
+}
+function extractWords(s, allowed) {
+	let specialChars = getSeparators(allowed);
+	let parts = splitAtAnyOf(s, specialChars.join('')).map(x => x.trim());
+	return parts.filter(x => !isEmpty(x));
+}
+function getSeparators(allowed) {
+	let specialChars = toLetters(' ,-.!?;:');
+	if (isdef(allowed)) specialChars = arrMinus(specialChars, toLetters(allowed));
+	return specialChars;
+}
+
+function toListEntry(s,sep = '_', keep = []) {
+	let nogo3=['and'];
+
+
+}
+
+async function askWiki(query) {
+	if (isEmpty(query)) return 'NO QUERY!';
+	let response = await mGetRoute('wiki', { question: query });
+	return response;
+}
+async function askHuggingFace(question) {
+	//gratis: hugging_face
+	if (isEmpty(question)) return 'NO QUESTION!';
+	let response = await mGetRoute('fetch_answer', { question });
+	return lookup(response, ['answer']) ?? 'ERROR';
+}
+async function askOpenai(prompt) {
+	if (nundef(prompt)) prompt = 'list of 100 very different documentary subjects?';
+	let answer = await mPostRoute('ask', { prompt });
+	return answer;
+}
+async function askOpenaiKeyword(word, category = null) {
+	if (!category) category = 'def';
+	let res = await mPostRoute('ask_details', { word, category });
+	return res;
+	// if (nundef(word)) return; //prompt = 'list of 100 very different documentary subjects?';
+	// //let prompt = pYamlDetails(word,category); =>app.js
+	// let answer = await mPostRoute('ask', { prompt });
+	// if (answer.includes('```')) answer = stringBeforeLast(stringAfter(answer,'\n'),'\n');
+	// let o= jsyaml.load(answer);//console.log('o',o,typeof o);
+	// return o;
+}
+async function askOpenaiListOf(word, num = 100) {
+	let res = await mPostRoute('ask_list', { word, num });
+	return res;
+	// if (nundef(word)) return; //prompt = 'list of 100 very different documentary subjects?';
+	// //let prompt = pYamlDetails(word,category); =>app.js
+	// let answer = await mPostRoute('ask', { prompt });
+	// if (answer.includes('```')) answer = stringBeforeLast(stringAfter(answer,'\n'),'\n');
+	// let o= jsyaml.load(answer);//console.log('o',o,typeof o);
+	// return o;
+}
+function pListOf(what) { return 'list of 100 ' + what.toLowerCase(); }
+function pYamlDetails(keyword, type, props) {
+	if (nundef(props)) {
+		switch (type) {
+			case 'animal': props = 'class, color, food, habitat, lifespan, name, offsprings, reproduction, size, species, weight'; break;
+			case 'location': props = 'population, size, longitude, latitude'; break;
+			default: props = 'definition, synonyms, antonyms, german, spanish, french'; break;
+		}
+	}
+	let p = `information about ${keyword}, formatted as yaml object with the following properties: `;
+	p += props + '.';
+	p += `property values should if possible contain numeric information in scientific (European) metrics.`
+	return p;
+}
+function showYaml(o, title, dParent, styles = {}, opts = {}) {
+	o = toFlatObject(o);
+	//return showObject(o, null, dParent, styles, addKeys({ title }, opts));
+	let d = mDom(dParent,styles,opts); 
+	mDom(d, {}, { tag: 'h2', html: title }); 
+	let keys = Object.keys(o); 
+	let grid = mGrid(keys.length,2,d,{rounding:8,padding:4,bg:'#eee',wmax:500},{wcols:'auto'});
+	let cellStyles = {hpadding:4};
+	if (isList(o)){
+		arrSort(o);
+		o.map((x,i)=>{mDom(grid,{fg:'red',align:'right'},{html:i});mDom(grid,{maleft:10},{html:x});});
+	}else if (isDict(o)){
+		keys.sort();
+		for(const k of keys){
+			mDom(grid,{fg:'red',align:'right'},{html:k})
+			mDom(grid,{maleft:10},{html:o[k]});
+		}
+	}
+	return d;
+	// mDom(d, {}, { tag:'pre', html: o });
+
+}
+function recFlatten(o) {
+	if (isLiteral(o)) return o;
+	else if (isList(o)) return o.map(x => recFlatten(x)).join(', ');
+	else if (isDict(o)) {
+		let valist = [];
+		for (const k in o) { let val1 = recFlatten(o[k]); valist.push(`${k}: ${val1}`); }
+		return valist.join(', ');
+	}
+}
+function toFlatObject(o) {
+	if (isString(o)) return { details: o };
+	for (const k in o) { let val = o[k]; o[k] = recFlatten(val); }
+	return o;
+}
+function trimQuotes(str) { return str.replace(/^['"`]+|['"`]+$/g, ''); }
+
+
+
+//#endregion
+
 function mist(){
 	addIf(DA.selectedPairIds, id);
 	let poss = DA.pairInfo.filter(x => x.includes(id));

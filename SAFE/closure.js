@@ -146,29 +146,6 @@ function allCondDict(d, func) {
   for (const k in d) { if (func(d[k])) res.push(k); }
   return res;
 }
-function allElementsFromPoint(x, y) {
-  var element, elements = [];
-  var old_visibility = [];
-  while (true) {
-    element = document.elementFromPoint(x, y);
-    if (!element || element === document.documentElement) {
-      break;
-    }
-    elements.push(element);
-    old_visibility.push(element.style.visibility);
-    element.style.visibility = 'hidden';
-  }
-  for (var k = 0; k < elements.length; k++) {
-    elements[k].style.visibility = old_visibility[k];
-  }
-  elements.reverse();
-  return elements;
-}
-function allIntegers(s) {
-  return s.match(/\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => {
-    return +v;
-  });
-}
 function allNumbers(s, func) {
   let m = s.match(/\-.\d+|\-\d+|\.\d+|\d+\.\d+|\d+\b|\d+(?=\w)/g);
   if (nundef(m)) return [];
@@ -303,13 +280,6 @@ function arrRotate(arr, count) {
 }
 function arrShuffle(arr) { if (isEmpty(arr)) return []; else return fisherYates(arr); }
 
-function arrSort(arr) {
-  return arr.sort((a, b) => {
-    const aStr = a.toString();
-    const bStr = b.toString();
-    return aStr.localeCompare(bStr, undefined, { numeric: true });
-  });
-}
 function arrSum(arr, props) {
   if (nundef(props)) return arr.reduce((a, b) => a + b);
   if (!isList(props)) props = [props];
@@ -332,30 +302,6 @@ function arrTakeWhile(arr, func) {
 }
 function arrWithout(arr, b) { return arrMinus(arr, b); }
 
-async function askHuggingFace(question) {
-  if (isEmpty(question)) return 'NO QUESTION!';
-  let response = await mGetRoute('fetch_answer', { question });
-  return lookup(response, ['answer']) ?? 'ERROR';
-}
-async function askOpenai(prompt) {
-  if (nundef(prompt)) prompt = 'list of 100 very different documentary subjects?';
-  let answer = await mPostRoute('ask', { prompt });
-  return answer;
-}
-async function askOpenaiKeyword(word, category = null) {
-  if (!category) category = 'def';
-  let res = await mPostRoute('ask_details', { word, category });
-  return res;
-}
-async function askOpenaiListOf(word, num = 100) {
-  let res = await mPostRoute('ask_list', { word, num });
-  return res;
-}
-async function askWiki(query) {
-  if (isEmpty(query)) return 'NO QUERY!';
-  let response = await mGetRoute('wiki', { question: query });
-  return response;
-}
 function assertion(cond) {
   if (!cond) {
     let args = [...arguments];
@@ -811,7 +757,7 @@ function clearFlex(styles = {}) {
 }
 function clearMain() { UI.commands = {}; staticTitle(); clearEvents(); mClear('dMain'); mClear('dTitle'); clearMessage(); }
 
-function clearMessage(remove = false) { if (remove) mRemove('dMessage'); else mStyle('dMessage', { h: 0 }); }
+function clearMessage() { mStyle('dMessage', { h: 0 }); }
 
 function clearParent(ev) { mClear(ev.target.parentNode); }
 
@@ -2827,7 +2773,8 @@ function extractTime(input) {
   }
 }
 function extractWords(s, allowed) {
-  let specialChars = getSeparators(allowed);
+  let specialChars = toLetters(' ,-.!?;:');
+  if (isdef(allowed)) specialChars = arrMinus(specialChars, toLetters(allowed));
   let parts = splitAtAnyOf(s, specialChars.join('')).map(x => x.trim());
   return parts.filter(x => !isEmpty(x));
 }
@@ -4481,12 +4428,7 @@ function getRelCoords(ev, elem) {
   let y = ev.pageY - elem.offset().top;
   return { x: x, y: y };
 }
-function getSeparators(allowed) {
-  let specialChars = toLetters(' ,-.!?;:');
-  if (isdef(allowed)) specialChars = arrMinus(specialChars, toLetters(allowed));
-  return specialChars;
-}
-function getServerurl(port = 3000) {
+function getServerurl(port=3000) {
   let type = detectSessionType();
   let server = type == 'vps' ? 'https://server.vidulusludorum.com' : `http://localhost:${port}`;
   return server;
@@ -4652,8 +4594,6 @@ function iDiv(i) { return isdef(i.live) ? i.live.div : valf(i.div, i.ui, i); } /
 
 function iRegister(item, id) { let uid = isdef(id) ? id : getUID(); Items[uid] = item; return uid; }
 
-function ifNotList(x) { return isList(x) ? x : [x]; }
-
 async function imgAsIsInDiv(url, dParent) {
   let d = mDom(dParent, { bg: 'pink', wmin: 128, hmin: 128, display: 'inline-block', align: 'center', margin: 10 }, { className: 'imgWrapper' });
   let sz = 300;
@@ -4771,7 +4711,7 @@ async function instructionStandard(table, instruction) {
   if (!myTurn) staticTitle(table); else animatedTitle();
   if (nundef(instruction)) return;
   let styleInstruction = { display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
-  let dinst = mBy('dInstruction');
+  let dinst = mBy('dInstruction'); 
   if (nundef(dinst)) return;
   mClear(dinst);
   let html;
@@ -4827,7 +4767,8 @@ function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isLi
 function isDigit(s) { return /^[0-9]$/i.test(s); }
 
 function isEmpty(arr) {
-  return arr === undefined || !arr || (isString(arr) && (arr == 'undefined' || arr == ''))
+  return arr === undefined || !arr
+    || (isString(arr) && (arr == 'undefined' || arr == ''))
     || (Array.isArray(arr) && arr.length == 0)
     || Object.entries(arr).length === 0;
 }
@@ -5319,13 +5260,13 @@ function mCols100(dParent, spec, gap = 4) {
   }
   return res;
 }
-function mCommand(dParent, key, html, styles = {}, opts = {}) {
+function mCommand(dParent, key, html, opts = {}) {
   if (nundef(html)) html = capitalize(key);
   let close = valf(opts.close, () => { console.log('close', key) });
   let save = valf(opts.save, false);
   let open = valf(opts.open, window[`onclick${capitalize(key)}`]);
   let d = mDom(dParent, { display: 'inline-block' }, { key: key });
-  let a = mDom(d, styles, { id: `${key}`, key: `${key}`, tag: 'a', href: '#', html: html, className: 'nav-link', onclick: onclickCommand })
+  let a = mDom(d, {}, { id: `${key}`, key: `${key}`, tag: 'a', href: '#', html: html, className: 'nav-link', onclick: onclickCommand })
   let cmd = { dParent, elem: d, div: a, key, open, close, save };
   addKeys(opts, cmd);
   return cmd;
@@ -5498,7 +5439,6 @@ function mCropResizePan(dParent, img, dButtons) {
   }
   function show_cropbox() { cropBox.style.display = 'block' }
   function hide_cropbox() { cropBox.style.display = 'none' }
-
   function setSize(wnew, hnew) {
     if (isList(wnew)) [wnew, hnew] = wnew;
     if (wnew == 0 || hnew == 0) {
@@ -5532,7 +5472,6 @@ function mCropResizePan(dParent, img, dButtons) {
   }
 }
 function mDataTable(reclist, dParent, rowstylefunc, headers, id, showheaders = true) {
-  if (isEmpty(reclist)) { mText('no data', dParent); return null; }
   if (nundef(headers)) headers = Object.keys(reclist[0]);
   let t = mTable(dParent, headers, showheaders);
   if (isdef(id)) t.id = `t${id}`;
@@ -5712,11 +5651,10 @@ function mGather(dAnchor, styles = {}, opts = {}) {
       }
     });
     dDialog.showModal();
-    if (isdef(dAnchor)) mAnchorTo(dx, toElem(dAnchor), opts.align);
-    else { mStyle(d, { h: '100vh' }); mCenterCenterFlex(d); }
+    mAnchorTo(dx, dAnchor, opts.align);
   });
 }
-async function mGetFiles(dir, port = 3000) {
+async function mGetFiles(dir,port=3000) {
   let server = getServerurl(port);
   let data = await mGetJsonCors(`${server}/filenames?directory=${dir}`);
   return data.files;
@@ -5730,8 +5668,8 @@ async function mGetJsonCors(url) {
   let json = await res.json();
   return json;
 }
-async function mGetRoute(route, o = {}, port = 3000) {
-  let server = getServerurl(port);
+async function mGetRoute(route, o = {}) {
+  let server = getServerurl();
   server += `/${route}?`;
   for (const k in o) { server += `${k}=${o[k]}&`; }
   const response = await fetch(server, {
@@ -5775,12 +5713,12 @@ async function mGetYaml(path = '../base/assets/m.txt') {
   let di = jsyaml.load(text);
   return di;
 }
-function mGrid(rows, cols, dParent, styles = {}, opts = {}) {
+function mGrid(rows, cols, dParent, styles = {},opts={}) {
   [rows, cols] = [Math.ceil(rows), Math.ceil(cols)]
   addKeys({ display: 'inline-grid', gridCols: 'repeat(' + cols + ',1fr)' }, styles);
   if (rows) styles.gridRows = 'repeat(' + rows + ',auto)';
   else styles.overy = 'auto';
-  let d = mDiv(dParent, styles, opts);
+  let d = mDiv(dParent, styles,opts);
   return d;
 }
 function mGridFromElements(dParent, elems, maxHeight, numColumns) {
@@ -5965,9 +5903,6 @@ async function mPostRoute(route, o = {}) {
   } else {
     return 'ERROR 1';
   }
-}
-async function mPostYaml(o, path) {
-  return await mPostRoute('postYaml', { o, path });
 }
 function mPrompt(gadget) {
   return new Promise((resolve, reject) => {
@@ -6253,14 +6188,18 @@ function mSymSizeToH(info, h) { let f = h / info.h; return { fz: 100 * f, w: inf
 function mSymSizeToW(info, w) { let f = w / info.w; return { fz: 100 * f, w: w, h: info.h * f }; }
 
 function mTable(dParent, headers, showheaders, styles = { mabottom: 0 }, className = 'table') {
-  let d = mDiv(dParent); mClass(dParent, 'table_container')
+  let d = mDiv(dParent);
   let t = mCreate('table');
   mAppend(d, t);
   if (isdef(className)) mClass(t, className);
   if (isdef(styles)) mStyle(t, styles);
   if (showheaders) {
-    let r = mDom(t, {}, { tag: 'tr' });
-    headers.map(x => mDom(r, {}, { tag: 'th', html: x }));
+    let code = `<tr>`;
+    for (const h of headers) {
+      code += `<th>${h}</th>`
+    }
+    code += `</tr>`;
+    t.innerHTML = code;
   }
   return t;
 }
@@ -6530,36 +6469,6 @@ function modifyStat(name, prop, val) {
   console.log('ui', ui)
   if (isdef(ui)) ui.innerHTML = val;
 }
-function msElapsedSince(msStart) { return Date.now() - msStart; }
-
-function multiSort(properties) {
-  return function (a, b) {
-    for (let prop of properties) {
-      let propA = a[prop];
-      let propB = b[prop];
-      if (propA == null && propB == null) continue;
-      if (propA == null) return -1;
-      if (propB == null) return 1;
-      if (typeof propA === 'number' && typeof propB === 'number') {
-        if (propA < propB) return -1;
-        if (propA > propB) return 1;
-        continue;
-      }
-      if (typeof propA === 'string' && typeof propB === 'string') {
-        propA = propA.toLowerCase();
-        propB = propB.toLowerCase();
-        if (propA < propB) return -1;
-        if (propA > propB) return 1;
-        continue;
-      }
-      propA = String(propA);
-      propB = String(propB);
-      if (propA < propB) return -1;
-      if (propA > propB) return 1;
-    }
-    return 0;
-  };
-}
 function name2id(name) { return 'd_' + name.split(' ').join('_'); }
 
 function nextBar(ctx, rest, color) {
@@ -6581,7 +6490,7 @@ function nextLine(ctx, rest, color) {
 function normalizeString(s, sep = '_', keep = []) {
   s = s.toLowerCase().trim();
   let res = '';
-  for (let i = 0; i < s.length; i++) { if (isAlphaNum(s[i]) || keep.includes(s[i])) res += s[i]; else if (last(res) != sep) res += sep; }
+  for (let i = 0; i < s.length; i++) { if (isAlphaNum(s[i]) || keep.includes(s[i])) res += s[i]; else res += sep; }
   return res;
 }
 function nundef(x) { return x === null || x === undefined || x === 'undefined'; }
@@ -6652,14 +6561,10 @@ async function onclickColor(color) {
   U.color = hex; delete U.fg;
   await updateUserTheme()
 }
-async function onclickCommand(ev, key) {
-  if (nundef(key)) key = evToAttr(ev, 'key'); //console.log(key);
+async function onclickCommand(ev) {
+  let key = evToAttr(ev, 'key'); //console.log(key);
   let cmd = key == 'user' ? UI.nav.commands.user : UI.commands[key];
-  assertion(isdef(cmd), `command ${key} not in UI!!!`);
-  let links = Array.from(mBy('dLeft').getElementsByTagName('a'));
-  links.map(x => mStyle(x, { fStyle: 'normal' }));
-  mStyle(iDiv(cmd), { fStyle: 'italic' });
-  UI.lastCommandKey = key;
+  assertion(isdef(cmd), `command ${key} not in UI!!!`)
   await cmd.open();
 }
 function onclickDay(d, styles) {
@@ -7158,8 +7063,6 @@ function openPopup(name = 'dPopup') {
 }
 function overwriteMerge(destinationArray, sourceArray, options) { return sourceArray }
 
-function pListOf(what) { return 'list of 100 ' + what.toLowerCase(); }
-
 function pSBC(p, c0, c1, l) {
   let r, g, b, P, f, t, h, i = parseInt, m = Math.round, a = typeof c1 == 'string';
   if (typeof p != 'number' || p < -1 || p > 1 || typeof c0 != 'string' || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
@@ -7196,19 +7099,6 @@ function pSBCr(d) {
     else (x.r = d >> 16), (x.g = (d >> 8) & 255), (x.b = d & 255), (x.a = -1);
   }
   return x;
-}
-function pYamlDetails(keyword, type, props) {
-  if (nundef(props)) {
-    switch (type) {
-      case 'animal': props = 'class, color, food, habitat, lifespan, name, offsprings, reproduction, size, species, weight'; break;
-      case 'location': props = 'population, size, longitude, latitude'; break;
-      default: props = 'definition, synonyms, antonyms, german, spanish, french'; break;
-    }
-  }
-  let p = `information about ${keyword}, formatted as yaml object with the following properties: `;
-  p += props + '.';
-  p += `property values should if possible contain numeric information in scientific (European) metrics.`
-  return p;
 }
 function paletteAddDistanceTo(pal, color, key, distfunc = colorGetContrast) {
   let opal = isDict(pal[0]) ? pal : paletteToObjects(pal);
@@ -7559,15 +7449,6 @@ function range(f, t, st = 1) {
   }
   return arr;
 }
-function recFlatten(o) {
-  if (isLiteral(o)) return o;
-  else if (isList(o)) return o.map(x => recFlatten(x)).join(', ');
-  else if (isDict(o)) {
-    let valist = [];
-    for (const k in o) { let val1 = recFlatten(o[k]); valist.push(`${k}: ${val1}`); }
-    return valist.join(', ');
-  }
-}
 function redrawImage(img, dParent, x, y, wold, hold, w, h, callback) {
   let canvas = mDom(null, {}, { tag: 'canvas', width: w, height: h });
   const ctx = canvas.getContext('2d');
@@ -7640,23 +7521,6 @@ function replaceAll(str, sSub, sBy) {
 }
 function replaceAllSpecialChars(str, sSub, sBy) { return str.split(sSub).join(sBy); }
 
-function replaceAllSpecialCharsFromList(str, list, sBy, removeConsecutive = true) {
-  for (const sSub of list) {
-    str = replaceAllSpecialChars(str, sSub, sBy);
-  }
-  if (removeConsecutive) {
-    let sresult = '';
-    while (str.length > 0) {
-      let sSub = str.substring(0, sBy.length);
-      str = stringAfter(str, sSub);
-      if (sSub == sBy && sresult.endsWith(sBy)) continue;
-      sresult += sSub;
-      if (str.length < sBy.length) { sresult += str; break; }
-    }
-    str = sresult;
-  }
-  return str;
-}
 function resetPeep({ stage, peep }) {
   const direction = Math.random() > 0.5 ? 1 : -1
   const offsetY = 100 - 250 * gsap.parseEase('power2.in')(Math.random())
@@ -8476,6 +8340,7 @@ async function showDashboard() {
     let dx = mDom(dblog, {}, { className: 'section', html: bl.text });
   }
 }
+
 function showDeck(keys, dParent, splay, w, h) {
   let d = mDiv(dParent);
   mStyle(d, { display: 'block', position: 'relative', bg: 'green', padding: 25 });
@@ -8498,6 +8363,7 @@ function showDeck(keys, dParent, splay, w, h) {
   console.log(Pictures[0].div)
   d.style.height = firstNumber(Pictures[0].div.style.height) + 'px';
 }
+
 function showDetailsAndMagnify(elem) {
   let key = elem.firstChild.getAttribute('key'); //console.log('key',key)
   if (nundef(key)) return;
@@ -8510,6 +8376,7 @@ function showDetailsAndMagnify(elem) {
   mDom(d, {}, { tag: 'img', src: valf(o.photo, o.img) });
   showDetailsPresentation(o, d);
 }
+
 function showDetailsPresentation(o, dParent) {
   let onew = {};
   let nogo = ['longSpecies', 'ooffsprings', 'name', 'cats', 'colls', 'friendly', 'ga', 'fa', 'fa6', 'text', 'key', 'nsize', 'nweight', 'img', 'photo']
@@ -8530,6 +8397,7 @@ function showDetailsPresentation(o, dParent) {
   onew = sortDictionary(onew);
   return showObjectInTable(onew, dParent, { w: window.innerWidth * .8 });
 }
+
 async function showDirPics(dir, dParent) {
   let imgs = await mGetFiles(dir);
   for (const fname of imgs) {
@@ -8539,6 +8407,7 @@ async function showDirPics(dir, dParent) {
     let img = mDom(dParent, styles, { tag: 'img', src });
   }
 }
+
 function showDiv(d) { mStyle(d, { bg: rColor() }); console.log(d, mGetStyle(d, 'w')); }
 
 function showEventOpen(id) {
@@ -8672,11 +8541,10 @@ function showImagePartial(dParent, image, x, y, w, h, left, top, wShow, hShow, w
 }
 function showMessage(msg, ms = 3000) {
   let d = mBy('dMessage');
-  if (nundef(d)) d = mPopup(); d.id = 'dMessage';
   mStyle(d, { h: 21, bg: 'red', fg: 'yellow' });
   d.innerHTML = msg;
   clearTimeout(TO.message);
-  TO.message = setTimeout(() => clearMessage(true), ms)
+  TO.message = setTimeout(clearMessage, ms)
 }
 function showNavbar() {
   let nav = mMenu('dNav');
@@ -8944,25 +8812,6 @@ function showValidMoves(table) {
   for (const m of table.moves) {
     console.log(`${m.step} ${m.name}: ${m.move.map(x => x.substring(0, 5)).join(',')} (${m.change})=>${m.score}`);
   }
-}
-function showYaml(o, title, dParent, styles = {}, opts = {}) {
-  o = toFlatObject(o);
-  let d = mDom(dParent, styles, opts);
-  mDom(d, {}, { tag: 'h2', html: title });
-  let keys = Object.keys(o);
-  let grid = mGrid(keys.length, 2, d, { rounding: 8, padding: 4, bg: '#eee', wmax: 500 }, { wcols: 'auto' });
-  let cellStyles = { hpadding: 4 };
-  if (isList(o)) {
-    arrSort(o);
-    o.map((x, i) => { mDom(grid, { fg: 'red', align: 'right' }, { html: i }); mDom(grid, { maleft: 10 }, { html: x }); });
-  } else if (isDict(o)) {
-    keys.sort();
-    for (const k of keys) {
-      mDom(grid, { fg: 'red', align: 'right' }, { html: k })
-      mDom(grid, { maleft: 10 }, { html: o[k] });
-    }
-  }
-  return d;
 }
 function showim1(imgKey, d, styles = {}, opts = {}) {
   let o = lookup(M.superdi, [imgKey]);
@@ -9305,39 +9154,10 @@ function sockPostUserChange(oldname, newname) {
 function someOtherPlayerName(table) {
   return rChoose(arrWithout(table.playerNames, getUname()));
 }
-function sortBy(arr, key) {
-  function fsort(a, b) {
-    let [av, bv] = [a[key], b[key]];
-    if (isNumber(av) && isNumber(bv)) return Number(av) < Number(bv) ? -1 : 1;
-    if (isEmpty(av)) return -1;
-    if (isEmpty(bv)) return 1;
-    return av < bv ? -1 : 1;
-  }
-  arr.sort(fsort);
-  return arr;
-}
-function sortByDescending(arr, key) {
-  function fsort(a, b) {
-    let [av, bv] = [a[key], b[key]];
-    if (isNumber(av) && isNumber(bv)) return Number(av) > Number(bv) ? -1 : 1;
-    if (isEmpty(av)) return 1;
-    if (isEmpty(bv)) return -1;
-    return av > bv ? -1 : 1;
-  }
-  arr.sort(fsort);
-  return arr;
-}
-function sortByEmptyLast(arr, key) {
-  function fsort(a, b) {
-    let [av, bv] = [a[key], b[key]];
-    if (isNumber(av) && isNumber(bv)) return Number(av) < Number(bv) ? -1 : 1;
-    if (isEmpty(av)) return 1;
-    if (isEmpty(bv)) return -1;
-    return av < bv ? -1 : 1;
-  }
-  arr.sort(fsort);
-  return arr;
-}
+function sortBy(arr, key) { arr.sort((a, b) => isEmpty(a[key]) || (a[key] < b[key] ? -1 : 1)); return arr; }
+
+function sortByDescending(arr, key) { arr.sort((a, b) => (a[key] > b[key] ? -1 : 1)); return arr; }
+
 function sortByFunc(arr, func) { arr.sort((a, b) => (func(a) < func(b) ? -1 : 1)); return arr; }
 
 function sortByHues(list) {
@@ -9573,13 +9393,6 @@ function stringCount(s, sSub, caseInsensitive = true) {
 function stringSplit(input) {
   return input.split(/[\s,]+/);
 }
-function superTrim(s) {
-  s = s.replace(/[\t\n]/g, ' ').trim();
-  s = s.replace(/\s\s+/g, ' ');
-  if (s.endsWith(';')) {
-    s = s.slice(0, -1);
-  }
-}
 async function switchToMainMenu(name) { return await switchToMenu(UI.nav, name); }
 
 async function switchToMenu(menu, key) {
@@ -9709,16 +9522,8 @@ async function testOnclickPlaymode(ev) {
 }
 function toElem(d) { return isString(d) ? mBy(d) : d; }
 
-function toFlatObject(o) {
-  if (isString(o)) return { details: o };
-  for (const k in o) { let val = o[k]; o[k] = recFlatten(val); }
-  return o;
-}
 function toLetters(s) { return [...s]; }
 
-function toListEntry(s, sep = '_', keep = []) {
-  let nogo3 = ['and'];
-}
 function toNameValueList(any) {
   if (isEmpty(any)) return [];
   let list = [];
@@ -9780,11 +9585,6 @@ function transformColorName(s) {
 }
 function trim(str) {
   return str.replace(/^\s+|\s+$/gm, '');
-}
-function trimQuotes(str) { return str.replace(/^['"`]+|['"`]+$/g, ''); }
-
-function trimToAlphanum(str, allow_ = true) {
-  return str.replace(/^[^a-zA-Z0-9_]+|[^a-zA-Z0-9_]+$/g, '');
 }
 function tryJSONParse(astext) {
   try {
@@ -10172,8 +9972,6 @@ async function updateDetails(di, key) {
   let res = await mPostRoute('postUpdateDetails', { key, di });
   await loadAssets();
 }
-async function updateExtra() { }
-
 function updateKeySettings(nMin) {
   if (nundef(G)) return;
   G.keys = setKeys({ nMin, lang: Settings.language, keysets: KeySets, key: Settings.vocab });

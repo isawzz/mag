@@ -3,8 +3,8 @@ async function start() { test10(); }
 
 async function test10(){
 	//await _sortFunctionsOfAFile();
-	//await _integrate(`../ode/games.js`,'../ode/baui.js');
-	await _closureFromProject('fe7',['../fe7/closure.js','../fe7/bau1.js','../fe7/bau2.js','../fe7/done.js','../fe7/start.js']); 
+	await _integrate(`../ode/closure.js`,'../ode/corrext.js');
+	//await _closureFromProject('fe7',['../fe7/closure.js','../fe7/bau1.js','../fe7/bau2.js','../fe7/done.js','../fe7/start.js']); 
 }
 async function test9_combineFromProject(dir) {
 	S.type = detectSessionType();

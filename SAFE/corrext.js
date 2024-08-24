@@ -1,27 +1,4 @@
 
-function allElementsFromPoint(x, y) {
-  var element, elements = [];
-  var old_visibility = [];
-  while (true) {
-    element = document.elementFromPoint(x, y);
-    if (!element || element === document.documentElement) {
-      break;
-    }
-    elements.push(element);
-    old_visibility.push(element.style.visibility);
-    element.style.visibility = 'hidden';
-  }
-  for (var k = 0; k < elements.length; k++) {
-    elements[k].style.visibility = old_visibility[k];
-  }
-  elements.reverse();
-  return elements;
-}
-function allIntegers(s) {
-  return s.match(/\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => {
-    return +v;
-  });
-}
 function calculateGoodColors(bg, fg) {
 	let fgIsLight = isdef(fg) ? colorIdealText(fg) == 'black' : colorIdealText(bg) == 'white';
 	let bgIsDark = colorIdealText(bg) == 'white';
@@ -50,11 +27,8 @@ function extractWords(s, allowed) {
 	let parts = splitAtAnyOf(s, specialChars.join('')).map(x => x.trim());
 	return parts.filter(x => !isEmpty(x));
 }
-function getServerurl() {
-  let type = detectSessionType();
-  let server = type == 'vps' ? 'https://server.vidulusludorum.com' : 'http://localhost:3001';
-  return server;
-}
+function ifNotList(x){return isList(x)?x:[x];}
+
 function mButtonX(dParent, handler = null, sz = 22, offset = 5, color = 'contrast') {
 	mIfNotRelative(dParent);
 	let bx = mDom(dParent, { position: 'absolute', top: -2 + offset, right: -5 + offset, w: sz, h: sz, cursor: 'pointer' }, { className: 'hop1' });
@@ -63,17 +37,6 @@ function mButtonX(dParent, handler = null, sz = 22, offset = 5, color = 'contras
 	let bg = mGetStyle(dParent, 'bg'); if (isEmpty(bg)) bg = 'white';
 	let fg = color == 'contrast' ? colorIdealText(bg, true) : color;
 	el = mDom(bx, { fz: sz, hline: sz, family: 'fa6', fg, display: 'inline' }, { html: String.fromCharCode('0x' + o.fa6) });
-}
-function mCommand(dParent, key, html, styles={}, opts = {}) {
-	if (nundef(html)) html = capitalize(key);
-	let close = valf(opts.close, () => { console.log('close', key) });
-	let save = valf(opts.save, false);
-	let open = valf(opts.open, window[`onclick${capitalize(key)}`]);
-	let d = mDom(dParent, { display: 'inline-block' }, { key: key });
-	let a = mDom(d, styles, { id: `${key}`, key: `${key}`, tag: 'a', href: '#', html: html, className: 'nav-link', onclick: onclickCommand })
-	let cmd = { dParent, elem: d, div: a, key, open, close, save };
-	addKeys(opts, cmd);
-	return cmd;
 }
 function mDataTable(reclist, dParent, rowstylefunc, headers, id, showheaders = true) {
 	//console.log(reclist[0])
@@ -120,6 +83,15 @@ function mGather(dAnchor, styles = {}, opts = {}) {
 		else { mStyle(d, { h: '100vh' }); mCenterCenterFlex(d); }
 	});
 }
+function mGrid(rows, cols, dParent, styles = {},opts={}) {
+  [rows, cols] = [Math.ceil(rows), Math.ceil(cols)];
+	addKeys({wcols:'1fr',hrows:'auto'},opts)
+  addKeys({ display: 'inline-grid', gridCols: 'repeat(' + cols + `,${opts.wcols})` }, styles);
+  if (rows) styles.gridRows = 'repeat(' + rows + `,${opts.hrows})`;
+  else styles.overy = 'auto';
+  let d = mDiv(dParent, styles, opts);
+  return d;
+}
 function mPopup(dParent, styles = {}, opts = {}) {
 	if (nundef(dParent)) dParent = document.body;
 	if (isdef(mBy(opts.id))) mRemove(opts.id);
@@ -130,10 +102,8 @@ function mPopup(dParent, styles = {}, opts = {}) {
 	mButtonX(popup);
 	return popup;
 }
-function msElapsedSince(msStart) { return Date.now() - msStart; }
-
 function mTable(dParent, headers, showheaders, styles = { mabottom: 0 }, className = 'table') {
-	let d = mDiv(dParent); mClass(dParent,'table_container')
+	let d = mDiv(dParent);
 	let t = mCreate('table');
 	mAppend(d, t);
 	if (isdef(className)) mClass(t, className);
@@ -201,8 +171,8 @@ async function onclickCommand(ev,key) {
 	let links = Array.from(mBy('dLeft').getElementsByTagName('a'));
 	links.map(x => mStyle(x, { fStyle: 'normal' }));
 	mStyle(iDiv(cmd), { fStyle: 'italic' });
-
 	UI.lastCommandKey = key;
+
 
 	await cmd.open();
 }
@@ -276,6 +246,9 @@ function sortByMultipleProperties(list) {
 		return 0;
 	});
 }
+
+
+async function updateExtra() { }
 
 
 

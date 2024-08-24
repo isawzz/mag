@@ -1,6 +1,22 @@
 onload = start;
 
-async function start() { TESTING = true; await prelims(); await test170_crazu(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
+async function start() { TESTING = true; await prelims(); await test172_lacunaTest(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
+
+async function test172_lacunaTest() {
+	let [w, h, sz, margin, n, neach] = [900, 600, 20, 30, 49, 7];
+	DA.sz = sz;
+	let points = DA.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
+	let d = clearDiv();
+	let dParent = DA.dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' }, { id: 'dCanvas' });
+	Items = drawPoints(dParent, points); //console.log(Items)
+	DA.meeples = [];
+
+	lacunaStartMove();
+}
+
+async function test171_blank(){
+  //how do I start a game?
+}
 
 async function test170_crazu() {
   //let d=clearFlex();
@@ -105,7 +121,7 @@ async function prelims() {
   let t5 = performance.now();
   window.onkeydown = keyDownHandler;
   window.onkeyup = keyUpHandler;
-  DA.funcs = { setgame: setgame(), crazu: crazu(), fishgame: fishgame(), button96: button96() }; //implemented games!
+  DA.funcs = { setgame: setgame(), lacuna: lacuna(), fishgame: fishgame(), button96: button96() }; //implemented games!
   for (const gname in Serverdata.config.games) {
     if (isdef(DA.funcs[gname])) continue;
     DA.funcs[gname] = defaultGameFunc();
@@ -139,4 +155,4 @@ async function prelims() {
 }
 
 
-//wegwerf!!!
+

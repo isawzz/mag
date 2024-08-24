@@ -118,7 +118,8 @@
 
 .selectable{
 	cursor: pointer;
-	border: 5px solid yellow;
+	border: 6px solid yellow;
+	translate: -3px -3px;
 }
 .rotatingBorder {
 	border: 5px solid #e2eb2e;

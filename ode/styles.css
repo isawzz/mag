@@ -102,6 +102,12 @@ dialog:-internal-dialog-in-top-layer {
   color: black;
 }
 
+.selectable{
+	cursor: pointer;
+	border: 6px solid yellow;
+	translate: -3px -3px;
+}
+
 .selectable_parent {
   box-shadow: inset 0px 0px 18px 16px #efff04, 0px 0px 12px 4px #efff04;
 }
