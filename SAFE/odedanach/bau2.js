@@ -4,13 +4,11 @@ function lacunaStartMove() {
 	DA = { meeples: DA.meeples, dParent: DA.dParent, points: DA.points, sz: DA.sz };
 
 	let [points, dParent, sz] = [DA.points, DA.dParent, DA.sz];
-	let result = findIsolatedPairs(points, sz*1.2); //console.log(result);
+	let result = findIsolatedPairs(points, sz); //console.log(result);
 
 	console.log('isolated', showPairs(result.isolatedPairs), result.isolatedPairs.length);
 	let isolated = DA.isolatedPairs = filterIsolatedPairs(result.isolatedPairs, DA.meeples,15);
 	console.log('isolated', showPairs(isolated), isolated.length);
-
-	t = showTimeSince(t, 'vor generateHotspots')
 
 	let [hotspots, linesByPair] = generateHotspots(dParent, isolated, sz, 'transparent');
 	DA.pairs = linesByPair; //console.log(DA.pairs)
@@ -21,6 +19,5 @@ function lacunaStartMove() {
 	dParent.onclick = placeYourMeeple;
 	t = showTimeSince(t, 'move')
 }
-
 
 

@@ -1,9 +1,14 @@
 onload = start;
 
-async function start() { TESTING = true; await prelims(); await test172_lacunaTest(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
+async function start() { TESTING = true; await prelims(); await test173_lacuna(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 
+async function test173_lacuna(){
+  // DA.gamename = 'lacuna';
+  // await onclickStartGame();
+  //await startGame('lacuna',{mimi:''});
+}
 async function test172_lacunaTest() {
-	let [w, h, sz, margin, n, neach] = [900, 600, 20, 30, 49, 7];
+	let [w, h, sz, margin, n, neach] = [800, 800, 20, 30, 49, 7];
 	DA.sz = sz;
 	let points = DA.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
 	let d = clearDiv();
@@ -17,7 +22,6 @@ async function test172_lacunaTest() {
 async function test171_blank(){
   //how do I start a game?
 }
-
 async function test170_crazu() {
   //let d=clearFlex();
   //let canvas = mCanvas

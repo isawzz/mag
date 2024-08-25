@@ -1,60 +1,4 @@
 
-function allElementsFromPoint(x, y) {
-  var element, elements = [];
-  var old_visibility = [];
-  while (true) {
-    element = document.elementFromPoint(x, y);
-    if (!element || element === document.documentElement) {
-      break;
-    }
-    elements.push(element);
-    old_visibility.push(element.style.visibility);
-    element.style.visibility = 'hidden';
-  }
-  for (var k = 0; k < elements.length; k++) {
-    elements[k].style.visibility = old_visibility[k];
-  }
-  elements.reverse();
-  return elements;
-}
-function allIntegers(s) {
-  return s.match(/\d+\.\d+|\d+\b|\d+(?=\w)/g).map(v => {
-    return +v;
-  });
-}
-function calculateGoodColors(bg, fg) {
-	let fgIsLight = isdef(fg) ? colorIdealText(fg) == 'black' : colorIdealText(bg) == 'white';
-	let bgIsDark = colorIdealText(bg) == 'white';
-	if (nundef(fg)) fg = colorIdealText(bg);
-	let bgNav = bg;
-	fg = colorToHex79(fg);
-	if (fgIsLight) {
-		if (isEmpty(U.texture)) { bgNav = '#00000040'; }
-		else if (bgIsDark) { bgNav = colorTrans(bg, .8); }
-		else { bgNav = colorTrans(colorDark(bg, 50), .8); }
-	} else {
-		if (isEmpty(U.texture)) { bgNav = '#ffffff40'; }
-		else if (!bgIsDark) { bgNav = colorTrans(bg, .8); }
-		else { bgNav = colorTrans(colorLight(bg, 50), .8); }
-	}
-	let realBg = bg;
-	if (bgNav == realBg) bgNav = fgIsLight ? colorDark(bgNav, .2) : colorLight(bgNav, .2);
-	let bgContrast = fgIsLight ? colorDark(bgNav, .2) : colorLight(bgNav, .2);
-	let fgContrast = fgIsLight ? '#ffffff80' : '#00000080';
-	return [realBg, bgContrast, bgNav, fg, fgContrast];
-}
-function clearMessage(remove=false) { if (remove) mRemove('dMessage'); else mStyle('dMessage', { h: 0 }); }
-
-function extractWords(s, allowed) {
-	let specialChars = getSeparators(allowed);
-	let parts = splitAtAnyOf(s, specialChars.join('')).map(x => x.trim());
-	return parts.filter(x => !isEmpty(x));
-}
-function getServerurl() {
-  let type = detectSessionType();
-  let server = type == 'vps' ? 'https://server.vidulusludorum.com' : 'http://localhost:3001';
-  return server;
-}
 function mButtonX(dParent, handler = null, sz = 22, offset = 5, color = 'contrast') {
 	mIfNotRelative(dParent);
 	let bx = mDom(dParent, { position: 'absolute', top: -2 + offset, right: -5 + offset, w: sz, h: sz, cursor: 'pointer' }, { className: 'hop1' });
@@ -64,7 +8,7 @@ function mButtonX(dParent, handler = null, sz = 22, offset = 5, color = 'contras
 	let fg = color == 'contrast' ? colorIdealText(bg, true) : color;
 	el = mDom(bx, { fz: sz, hline: sz, family: 'fa6', fg, display: 'inline' }, { html: String.fromCharCode('0x' + o.fa6) });
 }
-function mCommand(dParent, key, html, styles={}, opts = {}) {
+function mCommand(dParent, key, html, styles = {}, opts = {}) {
 	if (nundef(html)) html = capitalize(key);
 	let close = valf(opts.close, () => { console.log('close', key) });
 	let save = valf(opts.save, false);
@@ -130,10 +74,8 @@ function mPopup(dParent, styles = {}, opts = {}) {
 	mButtonX(popup);
 	return popup;
 }
-function msElapsedSince(msStart) { return Date.now() - msStart; }
-
 function mTable(dParent, headers, showheaders, styles = { mabottom: 0 }, className = 'table') {
-	let d = mDiv(dParent); mClass(dParent,'table_container')
+	let d = mDiv(dParent); mClass(dParent, 'table_container')
 	let t = mCreate('table');
 	mAppend(d, t);
 	if (isdef(className)) mClass(t, className);
@@ -144,55 +86,7 @@ function mTable(dParent, headers, showheaders, styles = { mabottom: 0 }, classNa
 	}
 	return t;
 }
-function multiSort(properties) {
-	// Example usage:
-	// const data = [
-	// 	{ name: "Alice", age: 30, city: "New York" },
-	// 	{ name: "bob", age: null, city: "los angeles" },
-	// 	{ name: null, age: 25, city: "Chicago" },
-	// 	{ name: "alice", age: 25, city: "Los Angeles" },
-	// 	{ name: "Bob", age: 30, city: null },
-	// ];
-
-	// data.sort(multiSort(['name', 'age', 'city']));
-
-	// console.log(data);
-	return function (a, b) {
-		for (let prop of properties) {
-			let propA = a[prop];
-			let propB = b[prop];
-
-			// Handle null or undefined values
-			if (propA == null && propB == null) continue;
-			if (propA == null) return -1;
-			if (propB == null) return 1;
-
-			// Compare numbers
-			if (typeof propA === 'number' && typeof propB === 'number') {
-				if (propA < propB) return -1;
-				if (propA > propB) return 1;
-				continue;
-			}
-
-			// Compare strings case-insensitively
-			if (typeof propA === 'string' && typeof propB === 'string') {
-				propA = propA.toLowerCase();
-				propB = propB.toLowerCase();
-				if (propA < propB) return -1;
-				if (propA > propB) return 1;
-				continue;
-			}
-
-			// For other types (including mixed types), compare as strings
-			propA = String(propA);
-			propB = String(propB);
-			if (propA < propB) return -1;
-			if (propA > propB) return 1;
-		}
-		return 0;
-	};
-}
-async function onclickCommand(ev,key) {
+async function onclickCommand(ev, key) {
 	//hier muss command irgendwie markiert werden und altes unmarked werden!!!
 	if (nundef(key)) key = evToAttr(ev, 'key'); //console.log(key);
 	let cmd = key == 'user' ? UI.nav.commands.user : UI.commands[key];
@@ -205,76 +99,6 @@ async function onclickCommand(ev,key) {
 	UI.lastCommandKey = key;
 
 	await cmd.open();
-}
-function replaceAllSpecialCharsFromList(str, list, sBy, removeConsecutive=true) { 
-	for(const sSub of list){
-		str=replaceAllSpecialChars(str,sSub,sBy);
-	}
-	if (removeConsecutive){
-		let sresult='';
-		while(str.length>0){
-			let sSub=str.substring(0,sBy.length);
-			str = stringAfter(str,sSub);
-			if (sSub == sBy && sresult.endsWith(sBy)) continue;
-			sresult += sSub;
-			if (str.length<sBy.length) {sresult+=str;break;}
-		}
-		str=sresult;
-	}
-	return str;
-}
-function showMessage(msg, ms = 3000) {
-	let d = mBy('dMessage');
-	if (nundef(d)) d = mPopup(); d.id='dMessage';
-	mStyle(d, { h: 21, bg: 'red', fg: 'yellow' });
-	d.innerHTML = msg;
-	clearTimeout(TO.message);
-	TO.message = setTimeout(()=>clearMessage(true), ms)
-}
-function sortBy(arr, key) {
-	function fsort(a, b) {
-		let [av, bv] = [a[key], b[key]];
-		if (isNumber(av) && isNumber(bv)) return Number(av) < Number(bv) ? -1 : 1;
-		if (isEmpty(av)) return -1;
-		if (isEmpty(bv)) return 1;
-		return av < bv ? -1 : 1;
-	}
-	arr.sort(fsort); //(a, b) => {let [av,bv]=[a[key],b[key]];return (av && !bv && av > bv) ? -1 : 1;}); 
-	// arr.sort((a, b) => {let [av,bv]=[a[key],b[key]];return (!av || av < bv) ? -1 : 1;}); 
-	return arr;
-}
-function sortByDescending(arr, key) {
-	function fsort(a, b) {
-		let [av, bv] = [a[key], b[key]];
-		if (isNumber(av) && isNumber(bv)) return Number(av) > Number(bv) ? -1 : 1;
-		if (isEmpty(av)) return 1;
-		if (isEmpty(bv)) return -1;
-		return av > bv ? -1 : 1;
-	}
-	arr.sort(fsort); //(a, b) => {let [av,bv]=[a[key],b[key]];return (av && !bv && av > bv) ? -1 : 1;}); 
-	return arr;
-}
-function sortByEmptyLast(arr, key) {
-	function fsort(a, b) {
-		let [av, bv] = [a[key], b[key]];
-		if (isNumber(av) && isNumber(bv)) return Number(av) < Number(bv) ? -1 : 1;
-		if (isEmpty(av)) return 1;
-		if (isEmpty(bv)) return -1;
-		return av < bv ? -1 : 1;
-	}
-	arr.sort(fsort); //(a, b) => {let [av,bv]=[a[key],b[key]];return (av && !bv && av > bv) ? -1 : 1;}); 
-	// arr.sort((a, b) => {let [av,bv]=[a[key],b[key]];return (!av || av < bv) ? -1 : 1;}); 
-	return arr;
-}
-function sortByMultipleProperties(list) {
-	let props = Array.from(arguments).slice(1);
-	return list.sort((a, b) => {
-		for (const p of props) {
-			if (a[p] < b[p]) return -1;
-			if (a[p] > b[p]) return 1;
-		}
-		return 0;
-	});
 }
 
 
