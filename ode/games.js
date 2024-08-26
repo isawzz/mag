@@ -1129,8 +1129,8 @@ function placeYourMeeple(ev) {
 		p.div.style.zIndex = 1000;
 	}
 	let sz = 30;
-	x = ev.clientX - d.offsetLeft;
-	y = ev.clientY - d.offsetTop;
+	x = ev.clientX - d.offsetLeft - d.parentNode.offsetLeft;
+	y = ev.clientY - d.offsetTop - d.parentNode.offsetTop;
 	let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', id: getUID() };
 	drawPoints(d, [pMeeple], false);
 	DA.meeples.push(pMeeple); console.log('DA.meeples', DA.meeples);

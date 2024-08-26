@@ -1,0 +1,196 @@
+status: started
+id: nAQERq4Np_BilFWULg16
+fen:
+  w: 900
+  h: 700
+  sz: 20
+  'n': 28
+  neach: 7
+  points:
+    - x: 378
+      'y': 386
+      bg: '#00ffff'
+      sz: 20
+      id: _1
+    - x: 466
+      'y': 257
+      bg: '#0000ff'
+      sz: 20
+      id: _2
+    - x: 533
+      'y': 445
+      bg: '#00ff00'
+      sz: 20
+      id: _3
+    - x: 283
+      'y': 326
+      bg: '#00ffff'
+      sz: 20
+      id: _4
+    - x: 604
+      'y': 264
+      bg: crimson
+      sz: 20
+      id: _5
+    - x: 424
+      'y': 511
+      bg: '#00ffff'
+      sz: 20
+      id: _6
+    - x: 356
+      'y': 191
+      bg: '#00ff00'
+      sz: 20
+      id: _7
+    - x: 674
+      'y': 417
+      bg: '#00ffff'
+      sz: 20
+      id: _8
+    - x: 215
+      'y': 428
+      bg: '#0000ff'
+      sz: 20
+      id: _9
+    - x: 589
+      'y': 171
+      bg: crimson
+      sz: 20
+      id: _10
+    - x: 581
+      'y': 544
+      bg: '#00ffff'
+      sz: 20
+      id: _11
+    - x: 182
+      'y': 255
+      bg: '#0000ff'
+      sz: 20
+      id: _12
+    - x: 751
+      'y': 304
+      bg: crimson
+      sz: 20
+      id: _13
+    - x: 243
+      'y': 538
+      bg: '#0000ff'
+      sz: 20
+      id: _14
+    - x: 406
+      'y': 96
+      bg: '#00ff00'
+      sz: 20
+      id: _15
+    - x: 695
+      'y': 534
+      bg: '#00ffff'
+      sz: 20
+      id: _16
+    - x: 101
+      'y': 377
+      bg: crimson
+      sz: 20
+      id: _17
+    - x: 696
+      'y': 145
+      bg: '#00ff00'
+      sz: 20
+      id: _18
+    - x: 400
+      'y': 636
+      bg: '#0000ff'
+      sz: 20
+      id: _19
+    - x: 216
+      'y': 117
+      bg: crimson
+      sz: 20
+      id: _20
+    - x: 826
+      'y': 430
+      bg: '#0000ff'
+      sz: 20
+      id: _21
+    - x: 94
+      'y': 490
+      bg: '#00ff00'
+      sz: 20
+      id: _22
+    - x: 567
+      'y': 46
+      bg: crimson
+      sz: 20
+      id: _23
+    - x: 718
+      'y': 598
+      bg: crimson
+      sz: 20
+      id: _24
+    - x: 30
+      'y': 298
+      bg: '#00ff00'
+      sz: 20
+      id: _25
+    - x: 806
+      'y': 158
+      bg: '#00ffff'
+      sz: 20
+      id: _26
+    - x: 302
+      'y': 674
+      bg: '#00ff00'
+      sz: 20
+      id: _27
+    - x: 292
+      'y': 22
+      bg: '#0000ff'
+      sz: 20
+      id: _28
+game: lacuna
+owner: mimi
+friendly: joust of Ashgabat
+players:
+  mimi:
+    name: mimi
+    color: '#ffe4e1'
+    texture: ../assets/textures/marble_rosa.jpeg
+    blendMode: normal
+    imgKey: mimi
+    palette:
+      - '#ffe4e1'
+      - '#c79f9b'
+      - '#9b8886'
+      - '#ae5031'
+      - '#cb765c'
+      - '#7c6d6f'
+      - '#b97876'
+      - '#d08d78'
+    playmode: human
+    score: 0
+    positions: []
+    flowers: []
+  annabel:
+    name: annabel
+    color: '#f07f7f'
+    imgKey: annabel
+    playmode: human
+    score: 0
+    positions: []
+    flowers: []
+playerNames:
+  - mimi
+  - annabel
+options:
+  numPoints: 28
+  numColors: 4
+  numMeeples: 3
+  gamemode: multi
+step: 0
+moves: []
+plorder:
+  - mimi
+  - annabel
+turn:
+  - mimi
+  - annabel

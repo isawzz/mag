@@ -29,6 +29,7 @@ function lacuna() {
 		DA.sz = sz;
 		Items = drawPoints(dParent, points); //console.log(Items)
 		DA.meeples = [];
+		return;
 
 		lacunaStartMove();
 

@@ -2015,7 +2015,7 @@ function createInteractiveCanvas(src) {
 function createOpenTable(gamename, players, options) {
   //console.log(gamename,players,options)
   let me = getUname();
-  let playerNames = [me];
+  let playerNames = [me]; console.log('me',me)
   assertion(me in players, "_createOpenTable without owner!!!!!")
   for (const name in players) { addIf(playerNames, name); }
   let table = {
@@ -7942,6 +7942,7 @@ function setTableToStarted(table) {
   table.status = 'started';
   table.step = 0;
   table.moves = [];
+  console.log(table)
   table.fen = DA.funcs[table.game].setup(table);
   return table;
 }
