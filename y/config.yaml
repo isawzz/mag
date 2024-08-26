@@ -112,7 +112,8 @@ games:
     ploptions:
       playmode: bot,human
     options:
-      numCards: 6,9,15,12
+      numPoints: 70,49,28
+      numColors: 10,7,4
       gamemode: solo,multi
   fishgame:
     friendly: tier

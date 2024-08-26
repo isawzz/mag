@@ -8,15 +8,8 @@ function lacuna() {
 			pl.positions = [];
 			pl.flowers = [];
 		}
-		fen.wbase=100;
-		fen.hbase=70;
-		let colorlist = siebenVonJederFarbe();
-		let o = rPositions(fen.wbase,fen.hbase,colorlist.length);
-		let flist=[];
-		for(let i=0;i<colorlist.length;i++){
-			flist.push({color:colorlist[i],x:o.list[i].x,y:o.list[i].y,r:o.radius});
-		}
-		fen.flowers = flist; //siebenVonJederFarbe(fen.wbase,fen.hbase);
+		let [w, h, sz, margin, n, neach] = [fen.w, fen.h, fen.sz, fen.margin, fen.n, fen.neach] = [800, 800, 20, 30, 49, 7];
+		fen.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
 		table.plorder = jsCopy(table.playerNames);
 		table.turn = jsCopy(table.playerNames);
 		return fen;
@@ -27,13 +20,14 @@ function lacuna() {
 	function present(table) {
 		let dTable = presentStandardRoundTable(table);
 		let fen = table.fen;
-		mStyle(dTable, { padding: 50, wmin: 800, hmin: 600 });
+		let [w, h, sz, margin, n, neach] = [fen.w, fen.h, fen.sz, fen.margin, fen.n, fen.neach];
+		mStyle(dTable, { padding: margin, wmin: w, hmin: h });
 
-		placeCircles1(dTable, 30)
+		// placeCircles1(dTable, 30)
 
 		//let canvas = mCanvas(dTable,{w:650,h:500,bg:'#00000020'}); //mDom(dTable,{w:700,h:500},{tag:'canvas'});
 		//placeCircles(canvas,70);
-		
+
 
 		return [];
 	}
