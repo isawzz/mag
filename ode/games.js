@@ -694,7 +694,7 @@ function generateRandomPointsRect(n, w, h, rand = 0) {
 	const points = [];
 	let { rows, cols } = divideRectangleIntoGrid(w, h * .8, n);
 	const xSpacing = w / (cols + 1);
-	const ySpacing = h / (rows + 1); console.log(xSpacing, ySpacing);
+	const ySpacing = h / (rows + 1); //console.log(xSpacing, ySpacing);
 	let dmin = 10;
 	let x, y, xfix, yfix, xlast = -dmin, ylast = -dmin;
 	for (let i = 0; i < rows; i++) {
@@ -999,15 +999,15 @@ function lacunaColors() {
 	let clist = { red: 'crimson', green: "#00ff00", blue: "#0000ff", cyan: "#00ffff", yellow: "#FFD166", pink: "#FF80AB", orange: "#F4A261", purple: "#9D4EDD", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080", magenta: "#D81159" };
 	return Object.values(clist);
 }
-function lacunaGeneratePoints(w, h, n = 49, neach = 7, sz = 10, rand = .7) {
+function lacunaGeneratePoints(w, h, n = 49, neach = 7, sz = 10, rand = .7, round=false) {
 	let clist = lacunaColors();
-	let points = generateRandomPointsRect(n, w, h, rand);
+	let points = round? generateRandomPointsRound(n, w, h, rand) : generateRandomPointsRect(n, w, h, rand);
 	let colors = generateRepeatedColors(n, neach, clist); arrShuffle(colors);
 	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; points[i].id = getUID(); }
 	return points;
 }
-function lacunaGeneratePointsMargin(w, h, margin, n = 49, neach = 7, sz = 10, rand = .7) {
-	let points = lacunaGeneratePoints(w - 2 * margin, h - 2 * margin, n, neach, sz, rand);
+function lacunaGeneratePointsMargin(w, h, margin, n = 49, neach = 7, sz = 10, rand = .7, round=false) {
+	let points = lacunaGeneratePoints(w - 2 * margin, h - 2 * margin, n, neach, sz, rand, round);
 	for (let i = 0; i < n; i++) { points[i].x += margin; points[i].y += margin; }
 	return points;
 }

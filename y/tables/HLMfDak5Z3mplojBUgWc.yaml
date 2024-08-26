@@ -1,0 +1,437 @@
+status: started
+id: HLMfDak5Z3mplojBUgWc
+fen:
+  w: 900
+  h: 700
+  sz: 20
+  'n': 70
+  neach: 7
+  points:
+    - x: 405
+      'y': 373
+      bg: '#9D4EDD'
+      sz: 20
+      id: _1
+    - x: 444
+      'y': 291
+      bg: '#FFD166'
+      sz: 20
+      id: _2
+    - x: 505
+      'y': 408
+      bg: '#9D4EDD'
+      sz: 20
+      id: _3
+    - x: 348
+      'y': 324
+      bg: '#F4A261'
+      sz: 20
+      id: _4
+    - x: 552
+      'y': 300
+      bg: '#FF80AB'
+      sz: 20
+      id: _5
+    - x: 439
+      'y': 452
+      bg: '#9D4EDD'
+      sz: 20
+      id: _6
+    - x: 403
+      'y': 246
+      bg: '#00ff00'
+      sz: 20
+      id: _7
+    - x: 589
+      'y': 398
+      bg: '#0000ff'
+      sz: 20
+      id: _8
+    - x: 303
+      'y': 402
+      bg: '#FF80AB'
+      sz: 20
+      id: _9
+    - x: 532
+      'y': 234
+      bg: '#00ff00'
+      sz: 20
+      id: _10
+    - x: 523
+      'y': 477
+      bg: '#FFD166'
+      sz: 20
+      id: _11
+    - x: 297
+      'y': 267
+      bg: '#00ff00'
+      sz: 20
+      id: _12
+    - x: 643
+      'y': 339
+      bg: '#8D6E63'
+      sz: 20
+      id: _13
+    - x: 348
+      'y': 485
+      bg: '#00ffff'
+      sz: 20
+      id: _14
+    - x: 405
+      'y': 192
+      bg: '#0000ff'
+      sz: 20
+      id: _15
+    - x: 635
+      'y': 435
+      bg: '#00ff00'
+      sz: 20
+      id: _16
+    - x: 230
+      'y': 374
+      bg: '#FF80AB'
+      sz: 20
+      id: _17
+    - x: 610
+      'y': 224
+      bg: '#F4A261'
+      sz: 20
+      id: _18
+    - x: 432
+      'y': 532
+      bg: '#FFD166'
+      sz: 20
+      id: _19
+    - x: 306
+      'y': 200
+      bg: '#00ff00'
+      sz: 20
+      id: _20
+    - x: 696
+      'y': 351
+      bg: '#0000ff'
+      sz: 20
+      id: _21
+    - x: 251
+      'y': 470
+      bg: '#A7FF83'
+      sz: 20
+      id: _22
+    - x: 499
+      'y': 153
+      bg: '#FFD166'
+      sz: 20
+      id: _23
+    - x: 587
+      'y': 525
+      bg: '#F4A261'
+      sz: 20
+      id: _24
+    - x: 210
+      'y': 255
+      bg: '#00ff00'
+      sz: 20
+      id: _25
+    - x: 698
+      'y': 260
+      bg: crimson
+      sz: 20
+      id: _26
+    - x: 309
+      'y': 538
+      bg: crimson
+      sz: 20
+      id: _27
+    - x: 359
+      'y': 140
+      bg: '#8D6E63'
+      sz: 20
+      id: _28
+    - x: 714
+      'y': 442
+      bg: '#8D6E63'
+      sz: 20
+      id: _29
+    - x: 181
+      'y': 444
+      bg: crimson
+      sz: 20
+      id: _30
+    - x: 615
+      'y': 156
+      bg: '#8D6E63'
+      sz: 20
+      id: _31
+    - x: 493
+      'y': 584
+      bg: crimson
+      sz: 20
+      id: _32
+    - x: 242
+      'y': 172
+      bg: '#FF80AB'
+      sz: 20
+      id: _33
+    - x: 764
+      'y': 353
+      bg: '#F4A261'
+      sz: 20
+      id: _34
+    - x: 259
+      'y': 548
+      bg: '#FF80AB'
+      sz: 20
+      id: _35
+    - x: 432
+      'y': 99
+      bg: '#0000ff'
+      sz: 20
+      id: _36
+    - x: 701
+      'y': 513
+      bg: '#0000ff'
+      sz: 20
+      id: _37
+    - x: 123
+      'y': 309
+      bg: '#A7FF83'
+      sz: 20
+      id: _38
+    - x: 702
+      'y': 177
+      bg: '#00ffff'
+      sz: 20
+      id: _39
+    - x: 405
+      'y': 612
+      bg: '#FF80AB'
+      sz: 20
+      id: _40
+    - x: 280
+      'y': 117
+      bg: '#00ffff'
+      sz: 20
+      id: _41
+    - x: 796
+      'y': 383
+      bg: '#9D4EDD'
+      sz: 20
+      id: _42
+    - x: 147
+      'y': 491
+      bg: '#8D6E63'
+      sz: 20
+      id: _43
+    - x: 567
+      'y': 88
+      bg: crimson
+      sz: 20
+      id: _44
+    - x: 547
+      'y': 620
+      bg: '#8D6E63'
+      sz: 20
+      id: _45
+    - x: 103
+      'y': 262
+      bg: '#A7FF83'
+      sz: 20
+      id: _46
+    - x: 803
+      'y': 266
+      bg: '#0000ff'
+      sz: 20
+      id: _47
+    - x: 284
+      'y': 609
+      bg: '#9D4EDD'
+      sz: 20
+      id: _48
+    - x: 323
+      'y': 74
+      bg: '#00ffff'
+      sz: 20
+      id: _49
+    - x: 793
+      'y': 478
+      bg: '#A7FF83'
+      sz: 20
+      id: _50
+    - x: 66
+      'y': 341
+      bg: '#F4A261'
+      sz: 20
+      id: _51
+    - x: 659
+      'y': 96
+      bg: '#A7FF83'
+      sz: 20
+      id: _52
+    - x: 497
+      'y': 652
+      bg: '#9D4EDD'
+      sz: 20
+      id: _53
+    - x: 212
+      'y': 104
+      bg: '#FFD166'
+      sz: 20
+      id: _54
+    - x: 849
+      'y': 340
+      bg: '#FFD166'
+      sz: 20
+      id: _55
+    - x: 167
+      'y': 573
+      bg: '#00ffff'
+      sz: 20
+      id: _56
+    - x: 453
+      'y': 34
+      bg: '#00ffff'
+      sz: 20
+      id: _57
+    - x: 634
+      'y': 634
+      bg: '#A7FF83'
+      sz: 20
+      id: _58
+    - x: 61
+      'y': 242
+      bg: '#F4A261'
+      sz: 20
+      id: _59
+    - x: 835
+      'y': 226
+      bg: '#FFD166'
+      sz: 20
+      id: _60
+    - x: 252
+      'y': 638
+      bg: '#00ffff'
+      sz: 20
+      id: _61
+    - x: 236
+      'y': 66
+      bg: '#00ff00'
+      sz: 20
+      id: _62
+    - x: 829
+      'y': 502
+      bg: crimson
+      sz: 20
+      id: _63
+    - x: 52
+      'y': 477
+      bg: '#A7FF83'
+      sz: 20
+      id: _64
+    - x: 709
+      'y': 80
+      bg: '#9D4EDD'
+      sz: 20
+      id: _65
+    - x: 609
+      'y': 666
+      bg: '#0000ff'
+      sz: 20
+      id: _66
+    - x: 87
+      'y': 157
+      bg: '#8D6E63'
+      sz: 20
+      id: _67
+    - x: 889
+      'y': 299
+      bg: '#FF80AB'
+      sz: 20
+      id: _68
+    - x: 173
+      'y': 623
+      bg: '#F4A261'
+      sz: 20
+      id: _69
+    - x: 364
+      'y': 6
+      bg: crimson
+      sz: 20
+      id: _70
+game: lacuna
+owner: mimi
+friendly: summit of Dhaka
+players:
+  mimi:
+    name: mimi
+    color: '#ffe4e1'
+    texture: ../assets/textures/marble_rosa.jpeg
+    blendMode: normal
+    imgKey: mimi
+    games:
+      setgame:
+        level: 1
+      button96:
+        handicap: 3
+    palette:
+      - '#ffe4e1'
+      - '#c79f9b'
+      - '#9b8886'
+      - '#ae5031'
+      - '#cb765c'
+      - '#7c6d6f'
+      - '#b97876'
+      - '#d08d78'
+    score: 0
+    positions: []
+    flowers: []
+  playmode: human
+  felix:
+    name: felix
+    color: '#0e1e76'
+    texture: ../assets/textures/marble_meer1.jpg
+    blendMode: normal
+    imgKey: felix
+    games:
+      setgame:
+        level: 7
+      button96:
+        handicap: 3
+    score: 0
+    positions: []
+    flowers: []
+  amanda:
+    name: amanda
+    color: '#046307'
+    texture: ../assets/textures/wall1.jpg
+    blendMode: overlay
+    imgKey: amanda
+    games:
+      setgame:
+        level: 2
+      button96:
+        handicap: 3
+    score: 0
+    positions: []
+    flowers: []
+playerNames:
+  - mimi
+  - playmode
+  - felix
+  - amanda
+options:
+  gamemode: multi
+  numPoints: 70
+  numColors: 10
+  numMeeples: 9
+step: 0
+moves: []
+plorder:
+  - mimi
+  - playmode
+  - felix
+  - amanda
+turn:
+  - mimi
+  - playmode
+  - felix
+  - amanda

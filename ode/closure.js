@@ -2013,7 +2013,7 @@ function createInteractiveCanvas(src) {
   });
 }
 function createOpenTable(gamename, players, options) {
-  console.log(gamename,players,options)
+  //console.log(gamename,players,options)
   let me = getUname();
   let playerNames = [me];
   assertion(me in players, "_createOpenTable without owner!!!!!")
@@ -9314,7 +9314,7 @@ function squareTo(tool, sznew = 128) {
   redrawImage(img, dParent, x1, y1, sz, sz, sznew, sznew, () => tool.setRect(0, 0, sznew, sznew))
 }
 async function startGame(gamename, players, options) {
-  console.log(gamename,jsCopy(players),jsCopy(options));
+  //console.log(gamename,jsCopy(players),jsCopy(options));
   let table = createOpenTable(gamename, players, options);
   table = setTableToStarted(table);
   let res = await mPostRoute('postTable', table);
