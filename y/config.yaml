@@ -114,6 +114,7 @@ games:
     options:
       numPoints: 70,49,28
       numColors: 10,7,4
+      numMeeples: 9,6,3
       gamemode: solo,multi
   fishgame:
     friendly: tier

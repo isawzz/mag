@@ -5,6 +5,14 @@ async function start() { TESTING = true; await prelims(); await test173_lacuna()
 async function test173_lacuna(){
   // DA.gamename = 'lacuna';
   // await onclickStartGame();
+  let players={};
+  for(const name of ['mimi','felix','amanda']){
+    players[name]=jsCopy(Serverdata.users[name]);
+    players.playmode = 'human';
+  }
+  let options = {gamemode:'multi',numPoints:70,numColors:10,numMeeples:9};
+  let gamename = 'lacuna';
+  await startGame(gamename, players, options);
   //await startGame('lacuna',{mimi:''});
 }
 async function test172_lacunaTest() {

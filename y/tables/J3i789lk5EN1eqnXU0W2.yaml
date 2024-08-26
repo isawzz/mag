@@ -1,0 +1,115 @@
+status: started
+id: J3i789lk5EN1eqnXU0W2
+fen:
+  w: 800
+  h: 800
+  sz: 20
+  'n': 49
+  neach: 7
+  points:
+    - x: 188
+      'y': 165
+      bg: crimson
+      sz: 20
+      id: _1
+    - x: 347
+      'y': 138
+      bg: crimson
+      sz: 20
+      id: _2
+    - x: 528
+      'y': 130
+      bg: crimson
+      sz: 20
+      id: _3
+    - x: 200
+      'y': 405
+      bg: crimson
+      sz: 20
+      id: _4
+    - x: 314
+      'y': 393
+      bg: crimson
+      sz: 20
+      id: _5
+    - x: 550
+      'y': 408
+      bg: crimson
+      sz: 20
+      id: _6
+    - x: 200
+      'y': 501
+      bg: crimson
+      sz: 20
+      id: _7
+game: lacuna
+owner: mimi
+friendly: tournament of Juba
+players:
+  mimi:
+    name: mimi
+    color: '#ffe4e1'
+    texture: ../assets/textures/marble_rosa.jpeg
+    blendMode: normal
+    imgKey: mimi
+    palette:
+      - '#ffe4e1'
+      - '#c79f9b'
+      - '#9b8886'
+      - '#ae5031'
+      - '#cb765c'
+      - '#7c6d6f'
+      - '#b97876'
+      - '#d08d78'
+    playmode: human
+    score: 0
+    positions: []
+    flowers: []
+  diana:
+    name: diana
+    color: '#4c2882'
+    texture: ../assets/textures/marble_violet1.jpeg
+    blendMode: luminosity
+    imgKey: das
+    playmode: human
+    score: 0
+    positions: []
+    flowers: []
+  guest:
+    name: guest
+    color: '#002e63'
+    texture: ../assets/textures/marble_blue1.jpeg
+    imgKey: stellers_jay
+    blendMode: normal
+    bg: '#55bc41'
+    fg: '#ffffff'
+    palette:
+      - '#002e63'
+      - '#071c3b'
+      - '#81591f'
+      - '#42372f'
+      - '#202737'
+      - '#23446a'
+      - '#0c2c55'
+      - '#131922'
+    playmode: human
+    score: 0
+    positions: []
+    flowers: []
+playerNames:
+  - mimi
+  - diana
+  - guest
+options:
+  numCards: 12
+  gamemode: multi
+step: 0
+moves: []
+plorder:
+  - mimi
+  - diana
+  - guest
+turn:
+  - mimi
+  - diana
+  - guest

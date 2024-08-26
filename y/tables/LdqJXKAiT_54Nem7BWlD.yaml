@@ -1,0 +1,122 @@
+status: started
+id: LdqJXKAiT_54Nem7BWlD
+fen:
+  w: 800
+  h: 800
+  sz: 20
+  'n': 49
+  neach: 7
+  points:
+    - x: 164
+      'y': 209
+      bg: crimson
+      sz: 20
+      id: _1
+    - x: 315
+      'y': 194
+      bg: crimson
+      sz: 20
+      id: _2
+    - x: 534
+      'y': 187
+      bg: crimson
+      sz: 20
+      id: _3
+    - x: 128
+      'y': 374
+      bg: crimson
+      sz: 20
+      id: _4
+    - x: 370
+      'y': 384
+      bg: crimson
+      sz: 20
+      id: _5
+    - x: 548
+      'y': 342
+      bg: crimson
+      sz: 20
+      id: _6
+    - x: 207
+      'y': 483
+      bg: crimson
+      sz: 20
+      id: _7
+game: lacuna
+owner: mimi
+friendly: soirée in Lusaka
+players:
+  mimi:
+    name: mimi
+    color: '#ffe4e1'
+    texture: ../assets/textures/marble_rosa.jpeg
+    blendMode: normal
+    imgKey: mimi
+    games:
+      setgame:
+        level: 1
+      button96:
+        handicap: 3
+    palette:
+      - '#ffe4e1'
+      - '#c79f9b'
+      - '#9b8886'
+      - '#ae5031'
+      - '#cb765c'
+      - '#7c6d6f'
+      - '#b97876'
+      - '#d08d78'
+    score: 0
+    positions: []
+    flowers: []
+  playmode: human
+  felix:
+    name: felix
+    color: '#0e1e76'
+    texture: ../assets/textures/marble_meer1.jpg
+    blendMode: normal
+    imgKey: felix
+    games:
+      setgame:
+        level: 7
+      button96:
+        handicap: 3
+    score: 0
+    positions: []
+    flowers: []
+  amanda:
+    name: amanda
+    color: '#046307'
+    texture: ../assets/textures/wall1.jpg
+    blendMode: overlay
+    imgKey: amanda
+    games:
+      setgame:
+        level: 2
+      button96:
+        handicap: 3
+    score: 0
+    positions: []
+    flowers: []
+playerNames:
+  - mimi
+  - playmode
+  - felix
+  - amanda
+options:
+  gamemode: multi
+  numPoints: 70
+  numColors: 10
+  numMeeples: 9
+step: 0
+moves: []
+plorder:
+  - mimi
+  - playmode
+  - felix
+  - amanda
+turn:
+  - mimi
+  - playmode
+  - felix
+  - amanda
