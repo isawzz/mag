@@ -1,5 +1,5 @@
 status: started
-id: nAQERq4Np_BilFWULg16
+id: W8bTVPelOfG_EXdqipUS
 fen:
   w: 900
   h: 700
@@ -7,149 +7,149 @@ fen:
   'n': 28
   neach: 7
   points:
-    - x: 378
-      'y': 386
+    - x: 380
+      'y': 387
       bg: '#00ffff'
       sz: 20
       id: _1
-    - x: 466
-      'y': 257
-      bg: '#0000ff'
-      sz: 20
-      id: _2
-    - x: 533
-      'y': 445
-      bg: '#00ff00'
-      sz: 20
-      id: _3
-    - x: 283
-      'y': 326
+    - x: 470
+      'y': 258
       bg: '#00ffff'
       sz: 20
+      id: _2
+    - x: 540
+      'y': 441
+      bg: '#00ffff'
+      sz: 20
+      id: _3
+    - x: 287
+      'y': 312
+      bg: '#00ff00'
+      sz: 20
       id: _4
-    - x: 604
-      'y': 264
-      bg: crimson
+    - x: 615
+      'y': 276
+      bg: '#0000ff'
       sz: 20
       id: _5
-    - x: 424
+    - x: 433
       'y': 511
       bg: '#00ffff'
       sz: 20
       id: _6
-    - x: 356
-      'y': 191
-      bg: '#00ff00'
-      sz: 20
-      id: _7
-    - x: 674
-      'y': 417
+    - x: 380
+      'y': 184
       bg: '#00ffff'
       sz: 20
+      id: _7
+    - x: 676
+      'y': 414
+      bg: crimson
+      sz: 20
       id: _8
-    - x: 215
-      'y': 428
-      bg: '#0000ff'
+    - x: 205
+      'y': 406
+      bg: crimson
       sz: 20
       id: _9
-    - x: 589
-      'y': 171
+    - x: 579
+      'y': 166
       bg: crimson
       sz: 20
       id: _10
-    - x: 581
-      'y': 544
-      bg: '#00ffff'
+    - x: 519
+      'y': 563
+      bg: '#00ff00'
       sz: 20
       id: _11
-    - x: 182
-      'y': 255
-      bg: '#0000ff'
+    - x: 213
+      'y': 214
+      bg: '#00ff00'
       sz: 20
       id: _12
-    - x: 751
-      'y': 304
+    - x: 742
+      'y': 277
       bg: crimson
       sz: 20
       id: _13
-    - x: 243
-      'y': 538
+    - x: 300
+      'y': 568
       bg: '#0000ff'
       sz: 20
       id: _14
-    - x: 406
-      'y': 96
-      bg: '#00ff00'
+    - x: 453
+      'y': 94
+      bg: crimson
       sz: 20
       id: _15
-    - x: 695
-      'y': 534
-      bg: '#00ffff'
+    - x: 670
+      'y': 552
+      bg: crimson
       sz: 20
       id: _16
     - x: 101
-      'y': 377
-      bg: crimson
+      'y': 326
+      bg: '#0000ff'
       sz: 20
       id: _17
-    - x: 696
-      'y': 145
-      bg: '#00ff00'
+    - x: 743
+      'y': 187
+      bg: '#0000ff'
       sz: 20
       id: _18
-    - x: 400
-      'y': 636
-      bg: '#0000ff'
+    - x: 491
+      'y': 637
+      bg: '#00ff00'
       sz: 20
       id: _19
-    - x: 216
-      'y': 117
-      bg: crimson
+    - x: 241
+      'y': 103
+      bg: '#00ffff'
       sz: 20
       id: _20
-    - x: 826
-      'y': 430
-      bg: '#0000ff'
+    - x: 835
+      'y': 396
+      bg: '#00ff00'
       sz: 20
       id: _21
-    - x: 94
-      'y': 490
+    - x: 151
+      'y': 555
       bg: '#00ff00'
       sz: 20
       id: _22
-    - x: 567
-      'y': 46
+    - x: 477
+      'y': 33
       bg: crimson
       sz: 20
       id: _23
-    - x: 718
-      'y': 598
-      bg: crimson
-      sz: 20
-      id: _24
-    - x: 30
-      'y': 298
-      bg: '#00ff00'
-      sz: 20
-      id: _25
-    - x: 806
-      'y': 158
+    - x: 628
+      'y': 643
       bg: '#00ffff'
       sz: 20
+      id: _24
+    - x: 66
+      'y': 208
+      bg: '#0000ff'
+      sz: 20
+      id: _25
+    - x: 867
+      'y': 257
+      bg: '#0000ff'
+      sz: 20
       id: _26
-    - x: 302
-      'y': 674
+    - x: 322
+      'y': 679
       bg: '#00ff00'
       sz: 20
       id: _27
-    - x: 292
-      'y': 22
+    - x: 340
+      'y': 11
       bg: '#0000ff'
       sz: 20
       id: _28
 game: lacuna
 owner: mimi
-friendly: joust of Ashgabat
+friendly: battle of Road Town
 players:
   mimi:
     name: mimi
@@ -170,17 +170,8 @@ players:
     score: 0
     positions: []
     flowers: []
-  annabel:
-    name: annabel
-    color: '#f07f7f'
-    imgKey: annabel
-    playmode: human
-    score: 0
-    positions: []
-    flowers: []
 playerNames:
   - mimi
-  - annabel
 options:
   numPoints: 28
   numColors: 4
@@ -190,7 +181,5 @@ step: 0
 moves: []
 plorder:
   - mimi
-  - annabel
 turn:
   - mimi
-  - annabel

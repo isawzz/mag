@@ -8,6 +8,7 @@ function lacuna() {
 			pl.positions = [];
 			pl.flowers = [];
 		}
+		console.log(table.options)
 		let [w, h, sz, n, neach] = [fen.w, fen.h, fen.sz, fen.n, fen.neach] = [900, 700, 20, table.options.numPoints, table.options.numPoints / table.options.numColors];
 		console.log(n, neach);
 		fen.points = lacunaGeneratePoints(w, h, n, neach, sz, .6, true); //console.log(jsCopy(points[0]));
@@ -27,11 +28,11 @@ function lacuna() {
 		let dParent = DA.dParent = mDom(dTable, { w, h, position: 'absolute', left: 2 * padding, top: 2 * padding }, { id: 'dCanvas' });
 		DA.points = points;
 		DA.sz = sz;
-		Items = drawPoints(dParent, points); //console.log(Items)
+		let items = drawPoints(dParent, points); //console.log(Items)
 		DA.meeples = [];
-		return;
+		return items;
 
-		lacunaStartMove();
+		//lacunaStartMove();
 
 		// placeCircles1(dTable, 30)
 
