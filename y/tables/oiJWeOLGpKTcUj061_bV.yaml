@@ -1,5 +1,5 @@
 status: started
-id: 405QqZAMIXnkUTpP13lY
+id: oiJWeOLGpKTcUj061_bV
 fen:
   w: 900
   h: 700
@@ -7,59 +7,59 @@ fen:
   'n': 10
   neach: 5
   points:
-    - x: 343
-      'y': 423
-      bg: '#00ff00'
-      sz: 20
-      id: _1
-    - x: 600
-      'y': 502
+    - x: 606
+      'y': 498
       bg: '#00ff00'
       sz: 20
       id: _3
-    - x: 168
-      'y': 318
+    - x: 170
+      'y': 308
       bg: crimson
       sz: 20
       id: _4
-    - x: 704
-      'y': 201
+    - x: 719
+      'y': 217
       bg: '#00ff00'
       sz: 20
       id: _5
-    - x: 344
-      'y': 608
+    - x: 345
+      'y': 609
       bg: crimson
       sz: 20
       id: _6
-    - x: 253
-      'y': 100
+    - x: 237
+      'y': 108
       bg: crimson
       sz: 20
       id: _7
-    - x: 840
-      'y': 428
-      bg: '#00ff00'
+    - x: 817
+      'y': 479
+      bg: crimson
       sz: 20
       id: _8
-    - x: 576
-      'y': 14
+    - x: 43
+      'y': 450
       bg: '#00ff00'
+      sz: 20
+      id: _9
+    - x: 652
+      'y': 37
+      bg: crimson
       sz: 20
       id: _10
   colorsInUse:
     - '#00ff00'
     - crimson
   meeples:
-    - x: 315
-      'y': 258
+    - x: 402
+      'y': 297
       sz: 20
       bg: black
-      id: _602
+      id: _829
       owner: mimi
 game: lacuna
 owner: mimi
-friendly: joust of Porto
+friendly: soirée in Bucharest
 players:
   mimi:
     name: mimi
@@ -80,14 +80,14 @@ players:
     score: 0
     positions: []
     flowers:
-      '#00ff00': 0
-      crimson: 2
-  amanda:
-    name: amanda
-    color: '#046307'
-    texture: ../assets/textures/wall1.jpg
-    blendMode: overlay
-    imgKey: amanda
+      '#00ff00': 2
+      crimson: 0
+  felix:
+    name: felix
+    color: '#0e1e76'
+    texture: ../assets/textures/marble_meer1.jpg
+    blendMode: normal
+    imgKey: felix
     playmode: human
     score: 0
     positions: []
@@ -96,7 +96,7 @@ players:
       crimson: 0
 playerNames:
   - mimi
-  - amanda
+  - felix
 options:
   numPoints: 10
   numColors: 2
@@ -106,6 +106,6 @@ step: 0
 moves: []
 plorder:
   - mimi
-  - amanda
+  - felix
 turn:
-  - amanda
+  - felix
