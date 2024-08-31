@@ -4721,7 +4721,7 @@ async function instructionStandard(table, instruction) {
   let myTurn = isMyTurn(table);
   if (!myTurn) staticTitle(table); else animatedTitle();
   if (nundef(instruction)) return;
-  let styleInstruction = { display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
+  let styleInstruction = { hmin:42, display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
   let dinst = mBy('dInstruction');
   if (nundef(dinst)) return;
   mClear(dinst);

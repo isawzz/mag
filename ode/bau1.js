@@ -46,14 +46,17 @@ function lacuna() {
 		B.diPoints = lacunaDrawPoints(dParent, points, false);
 		B.meeples = meeples;
 		B.diMeeples = lacunaDrawPoints(dParent, meeples, false);
+		meeples.map(x=>showMeeple(dParent,x));
 		return B.points;
 	}
 
 	async function activate(table, items) {
 		//console.log('activate', table, items);
 		await instructionStandard(table, 'must place a meeple'); //browser tab and instruction if any
+		if (!isMyTurn(table)) return;
 		setTimeout(() => lacunaStartMove(), 10);
 	}
+
 	return { setup, present, stats, activate };
 }
 

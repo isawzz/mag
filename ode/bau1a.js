@@ -29,6 +29,11 @@ function unlock(){
 	console.log('UNLOCK!!!!!!!!!!!!!!!!!!!!!!');
 }
 
+function showMeeple(d,pMeeple){
+	lacunaDrawPoints(d, [pMeeple], false);
+	let color = T.players[pMeeple.owner].color; console.log('color', color)
+	mStyle(iDiv(pMeeple), { border: `${color} 5px solid` });
+}
 function placeYourMeepleME(ev) {
 	let [fen,players,pl]=[T.fen,T.players,T.players[getUname()]]
 	stopPulsing();
@@ -44,9 +49,7 @@ function placeYourMeepleME(ev) {
 
 	fen.meeples.push(jsCopy(pMeeple));//**** */
 
-	lacunaDrawPoints(d, [pMeeple], false);
-	let color = getPlayerProp('color'); console.log('color', color)
-	mStyle(iDiv(pMeeple), { border: `${color} 5px solid` })
+	showMeeple(d,pMeeple);
 	B.meeples.push(pMeeple); console.log('B.meeples', B.meeples);
 	//TODO: if only 2 points are selectable, just grab them and finish move!
 	if (B.endPoints.length == 0) {
