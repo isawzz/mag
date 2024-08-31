@@ -4352,7 +4352,7 @@ function getPixRgb(ctx, x, y) {
   var red = pix[0]; var green = pix[1]; var blue = pix[2];
   return { r: red, g: green, b: blue };
 }
-function getPlayerProp(prop) { let pl = T.players[getUname()]; return pl[prop]; }
+function getPlayerProp(prop,name) { let pl = T.players[valf(name,getUname())]; return pl[prop]; }
 
 function getPlayersWithMaxScore(table) {
   let list = dict2list(table.players, 'name');
@@ -4771,7 +4771,7 @@ function isBetween(n, a, b) { return n >= a && n <= b }
 
 function isCloseTo(n, m, acc = 10) { return Math.abs(n - m) <= acc + 1; }
 
-function isColor(s) { return isdef(M.colorByName[s]); }
+function isColor(s) { return isdef(M.colorByName[s]) || s.length == 7 && s[0]=='#'; }
 
 function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
 
@@ -7032,12 +7032,22 @@ async function onsockMerged(x) {
   await showTable(x);
 }
 async function onsockPending(id) {
-  console.log('SOCK::pending', x)
+  console.log('SOCK::pending', id)
   if (!isSameTableOpen(id)) return;
   await showTable(id);
 }
 async function onsockSuperdi(x) {
   console.log('SOCK::superdi', x)
+}
+async function onsockTable(x) {
+  console.log('SOCK::table', x); 
+  let [msg, id, turn, isNew] = [x.msg, x.id, x.turn, x.isNew];
+  let menu = getMenu();
+  let me = getUname();
+	console.log('menu',menu,'me',me,'turn',turn,'isNew',isNew)
+  if (turn.includes(me) && menu == 'play') { Tid = id; await switchToMainMenu('table'); }
+  else if (menu == 'table') await showTable(id);
+  else if (menu == 'play') await showTables();
 }
 async function onsockTables(x) {
   console.log('SOCK::tables', x)
@@ -7256,18 +7266,6 @@ function paletteTransWhiteBlack(n = 9) {
 }
 function pathFromBgImage(bgImage) { return bgImage.substring(5, bgImage.length - 2); }
 
-function playerStatCount(key, n, dParent, styles = {}, opts = {}) {
-  let sz = valf(styles.sz, 16);
-  addKeys({ display: 'flex', margin: 4, dir: 'column', hmax: 2 * sz, 'align-content': 'center', fz: sz, align: 'center' }, styles);
-  let d = mDiv(dParent, styles);
-  let o = M.superdi[key];
-  if (typeof key == 'function') key(d, { h: sz, hline: sz, w: '100%', fg: 'grey' });
-  else if (isFilename(key)) showim2(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
-  else if (isdef(o)) showim2(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
-  else mText(key, d, { h: sz, fz: sz, w: '100%' });
-  d.innerHTML += `<span ${isdef(opts.id) ? `id='${opts.id}'` : ''} style="font-weight:bold;color:inherit">${n}</span>`;
-  return d;
-}
 function pluralOf(s, n) {
   di = { food: '', child: 'ren' };
   return s + (n == 0 || n > 1 ? valf(di[s.toLowerCase()], 's') : '');

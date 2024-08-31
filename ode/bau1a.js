@@ -1,66 +1,51 @@
 
-async function onsockTable(x) {
-  console.log('SOCK::table', x); 
-  let [msg, id, turn, isNew] = [x.msg, x.id, x.turn, x.isNew];
-  let menu = getMenu();
-  let me = getUname();
-	console.log('menu',menu,'me',me,'turn',turn,'isNew',isNew)
-  if (turn.includes(me) && menu == 'play') { Tid = id; await switchToMainMenu('table'); }
-  else if (menu == 'table') await showTable(id);
-  else if (menu == 'play') await showTables();
-}
-function unlockLengthyProcess(){
-	try{
-		if (DA.Interrupt === true && DA.LengthyProcessRunning === true) {
-			DA.LengthyProcessRunning = false;  
-			
-			console.log('INTERRUPT!!!!!!!!!!!!!!!!!!!!!!');
-			throw 1;
+function findClosestMeeple(p){
+	console.log('p', p);
+	let fen = T.fen;
+	let dist = 9999999;
+	let closestMeeple = null;
+	for (const meeple of fen.meeples) {
+		console.log('meeple', meeple);
+		let d = getDistanceBetweenCenters(mBy(p.id),mBy(meeple.id)); //getDistanceBetweenPoints(p, meeple);
+		console.log('d', d);
+		if (d < dist) {
+			dist = d;
+			closestMeeple = meeple;
 		}
 	}
-	catch(err){}
+	return closestMeeple;
 }
-function lockForLengthyProcess(){
-	DA.LengthyProcessRunning = true;
-	console.log('LOCK!!!!!!!!!!!!!!!!!!!!!!');
-}
-function unlock(){
-	DA.LengthyProcessRunning = false;
-	console.log('UNLOCK!!!!!!!!!!!!!!!!!!!!!!');
+function drawInteractiveLine(p1, p2) {
+	const line = document.createElement('div');// mDom(d);
+
+	// Calculate the distance and angle between the points
+	const distance = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+	const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI);
+
+	// Style the line
+	line.style.position = 'absolute';
+	line.style.transformOrigin = '0 0';
+	line.style.transform = `rotate(${angle}deg)`;
+	line.style.height = '2px';
+	//line.style.border = 'solid black 11px';
+	line.style.width = `${distance}px`;
+	line.style.backgroundColor = 'black';
+	line.style.left = `${p1.x}px`;
+	line.style.top = `${p1.y}px`;
+
+	// Add mouseover event
+	line.addEventListener('mouseover', () => {
+		line.style.backgroundColor = 'red';
+	});
+
+	line.addEventListener('mouseout', () => {
+		line.style.backgroundColor = 'black';
+	});
+
+	// Append the line to the body or a specific container
+	document.body.appendChild(line);
+
+	return line;
 }
 
-function showMeeple(d,pMeeple){
-	lacunaDrawPoints(d, [pMeeple], false);
-	let color = T.players[pMeeple.owner].color; console.log('color', color)
-	mStyle(iDiv(pMeeple), { border: `${color} 5px solid` });
-}
-function placeYourMeepleME(ev) {
-	let [fen,players,pl]=[T.fen,T.players,T.players[getUname()]]
-	stopPulsing();
-	d = mBy('dCanvas');
-	d.onmousemove = null;
-	d.onclick = null;
-	for (const p of B.hotspotList) { mStyle(p.div, { z: 0 }) }
-	for (const p of B.points) { p.div.style.zIndex = 1000; }
-	let sz = 20;
-	x = ev.clientX - d.offsetLeft - d.parentNode.offsetLeft;
-	y = ev.clientY - d.offsetTop - d.parentNode.offsetTop;
-	let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', id: getUID(), owner: getUname() };
 
-	fen.meeples.push(jsCopy(pMeeple));//**** */
-
-	showMeeple(d,pMeeple);
-	B.meeples.push(pMeeple); console.log('B.meeples', B.meeples);
-	//TODO: if only 2 points are selectable, just grab them and finish move!
-	if (B.endPoints.length == 0) {
-		//finish move without grabbing any flowers
-		lacunaMoveCompletedME([]);
-
-	} else if (B.endPoints.length == 2) {
-		//grab those flowers and finish move
-		B.selectedPoints.push(B.endPoints[0]);
-		B.selectedPoints.push(B.endPoints[1]);
-		lacunaMoveCompletedME(B.selectedPoints);
-
-	} else lacunaMakeSelectableME();
-}

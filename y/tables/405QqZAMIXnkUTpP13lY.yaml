@@ -1,0 +1,111 @@
+status: started
+id: 405QqZAMIXnkUTpP13lY
+fen:
+  w: 900
+  h: 700
+  sz: 20
+  'n': 10
+  neach: 5
+  points:
+    - x: 343
+      'y': 423
+      bg: '#00ff00'
+      sz: 20
+      id: _1
+    - x: 600
+      'y': 502
+      bg: '#00ff00'
+      sz: 20
+      id: _3
+    - x: 168
+      'y': 318
+      bg: crimson
+      sz: 20
+      id: _4
+    - x: 704
+      'y': 201
+      bg: '#00ff00'
+      sz: 20
+      id: _5
+    - x: 344
+      'y': 608
+      bg: crimson
+      sz: 20
+      id: _6
+    - x: 253
+      'y': 100
+      bg: crimson
+      sz: 20
+      id: _7
+    - x: 840
+      'y': 428
+      bg: '#00ff00'
+      sz: 20
+      id: _8
+    - x: 576
+      'y': 14
+      bg: '#00ff00'
+      sz: 20
+      id: _10
+  colorsInUse:
+    - '#00ff00'
+    - crimson
+  meeples:
+    - x: 315
+      'y': 258
+      sz: 20
+      bg: black
+      id: _602
+      owner: mimi
+game: lacuna
+owner: mimi
+friendly: joust of Porto
+players:
+  mimi:
+    name: mimi
+    color: '#ffe4e1'
+    texture: ../assets/textures/marble_rosa.jpeg
+    blendMode: normal
+    imgKey: mimi
+    palette:
+      - '#ffe4e1'
+      - '#c79f9b'
+      - '#9b8886'
+      - '#ae5031'
+      - '#cb765c'
+      - '#7c6d6f'
+      - '#b97876'
+      - '#d08d78'
+    playmode: human
+    score: 0
+    positions: []
+    flowers:
+      '#00ff00': 0
+      crimson: 2
+  amanda:
+    name: amanda
+    color: '#046307'
+    texture: ../assets/textures/wall1.jpg
+    blendMode: overlay
+    imgKey: amanda
+    playmode: human
+    score: 0
+    positions: []
+    flowers:
+      '#00ff00': 0
+      crimson: 0
+playerNames:
+  - mimi
+  - amanda
+options:
+  numPoints: 10
+  numColors: 2
+  numMeeples: 1
+  gamemode: multi
+step: 0
+moves: []
+plorder:
+  - mimi
+  - amanda
+turn:
+  - amanda

@@ -1,16 +1,16 @@
 
 async function showTable(id) {
-	let me = getUname(); console.log('_________showTable', id)
+	let me = getUname(); //console.log('_________showTable', id)
 	let table = await mGetRoute('table', { id });  //console.log('table',table)
 	if (!table) { showMessage('table deleted!'); return await showTables('showTable'); }
 
-	console.log('lengthy',DA.LengthyProcessRunning);
+	//console.log('lengthy',DA.LengthyProcessRunning);
 	DA.Interrupt = true;
 	while (DA.LengthyProcessRunning === true){
 		await mSleep(100);
 	} 
 	DA.Interrupt = false;
-	console.log('____________showTable', table);
+	//console.log('____________showTable', table);
 
 	let func = DA.funcs[table.game];
 	T = table;

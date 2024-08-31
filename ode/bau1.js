@@ -2,19 +2,33 @@
 function lacuna() {
 	function setup(table) {
 		let fen = {};
+
+		table.options.numMeeples = 1;
+		table.options.numPoints = 10;
+		table.options.numColors = 2;
+
+		//console.log(table.options)
+		let [w, h, sz, n, neach] = [fen.w, fen.h, fen.sz, fen.n, fen.neach] = [900, 700, 20, table.options.numPoints, table.options.numPoints / table.options.numColors];
+		//console.log(n, neach);
+		fen.points = lacunaGeneratePoints(w, h, n, neach, sz, .6, true); //console.log(jsCopy(points[0]));
+
+		fen.colorsInUse = Array.from(new Set(fen.points.map(x=>x.bg))); console.log('colorsUsed',fen.colorsInUse)
 		for (const name in table.players) {
 			let pl = table.players[name];
 			pl.score = 0;
 			pl.positions = [];
 			pl.flowers = {};
+			for(const c of fen.colorsInUse){
+				pl.flowers[c]=0;
+			}
 		}
-		//console.log(table.options)
-		let [w, h, sz, n, neach] = [fen.w, fen.h, fen.sz, fen.n, fen.neach] = [900, 700, 20, table.options.numPoints, table.options.numPoints / table.options.numColors];
-		//console.log(n, neach);
-		fen.points = lacunaGeneratePoints(w, h, n, neach, sz, .6, true); //console.log(jsCopy(points[0]));
+
 		fen.meeples = [];
 		table.plorder = jsCopy(table.playerNames);
 		table.turn = [rChoose(table.playerNames)];
+
+		
+
 		return fen;
 	}
 
@@ -27,7 +41,14 @@ function lacuna() {
 			let item = player_stat_items[plname];
 			if (pl.playmode == 'bot') { mStyle(item.img, { rounding: 0 }); }
 			let d = iDiv(item); mCenterFlex(d); mLinebreak(d); mIfNotRelative(d);
-			playerStatCount('star', pl.score, d); //, {}, {id:`stat_${plname}_score`});
+
+			
+			for(const c in pl.flowers){
+				let n=pl.flowers[c];
+				playerStatCount(c, n, d); //, {}, {id:`stat_${plname}_score`});	
+			}
+
+			
 			if (table.turn.includes(plname)) { mDom(d, { position: 'absolute', left: -3, top: 0 }, { html: getWaitingHtml() }); }
 		}
 
@@ -109,6 +130,20 @@ function findIsolatedPairs(nodes, threshold = 3) {
 	}
 	return { isolatedPairs, obstaclePairs };
 }
+function findPlayerWithMeeplesLeft(name) {
+	let pnamesWithMeeplesLeft = [];
+	for (const pname of T.playerNames) {
+		let meeplesOfThatPlayer = T.fen.meeples.filter(x => x.owner == pname);
+		if (meeplesOfThatPlayer.length < T.options.numMeeples) pnamesWithMeeplesLeft.push(pname);
+	}
+	if (pnamesWithMeeplesLeft.length == 0) return null;
+	let nextPlayer = null;
+	while (!nextPlayer) {
+		nextPlayer = arrNext(T.plorder, name);
+		if (!pnamesWithMeeplesLeft.includes(nextPlayer)) { name = nextPlayer; nextPlayer = null; }
+	}
+	return nextPlayer;
+}
 function generateHotspots(dParent, pointPairs, sz = 20, color = 'red') {
 	let t = getNow();
 	let hotspots = [];
@@ -136,7 +171,7 @@ function generateHotspots(dParent, pointPairs, sz = 20, color = 'red') {
 		}
 		linesByPair[key] = line;
 	}
-	t = showTimeSince(t); 
+	//t = showTimeSince(t); 
 	let dihotspots = lacunaDrawPoints(dParent, hotspots);
 	if (color == 'transparent') hotspots.map(x => mStyle(x.div, { opacity: 0 }))
 	let [c1, c2, c3, c4, c5, c6] = [0, 0, 0, 0, 0, 0];
@@ -169,7 +204,7 @@ function generateHotspots(dParent, pointPairs, sz = 20, color = 'red') {
 			}
 		}
 	}
-	t = showTimeSince(t); 
+	//t = showTimeSince(t); 
 	return [hotspots, linesByPair];
 }
 function getDistanceBetweenPoints(p1, p2) {
@@ -243,10 +278,132 @@ function lacunaMakeSelectableME() {
 		div.onclick = ev => lacunaSelectPointME(ev);
 	}
 }
+async function lacunaMoveCompletedME(idlist) {
+	let [fen, players, me, table] = [T.fen, T.players, T.players[getUname()], T]
+	B.endPoints.map(x => lacunaUnselectable(x));
+	showMessage("________Move completed, removing", idlist);
+	assertion(idlist.length == 2 || idlist.length == 0, `WTF3!!! ${idlist.length}`);
+	if (idlist.length == 2) {
+		fen.points = fen.points.filter(x => x.id != idlist[0] && x.id != idlist[1]);
+		let color = B.diPoints[idlist[0]].bg; //console.log('color', color);
+		let flower = lacunaColorName(color); //console.log('flower', flower);
+		let n = lookup(me, ['flowers', color]);
+		lookupSetOverride(me, ['flowers', color], n ? n + 2 : 2);
+	}
+
+	//table.turn=[arrNext(table.plorder,getUname())]; //console.log('turn changed to',table.turn);
+	let nextPlayer = findPlayerWithMeeplesLeft(getUname()); console.log('nextPlayer', nextPlayer);
+	if (nextPlayer) {
+		table.turn = [nextPlayer];
+		let o = { id: table.id, name: me, step: table.step + 1, table };
+		let res = await mPostRoute('table', o); //console.log(res);
+	} else await lacunaGameover();
+
+
+}
+async function lacunaSelectPointME(ev) {
+	let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
+	let id = evToId(ev);
+	let p = B.diPoints[id];
+	//console.log('selecting point', p.id);
+	lookupAddIfToList(B, ['selectedPoints'], id); //console.log(B.selectedPoints.length)
+	assertion(B.selectedPoints.length >= 1, "WTF");
+	if (B.selectedPoints.length == 1) {
+		let eps = [];
+		//console.log('possiblePairs', B.possiblePairs);
+		for (const pair of B.possiblePairs.map(x => x.split(',').map(x => B.diPoints[x]))) {
+			let p1 = pair[0];
+			let p2 = pair[1];
+			if (p1.id != id && p2.id != id) continue;
+			if (p1.id == id) addIf(eps, p2.id); else addIf(eps, p1.id);
+		}
+		let unselect = B.endPoints.filter(x => !eps.includes(x));
+		unselect.map(x => lacunaUnselectable(x));
+		B.endPoints = eps; //console.log('endPoints remaining', B.endPoints);
+		if (B.endPoints.length < 2) {
+			B.selectedPoints.push(B.endPoints[0]);
+			await lacunaMoveCompletedME(B.selectedPoints);
+		}
+	} else {
+		assertion(B.selectedPoints.length == 2, "WTF2!!!!!!!!!!!!!");
+		await lacunaMoveCompletedME(B.selectedPoints);
+	}
+}
+function lacunaStartMove() {
+	lockForLengthyProcess();
+	let t = getNow();
+	h = { meeples: B.meeples, dParent: B.dParent, points: B.points, sz: B.sz };
+
+	let [points, dParent, sz] = [B.points, B.dParent, B.sz];
+	let result = findIsolatedPairs(points, sz*1.2); //console.log(result);
+
+	//console.log('isolated', showPairs(result.isolatedPairs), result.isolatedPairs.length);
+	let isolated = B.isolatedPairs = filterIsolatedPairs(result.isolatedPairs, B.meeples, 15);
+	//console.log('isolated', showPairs(isolated), isolated.length);
+
+	//t = showTimeSince(t, 'vor generateHotspots')
+
+	let [hotspots, linesByPair] = generateHotspots(dParent, isolated, sz, 'transparent');
+
+	B.hotspots=hotspots;
+	B.linesByPair = linesByPair;
+	B.pairs = linesByPair; //console.log(B.pairs)
+	B.hotspotList = hotspots;
+	B.hotspotDict = list2dict(hotspots, 'id');
+
+	dParent.onmousemove = highlightHotspots;
+	dParent.onclick = placeYourMeepleME;
+	//t = showTimeSince(t, 'move');
+	unlock();
+}
 function lacunaUnselectable(id) {
-	let div = mBy(id); console.log('unselecting', id)
+	let div = mBy(id); //console.log('unselecting', id)
 	mClassRemove(div, 'selectable');
 	div.onclick = null;
+}
+function lockForLengthyProcess(){
+	DA.LengthyProcessRunning = true;
+	console.log('LOCK!!!!!!!!!!!!!!!!!!!!!!');
+}
+async function placeYourMeepleME(ev) {
+	let [fen,players,pl]=[T.fen,T.players,T.players[getUname()]]
+	stopPulsing();
+	d = mBy('dCanvas');
+	d.onmousemove = null;
+	d.onclick = null;
+	for (const p of B.hotspotList) { mStyle(p.div, { z: 0 }) }
+	for (const p of B.points) { p.div.style.zIndex = 1000; }
+	let sz = 20;
+	x = ev.clientX - d.offsetLeft - d.parentNode.offsetLeft;
+	y = ev.clientY - d.offsetTop - d.parentNode.offsetTop;
+	let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', id: getUID(), owner: getUname() };
+
+	fen.meeples.push(jsCopy(pMeeple));//**** */
+
+	showMeeple(d,pMeeple);
+	B.meeples.push(pMeeple); //console.log('B.meeples', B.meeples);
+	//TODO: if only 2 points are selectable, just grab them and finish move!
+	if (B.endPoints.length == 0) {
+		//finish move without grabbing any flowers
+		await lacunaMoveCompletedME([]);
+
+	} else if (B.endPoints.length == 2) {
+		//grab those flowers and finish move
+		B.selectedPoints.push(B.endPoints[0]);
+		B.selectedPoints.push(B.endPoints[1]);
+		await lacunaMoveCompletedME(B.selectedPoints);
+
+	} else lacunaMakeSelectableME();
+}
+function showMeeple(d,pMeeple){
+	//console.log(pMeeple.owner)
+	lacunaDrawPoints(d, [pMeeple], false);
+
+	let color = getPlayerProp('color',pMeeple.owner); //console.log('color', color)
+	let letter = pMeeple.owner[0].toUpperCase();
+	
+	mStyle(iDiv(pMeeple), { border: `${color} 5px solid` });
+	iDiv(pMeeple).innerHTML = letter;
 }
 function startPulsing(idlist) {
 	idlist.map(x => B.diPoints[x].div.classList.add('pulseFastInfinite'));
@@ -257,6 +414,21 @@ function stopPulsing(idExcept = []) {
 		if (idExcept.includes(d.id)) continue;
 		d.classList.remove('pulseFastInfinite');
 	}
+}
+function unlock(){
+	DA.LengthyProcessRunning = false;
+	console.log('UNLOCK!!!!!!!!!!!!!!!!!!!!!!');
+}
+function unlockLengthyProcess(){
+	try{
+		if (DA.Interrupt === true && DA.LengthyProcessRunning === true) {
+			DA.LengthyProcessRunning = false;  
+			
+			console.log('INTERRUPT!!!!!!!!!!!!!!!!!!!!!!');
+			throw 1;
+		}
+	}
+	catch(err){}
 }
 
 

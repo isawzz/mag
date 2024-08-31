@@ -1,31 +1,45 @@
 
-function lacunaStartMove() {
-	lockForLengthyProcess();
-	let t = getNow();
-	h = { meeples: B.meeples, dParent: B.dParent, points: B.points, sz: B.sz };
+async function lacunaGameover() {
+	showMessage('Game over');
+	console.log('Game over');
 
-	let [points, dParent, sz] = [B.points, B.dParent, B.sz];
-	let result = findIsolatedPairs(points, sz*1.2); //console.log(result);
+	//for each point remaining on the board, calculate closest meeple
+	let [fen,players] = [T.fen, T.players];
+	
+	for(const p of fen.points) {
+		let closestMeeple = findClosestMeeple(p);
+		if(closestMeeple) {
+			console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
+			let owner = closestMeeple.owner;
+			players[owner].flowers[p.color] += 1;
+			//draw a line between meeple and point
+			let d=mBy(p.id);
+			console.log('d',d);
+			d.classList.add('pulseFastInfinite');
+			mBy(p.id).innerHTML = owner[0].toUpperCase();
 
-	//console.log('isolated', showPairs(result.isolatedPairs), result.isolatedPairs.length);
-	let isolated = B.isolatedPairs = filterIsolatedPairs(result.isolatedPairs, B.meeples, 15);
-	//console.log('isolated', showPairs(isolated), isolated.length);
+			//drawInteractiveLine(p, closestMeeple);
+		}
+		//break;
+	}
 
-	t = showTimeSince(t, 'vor generateHotspots')
 
-	let [hotspots, linesByPair] = generateHotspots(dParent, isolated, sz, 'transparent');
+	for(const plname of T.playerNames) {
+		let pl = T.players[plname];
+		for(const f in pl.flowers) pl.score += pl.flowers[f];
+	}
+	let table = T;
+  table.winners = getPlayersWithMaxScore(table);
+  table.status = 'over';
+  table.turn = [];
+  let id = table.id;
+  let name = getUname();
+  let step = table.step;
+  let o = { id, name, step, table };
+  //let res = await mPostRoute('table', o); //console.log(res);
 
-	B.hotspots=hotspots;
-	B.linesByPair = linesByPair;
-	B.pairs = linesByPair; //console.log(B.pairs)
-	B.hotspotList = hotspots;
-	B.hotspotDict = list2dict(hotspots, 'id');
-
-	dParent.onmousemove = highlightHotspots;
-	dParent.onclick = placeYourMeepleME;
-	t = showTimeSince(t, 'move');
-	unlock();
 }
+
 
 
 

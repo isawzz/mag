@@ -556,8 +556,6 @@ function homeSidebar(wmin = 150) {
 	cmds.homeNew = mCommand(d, 'homeNew', 'New Entry'); mNewline(d, gap);
 	UI.commands = cmds;
 }
-function isColor(s) { return isdef(M.colorByName[s]); }
-
 function isFilename(s) { return s.includes('../'); }
 
 function mArea(padding, dParent, styles = {}, opts = {}) {
@@ -630,6 +628,7 @@ function playerStatCount(key, n, dParent, styles = {}, opts = {}) {
 	let o = M.superdi[key];
 	if (typeof key == 'function') key(d, { h: sz, hline: sz, w: '100%', fg: 'grey' });
 	else if (isFilename(key)) showim2(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
+	else if (isColor(key)) mDom(d, { bg:key, h: sz, fz: sz, w: '100%', fg: key },{html:' ' });
 	else if (isdef(o)) showim2(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
 	else mText(key, d, { h: sz, fz: sz, w: '100%' });
 	d.innerHTML += `<span ${isdef(opts.id) ? `id='${opts.id}'` : ''} style="font-weight:bold;color:inherit">${n}</span>`;
@@ -735,7 +734,7 @@ function setgame() {
 		let rows = Math.ceil(fen.cards.length / 3);
 		let gap = 10;
 		let sz = rows <= 4 ? 80 : rows == 5 ? 70 : rows == 6 ? 68 : rows == 7 ? 65 : rows == 8 ? 62 : 60;
-		let dBoard = T.dBoard = mGrid(rows, 3, d, { gap });
+		let dBoard = mGrid(rows, 3, d, { gap });
 		let items = [];
 		for (const c of fen.cards) {
 			let dc = setDrawCard(c, dBoard, colors, sz);
@@ -1117,7 +1116,7 @@ async function updateTestButtonsPlayers(table) {
 	assertion(table, "NOT TABLE IN updateTestButtonsPlayers")
 	let d = mBy('dExtraRight'); mClear(d); //mFlexWrap(d);
 	let me = getUname();
-	let names = T.playerNames; //addIf(names,'mimi');
+	let names = table.playerNames; //addIf(names,'mimi');
 	//addIf(names,me);
 	let dplayers = mDom(d);
 	for (const name of names) {
