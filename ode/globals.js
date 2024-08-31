@@ -1,4 +1,5 @@
 var A = null;
+var B = {};
 var Menu = null;
 var T = null;
 var Tid = null;

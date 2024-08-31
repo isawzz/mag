@@ -23,7 +23,7 @@ async function test172_lacunaTest() {
 	let points = DA.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
 	let d = clearDiv();
 	let dParent = DA.dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' }, { id: 'dCanvas' });
-	Items = drawPoints(dParent, points); //console.log(Items)
+	Items = lacunaDrawPoints(dParent, points); //console.log(Items)
 	DA.meeples = [];
 
 	lacunaStartMove();

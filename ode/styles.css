@@ -103,9 +103,8 @@ dialog:-internal-dialog-in-top-layer {
 }
 
 .selectable{
-	cursor: pointer;
-	border: 6px solid yellow;
-	translate: -3px -3px;
+	outline: 6px solid yellow;
+	/* translate: -3px -3px; */
 }
 
 .selectable_parent {

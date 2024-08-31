@@ -22,7 +22,6 @@ function allIntegers(s) {
     return +v;
   });
 }
-
 function arrSort(arr, caseSensitive=true) {
 	return arr.sort((a, b) => {
 		// Convert both elements to strings for comparison

@@ -1,150 +1,3 @@
-function _drawPoints(dParent, points) {
-	return points.map(p => placeCircle(dParent, p.x, p.y, valf(p.sz, 20), valf(p.bg, rColor())));
-}
-function alertOnPointClick(elem, di, threshold = 2) {
-	elem.addEventListener('click', (ev) => {
-		const rect = elem.getBoundingClientRect();
-		const mouseX = ev.clientX - rect.left;
-		const mouseY = ev.clientY - rect.top;
-		let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
-		let mx1 = xs.lower;
-		let mx2 = xs.higher;
-		let my1 = ys.lower;
-		let my2 = ys.higher;
-		stopAnimatingPoints();
-		if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
-			DA.mousePoint = { x: mouseX, y: mouseY };
-			key = getXYKey(mx1, my1);
-			let entry = lookup(di, [key]);
-			if (entry) {
-				DA.pairInfo = entry;
-				console.log(`Mouse over point (${mx1} (${mouseX}),${my1} (${mouseY}))`, entry);
-				for (const id of entry) {
-					mClass(id, ani)
-				}
-			}
-		}
-	});
-}
-function alertOnPointClickPair(elem, di, threshold = 2) {
-	elem.addEventListener('click', (ev) => {
-		const rect = elem.getBoundingClientRect();
-		const mouseX = ev.clientX - rect.left;
-		const mouseY = ev.clientY - rect.top;
-		let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
-		let mx1 = xs.lower;
-		let mx2 = xs.higher;
-		let my1 = ys.lower;
-		let my2 = ys.higher;
-		stopAnimatingPairs();
-		if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
-			DA.mousePoint = { x: mouseX, y: mouseY };
-			key = getXYKey(mx1, my1);
-			let entry = lookup(di, [key]);
-			if (entry) {
-				DA.pairInfo = entry;
-				if (entry.length == 1) {
-					console.log(`pair ${entry[0]} is removed`);
-					lacunaRemovePair(entry[0]);
-				} else {
-					console.log(`user will choose pair from`, entry);
-				}
-			}
-		}
-	});
-}
-async function alertOnPointClickPairHandler(ev) {
-	let [dParent, di] = [DA.info.dParent, DA.info.di];
-	dParent.onmousemove = null;
-	dParent.onclick = null;
-	const rect = dParent.getBoundingClientRect();
-	const mouseX = ev.clientX - rect.left;
-	const mouseY = ev.clientY - rect.top;
-	let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
-	let mx1 = xs.lower;
-	let mx2 = xs.higher;
-	let my1 = ys.lower;
-	let my2 = ys.higher;
-	if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
-		DA.mousePoint = { x: mouseX, y: mouseY };
-		key = getXYKey(mx1, my1);
-		let entry = lookup(di, [key]);
-		if (entry) {
-			DA.pairInfo = entry;
-			if (entry.length == 1) {
-				stopAnimatingPairs();
-				DA.selectedPairIds = entry[0].split(',');
-				console.log(`pair ${entry[0]} is removed`);
-				lacunaRemovePair(entry[0]);
-			} else {
-				DA.selectedPairIds = [];
-				lacunaSelectPair(entry);
-			}
-		}
-	}
-}
-function alertOnPointHover(elem, di, threshold = 2) {
-	elem.addEventListener('mousemove', (ev) => {
-		const rect = elem.getBoundingClientRect();
-		const mouseX = ev.clientX - rect.left;
-		const mouseY = ev.clientY - rect.top;
-		let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
-		let mx1 = xs.lower;
-		let mx2 = xs.higher;
-		let my1 = ys.lower;
-		let my2 = ys.higher;
-		stopAnimatingPoints();
-		if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
-			DA.mousePoint = { x: mouseX, y: mouseY };
-			key = getXYKey(mx1, my1);
-			let entry = lookup(di, [key]);
-			if (entry) {
-				startAnimatingPoints(entry)
-			}
-		}
-	});
-}
-function alertOnPointHoverPair(elem, di, threshold = 2) {
-	elem.addEventListener('mousemove', (ev) => {
-		const rect = elem.getBoundingClientRect();
-		const mouseX = ev.clientX - rect.left;
-		const mouseY = ev.clientY - rect.top;
-		let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
-		let mx1 = xs.lower;
-		let mx2 = xs.higher;
-		let my1 = ys.lower;
-		let my2 = ys.higher;
-		stopAnimatingPairs();
-		if (mx1 - 2 <= mouseX && mouseX <= mx2 && my1 - 2 <= mouseY && mouseY <= my2) {
-			DA.mousePoint = { x: mouseX, y: mouseY };
-			key = getXYKey(mx1, my1);
-			let entry = lookup(di, [key]);
-			if (entry) {
-				startAnimatingPairs(entry)
-			}
-		}
-	});
-}
-function alertOnPointHoverPairHandler(ev) {
-	let [dParent, di] = [DA.info.dParent, DA.info.di];
-	const rect = dParent.getBoundingClientRect();
-	const mouseX = ev.clientX - rect.left;
-	const mouseY = ev.clientY - rect.top;
-	let [xs, ys] = [roundToNearestMultiples(mouseX, 10), roundToNearestMultiples(mouseY, 10)];
-	let mx1 = xs.lower;
-	let mx2 = xs.higher;
-	let my1 = ys.lower;
-	let my2 = ys.higher;
-	stopAnimatingPairs();
-	if (mx1 - 10 <= mouseX && mouseX <= mx2 + 5 && my1 - 10 <= mouseY && mouseY <= my2 + 5) {
-		DA.mousePoint = { x: mouseX, y: mouseY };
-		key = getXYKey(mx1, my1);
-		let entry = lookup(di, [key]);
-		if (entry) {
-			startAnimatingPairs(entry)
-		}
-	}
-}
 function button96() {
 	function setup(table) {
 		let fen = {};
@@ -332,68 +185,8 @@ function drawLineOnCanvas(canvas, x1, y1, x2, y2, stroke = 1) {
 	ctx.lineWidth = stroke;
 	ctx.stroke();
 }
-function drawPoints(dParent, points, addLabel = true) {
-	let items = [];
-	for (const p of points) {
-		let d1 = p.div = mDom(dParent, { round: true, left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html: addLabel ? p.id.substring(1) : '', id: p.id });
-		d1.style.cursor = 'default';
-		let rect = getRect(d1);
-		p.cx = p.x + p.sz / 2; p.cy = p.y + p.sz / 2;
-		p.xPage = rect.x; p.yPage = rect.y;
-		p.cxPage = rect.x + p.sz / 2; p.cyPage = rect.y + p.sz / 2;
-		items[p.id] = p;
-	}
-	return items;
-}
-function filterIsolatedPairs(pairs, blockers, threshold = 10) {
-	console.log(pairs, blockers);
-	let newPairs = [];
-	for (const pair of pairs) {
-		const [ax, ay] = [pair[0].x, pair[0].y];
-		const [bx, by] = [pair[1].x, pair[1].y];
-		let isIsolated = true;
-		for (const blocker of blockers) {
-			const [px, py] = [blocker.x, blocker.y];
-			const distance = pointToLineDistance(px, py, ax, ay, bx, by);
-			if (distance < threshold) {
-				isIsolated = false;
-				break;
-			}
-		}
-		if (isIsolated) {
-			newPairs.push(pair);
-		}
-	}
-	return newPairs;
-	const isolatedPairs = [], obstaclePairs = [];
-	for (let i = 0; i < nodes.length; i++) {
-		for (let j = i + 1; j < nodes.length; j++) {
-			if (nodes[i].bg != nodes[j].bg) continue;
-			const [ax, ay] = [nodes[i].x, nodes[i].y];
-			const [bx, by] = [nodes[j].x, nodes[j].y];
-			let isIsolated = true;
-			for (let k = 0; k < nodes.length; k++) {
-				if (k === i || k === j) continue;
-				const [px, py] = [nodes[k].x, nodes[k].y];
-				const distance = pointLineDistance(px, py, ax, ay, bx, by);
-				if (distance < threshold) {
-					isIsolated = false;
-					break;
-				}
-			}
-			let pair = nodes[i].x <= nodes[j].x ? [nodes[i], nodes[j]] : [nodes[j], nodes[i]]; //console.log(pair[0].x,pair[1].x);
-			assertion(pair[0].x <= pair[1].x, "NOT SORTED!!!!!!!!!!!!!!!!");
-			if (isIsolated) {
-				isolatedPairs.push(pair);
-			} else {
-				obstaclePairs.push(pair);
-			}
-		}
-	}
-	return { isolatedPairs, obstaclePairs };
-}
 function findClosePairs(points, x, y, threshold = 3) {
-	function pointLineDistance(px, py, ax, ay, bx, by) {
+	function _pointLineDistance(px, py, ax, ay, bx, by) {
 		const A = px - ax;
 		const B = py - ay;
 		const C = bx - ax;
@@ -428,57 +221,6 @@ function findClosePairs(points, x, y, threshold = 3) {
 		}
 	}
 	return closePairs;
-}
-function findIsolatedPairs(nodes, threshold = 3) {
-	function pointLineDistance(px, py, ax, ay, bx, by) {
-		const A = px - ax;
-		const B = py - ay;
-		const C = bx - ax;
-		const D = by - ay;
-		const dot = A * C + B * D;
-		const len_sq = C * C + D * D;
-		let param = (len_sq !== 0) ? dot / len_sq : -1;
-		let xx, yy;
-		if (param < 0) {
-			xx = ax;
-			yy = ay;
-		} else if (param > 1) {
-			xx = bx;
-			yy = by;
-		} else {
-			xx = ax + param * C;
-			yy = ay + param * D;
-		}
-		const dx = px - xx;
-		const dy = py - yy;
-		return Math.sqrt(dx * dx + dy * dy);
-	}
-	const isolatedPairs = [], obstaclePairs = [];
-	for (let i = 0; i < nodes.length; i++) {
-		for (let j = i + 1; j < nodes.length; j++) {
-			if (nodes[i].bg != nodes[j].bg) continue;
-			const [ax, ay] = [nodes[i].x, nodes[i].y];
-			const [bx, by] = [nodes[j].x, nodes[j].y];
-			let isIsolated = true;
-			for (let k = 0; k < nodes.length; k++) {
-				if (k === i || k === j) continue;
-				const [px, py] = [nodes[k].x, nodes[k].y];
-				const distance = pointLineDistance(px, py, ax, ay, bx, by);
-				if (distance < threshold) {
-					isIsolated = false;
-					break;
-				}
-			}
-			let pair = nodes[i].x <= nodes[j].x ? [nodes[i], nodes[j]] : [nodes[j], nodes[i]]; //console.log(pair[0].x,pair[1].x);
-			assertion(pair[0].x <= pair[1].x, "NOT SORTED!!!!!!!!!!!!!!!!");
-			if (isIsolated) {
-				isolatedPairs.push(pair);
-			} else {
-				obstaclePairs.push(pair);
-			}
-		}
-	}
-	return { isolatedPairs, obstaclePairs };
 }
 function findPairsByProp(objects, prop) {
 	const pairs = [];
@@ -556,104 +298,6 @@ function fishgame() {
 		let res = await mPostRoute('table', o);
 	}
 	return { setup, present, stats, activate };
-}
-function generateHotspots(dParent, pointPairs, sz = 20, color = 'red') {
-	let t = getNow();
-	let hotspots = [];
-	let linesByPair = {};
-	for (const pair of pointPairs) {
-		let ids = pair.map(x => x.id);
-		let key = ids.join(',');
-		let [pStart, pEnd] = [Items[ids[0]], Items[ids[1]]];
-		let line = getEquidistantPoints(pStart, pEnd, sz / 2);
-		for (const p of line) {
-			p.bg = color;
-			p.sz = sz;
-			p.start = ids[0];
-			p.end = ids[1];
-			p.startX = pStart.x;
-			p.endX = pEnd.x;
-			p.startY = pStart.y;
-			p.endY = pEnd.y;
-			p.id = getUID();
-			p.pairs = [key];
-			hotspots.push(p);
-		}
-		linesByPair[key] = line;
-	}
-	DA.hotspots = drawPoints(dParent, hotspots);
-	if (color == 'transparent') hotspots.map(x => mStyle(x.div, { opacity: 0 }))
-	let [c1, c2, c3, c4, c5, c6] = [0, 0, 0, 0, 0, 0];
-	for (const p1 of hotspots) {
-		assertion(p1.startX <= p1.endX, "NOT SORTED!!!!!")
-		for (const p2 of hotspots) {
-			if (p1 == p2) { c3++; continue; }
-			if (p1.startX > p2.endX) { c1++; continue; }
-			if (p2.startX > p1.endX) { c2++; continue; }
-			if (p1.start == p2.start && p1.end == p2.end) { c4++; continue; }
-			if (p1.start == p2.end && p1.end == p2.start) { c5++; continue; }
-			let miny1 = Math.min(p1.startY, p1.endY);
-			let maxy1 = Math.max(p1.startY, p1.endY);
-			let miny2 = Math.min(p2.startY, p2.endY);
-			let maxy2 = Math.max(p2.startY, p2.endY);
-			if (miny1 > maxy2 || miny2 > maxy1) { c5++; continue; }
-			c6++;
-			let dist = getDistanceBetweenPoints(p1, p2);
-			if (dist < sz / 3) {
-				let newlist = new Set(p1.pairs.concat(p2.pairs));
-				p1.pairs = Array.from(newlist);
-				p2.pairs = Array.from(newlist);
-				if (color != 'transparent') {
-					p1.bg = 'blue'; mStyle(p1.div, { bg: 'blue' });
-					p2.bg = 'blue'; mStyle(p2.div, { bg: 'blue' });
-				}
-			}
-		}
-	}
-	return [hotspots, linesByPair];
-}
-function generateHotspotsNOY(dParent, pointPairs, sz = 20, color = 'red') {
-	let hotspots = [];
-	let linesByPair = {};
-	for (const pair of pointPairs) {
-		let ids = pair.map(x => x.id);
-		let key = ids.join(',');
-		let [pStart, pEnd] = [Items[ids[0]], Items[ids[1]]];
-		let line = getEquidistantPoints(pStart, pEnd, sz / 2);
-		for (const p of line) {
-			p.bg = color;
-			p.sz = sz;
-			p.start = ids[0];
-			p.end = ids[1];
-			p.startX = pStart.x;
-			p.endX = pEnd.x;
-			p.id = getUID();
-			p.pairs = [key];
-			hotspots.push(p);
-		}
-		linesByPair[key] = line;
-	}
-	DA.hotspots = drawPoints(dParent, hotspots);
-	hotspots.map(x => mStyle(x.div, { opacity: 0 }))
-	let [c1, c2, c3, c4, c5, c6] = [0, 0, 0, 0, 0, 0];
-	for (const p1 of hotspots) {
-		assertion(p1.startX <= p1.endX, "NOT SORTED!!!!!")
-		for (const p2 of hotspots) {
-			if (p1 == p2) { c3++; continue; }
-			if (p1.startX > p2.endX) { c1++; continue; }
-			if (p2.startX > p1.endX) { c2++; continue; }
-			if (p1.start == p2.start && p1.end == p2.end) { c4++; continue; }
-			if (p1.start == p2.end && p1.end == p2.start) { c5++; continue; }
-			c6++;
-			let dist = getDistanceBetweenPoints(p1, p2);
-			if (dist < sz / 3) {
-				let newlist = new Set(p1.pairs.concat(p2.pairs));
-				p1.pairs = Array.from(newlist);
-				p2.pairs = Array.from(newlist);
-			}
-		}
-	}
-	return [hotspots, linesByPair];
 }
 function generatePizzaSvg(sz) {
 	let colors = Array.from(arguments).slice(1);
@@ -803,11 +447,6 @@ function getDistanceBetweenCenters(div1, div2) {
 	const dy = centerY2 - centerY1;
 	return Math.sqrt(dx * dx + dy * dy);
 }
-function getDistanceBetweenPoints(p1, p2) {
-	if (isString(p1)) p1 = Items[p1];
-	if (isString(p2)) p2 = Items[p2];
-	return getDistanceBetweenCenters(p1.div, p2.div);
-}
 function getEquidistantPoints(p1, p2, d = 10, includeEnds = false) {
 	const points = [];
 	const dx = p2.x - p1.x;
@@ -885,24 +524,6 @@ function groupByProperty(list, prop) {
 	});
 	return Object.values(groups);
 }
-function highlightHotspots(ev) {
-	let [x, y] = [ev.clientX, ev.clientY];
-	let els = allElementsFromPoint(x, y);
-	let endpoints = [], possiblePairs = [];
-	for (const elem of els) {
-		let p = DA.hotspotDict[elem.id];
-		if (isdef(p)) {
-			addIf(endpoints, p.start);
-			addIf(endpoints, p.end);
-			let pair = [p.start, p.end]; pair.sort();
-			addIf(possiblePairs, pair.join(','));
-		}
-	}
-	stopPulsing(endpoints);
-	startPulsing(endpoints);
-	DA.endpoints = endpoints;
-	DA.possiblePairs = possiblePairs;
-}
 async function homeOnclickDeleteBlog() {
 	let ta = mByTag('textarea');
 	if (nundef(ta)) return;
@@ -939,121 +560,6 @@ function isColor(s) { return isdef(M.colorByName[s]); }
 
 function isFilename(s) { return s.includes('../'); }
 
-function lacunaCalculate() {
-	let { dParent, cv, w, h, sz, points } = DA.info;
-	let result = findIsolatedPairs(points, sz);
-	let pixelsByPair = [];
-	let di = {};
-	let allPixels = [];
-	for (const pair of result.isolatedPairs) {
-		let [p1, p2] = [pair[0], pair[1]];
-		let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
-		[x1, y1, x2, y2] = [x1, y1, x2, y2].map(x => x + sz / 2);
-		let pixels = getLinePixels(x1, y1, x2, y2);
-		for (const pix of pixels) {
-			allPixels.push(pix);
-			let key = getPixelKey(pix);
-			let l = lookup(di, [key]);
-			lookupAddIfToList(di, [key], `${p1.id},${p2.id}`)
-		}
-	}
-	let di1 = DA.info.di = clusterize(di);
-	dParent.onmousemove = alertOnPointHoverPairHandler;
-	dParent.onclick = alertOnPointClickPairHandler;
-}
-function lacunaCircles(w = 800, h = 400, n = 49, neach = 7, sz = 10) {
-	let d = clearFlex();
-	let rand = .8;
-	let [d1, cv] = mArea(30, d, { w, h, bg: '#eee', position: 'relative' });
-	let clist = lacunaColors();
-	let points = generateRandomPointsRect(n, w, h, rand);
-	let colors = generateRepeatedColors(n, neach, clist); arrShuffle(colors);
-	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; }
-	for (const p of points) { drawCircleOnCanvas(cv, p.x, p.y, p.sz, p.bg); }
-	return { d, cv, points };
-}
-function lacunaCirclesDiv(w = 800, h = 400, n = 49, neach = 7, sz = 10) {
-	let d = clearFlex();
-	let rand = .8;
-	let [d1, cv] = mArea(30, d, { w, h, bg: '#eee', position: 'relative' });
-	cv.remove();
-	let clist = lacunaColors();
-	let points = generateRandomPointsRect(n, w, h, rand);
-	let colors = generateRepeatedColors(n, neach, clist); arrShuffle(colors);
-	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; }
-	points = points.map(p => drawCircleOnDiv(d1, p.x, p.y, p.sz, p.bg));
-	return { d, points };
-}
-function lacunaColor(name) {
-	let clist = { red: "#E63946", green: "#06D6A0", blue: "#118AB2", cyan: "#0F4C75", magenta: "#D81159", yellow: "#FFD166", orange: "#F4A261", purple: "#9D4EDD", pink: "#FF80AB", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080" };
-	return clist[name];
-}
-function lacunaColorName(val) {
-	let clist = { red: "#E63946", green: "#06D6A0", blue: "#118AB2", cyan: "#0F4C75", magenta: "#D81159", yellow: "#FFD166", orange: "#F4A261", purple: "#9D4EDD", pink: "#FF80AB", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080" };
-	for (const k in clist) {
-		if (val == clist[k]) return k;
-	}
-	return 'unknown';
-}
-function lacunaColors() {
-	let clist = { red: 'crimson', green: "#00ff00", blue: "#0000ff", cyan: "#00ffff", yellow: "#FFD166", pink: "#FF80AB", orange: "#F4A261", purple: "#9D4EDD", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080", magenta: "#D81159" };
-	return Object.values(clist);
-}
-function lacunaGeneratePoints(w, h, n = 49, neach = 7, sz = 10, rand = .7, round=false) {
-	let clist = lacunaColors();
-	let points = round? generateRandomPointsRound(n, w, h, rand) : generateRandomPointsRect(n, w, h, rand);
-	let colors = generateRepeatedColors(n, neach, clist); arrShuffle(colors);
-	for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; points[i].id = getUID(); }
-	return points;
-}
-function lacunaGeneratePointsMargin(w, h, margin, n = 49, neach = 7, sz = 10, rand = .7, round=false) {
-	let points = lacunaGeneratePoints(w - 2 * margin, h - 2 * margin, n, neach, sz, rand, round);
-	for (let i = 0; i < n; i++) { points[i].x += margin; points[i].y += margin; }
-	return points;
-}
-function lacunaMakeSelectable() {
-	for (const id of DA.endpoints) {
-		let div = mBy(id);
-		mClass(div, 'selectable')
-		div.onclick = ev => selectPoint(ev);
-	}
-}
-function lacunaMoveCompleted(idlist) {
-	DA.endpoints.map(x => lacunaUnselectable(x));
-	showMessage("Move completed, removing", idlist);
-	let p1 = Items[idlist[0]];
-	let p2 = Items[idlist[1]];
-	delete Items[p1.id];
-	delete Items[p2.id];
-	mRemove(p1.div);
-	mRemove(p2.div);
-	DA.points = DA.points.filter(x => x.id != p1.id && x.id != p2.id);
-	for (const p of DA.hotspotList) {
-		mRemove(p.div);
-	}
-	let ch = arrChildren(DA.dParent); console.log('ch', ch.length, 'points', DA.points.length);
-	DA.dParent.onclick = lacunaStartMove;
-}
-function lacunaPresent() {
-	let d = clearDiv();
-	let [w, h, sz] = [900, 400, 20];
-	let [dParent, cv] = mArea(10, d, { w, h, bg: '#eee' }); //mDom(d, { w, h, position: 'absolute', left: dx, top: dy, bg: 'yellow' });
-	let points = mLacunaCirles(dParent, 49, 7, sz, .6);
-	Items = drawPoints(dParent, points);
-	DA.info = { dParent, cv, w, h, sz, points };
-	lacunaCalculate();
-}
-function lacunaSelectPair(ev, pdiv, divs) {
-	for (const div of divs) {
-		mStyle(div, { cursor: 'pointer' })
-		div.onclick = ev => lacunaSelectPoint(div, divs);
-	}
-}
-function lacunaUnselectable(id) {
-	let div = mBy(id); console.log('unselecting', id)
-	mClassRemove(div, 'selectable');
-	div.onclick = null;
-}
 function mArea(padding, dParent, styles = {}, opts = {}) {
 	addKeys({ padding, wbox: true, position: 'relative' }, styles)
 	let d0 = mDom(dParent, styles);
@@ -1117,25 +623,6 @@ function placeCirclesRandom(dParent, n, sz, color, rand = 0.2) {
 	}
 	return circles;
 }
-function placeYourMeeple(ev) {
-	stopPulsing();
-	d = mBy('dCanvas');
-	d.onmousemove = null;
-	d.onclick = null;
-	for (const p of DA.hotspotList) {
-		mStyle(p.div, { z: 0 })
-	}
-	for (const p of DA.points) {
-		p.div.style.zIndex = 1000;
-	}
-	let sz = 30;
-	x = ev.clientX - d.offsetLeft - d.parentNode.offsetLeft;
-	y = ev.clientY - d.offsetTop - d.parentNode.offsetTop;
-	let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', id: getUID() };
-	drawPoints(d, [pMeeple], false);
-	DA.meeples.push(pMeeple); console.log('DA.meeples', DA.meeples);
-	lacunaMakeSelectable();
-}
 function playerStatCount(key, n, dParent, styles = {}, opts = {}) {
 	let sz = valf(styles.sz, 16);
 	addKeys({ display: 'flex', margin: 4, dir: 'column', hmax: 2 * sz, 'align-content': 'center', fz: sz, align: 'center' }, styles);
@@ -1196,37 +683,22 @@ function presentStandardRoundTable() {
 	mCenterCenter(dTable);
 	return dTable;
 }
+function presentBgaRoundTable() {
+	let d0=mDom('dMain');
+	let [dl,dr]=mColFlex(d0,[4,1]);
+	d = mDom(dl); mCenterFlex(d);
+	mDom(d, { className: 'instruction' }, { id: 'dInstruction' }); mLinebreak(d); // instruction
+	let minTableSize = 400;
+	let dTable = mDom(d, { hmin: minTableSize, wmin: minTableSize, hmargin: 20, round: true, className: 'wood' }, { id: 'dTable' });
+	mCenterCenter(dTable);
+	let dstats = mDom(dr, {}, { id: 'dStats' });
+	//mStyle(dstats,{display:'flex',direction:'rows'});
+	return dTable;
+}
 function roundToNearestMultiples(n, x = 10) {
 	const lower = Math.floor(n / x) * x;
 	const higher = Math.ceil(n / x) * x;
 	return { lower, higher };
-}
-function selectPoint(ev) {
-	let id = evToId(ev);
-	let p = Items[id];
-	console.log('selecting point', p.id);
-	lookupAddIfToList(DA, ['selectedPoints'], id);
-	assertion(DA.selectedPoints.length >= 1, "WTF");
-	if (DA.selectedPoints.length == 1) {
-		let eps = [];
-		console.log('possiblePairs', DA.possiblePairs);
-		for (const pair of DA.possiblePairs.map(x => x.split(',').map(x => Items[x]))) {
-			let p1 = pair[0];
-			let p2 = pair[1];
-			if (p1.id != id && p2.id != id) continue;
-			if (p1.id == id) addIf(eps, p2.id); else addIf(eps, p1.id);
-		}
-		let unselect = DA.endpoints.filter(x => !eps.includes(x));
-		unselect.map(x => lacunaUnselectable(x));
-		DA.endpoints = eps; console.log('endpoints remaining', DA.endpoints);
-		if (DA.endpoints.length < 2) {
-			DA.selectedPoints.push(DA.endpoints[0]);
-			lacunaMoveCompleted(DA.selectedPoints);
-		}
-	} else {
-		assertion(DA.selectedPoints.length == 2, "WTF2!!!!!!!!!!!!!");
-		lacunaMoveCompleted(DA.selectedPoints);
-	}
 }
 function setgame() {
 	function setup(table) {
@@ -1522,26 +994,10 @@ function showPairs(pairlist) {
 	}
 	return s;
 }
-async function showTable(id) {
-	let me = getUname();
-	let table = await mGetRoute('table', { id });  //console.log('table',table)
-	if (!table) { showMessage('table deleted!'); return await showTables('showTable'); }
-	let func = DA.funcs[table.game];
-	T = table;
-	clearMain();
-	let d = mBy('dExtraLeft');
-	d.innerHTML = `<h2>${getGameProp('friendly').toUpperCase()}: ${table.friendly} (${table.step})</h2>`; // title
-	let items = func.present(table);
-	func.stats(table);
-	if (table.status == 'over') { showGameover(table, 'dTitle'); return; }
-	assertion(table.status == 'started', `showTable status ERROR ${table.status}`);
-	await updateTestButtonsPlayers(table);
-	func.activate(table, items);
-}
 function showTimeSince(t, msg = 'now') {
 	let tNew = getNow();
 	let ms = tNew - t;
-	console.log(msg + ':', ms);
+	console.log('::time:',msg + ':', ms);
 	return tNew;
 }
 function showim1(imgKey, d, styles = {}, opts = {}) {
@@ -1608,54 +1064,6 @@ function simpleShowImageInBatch(key, dParent, styles = {}, opts = {}) {
 	d1.setAttribute('draggable', true)
 	d1.ondragstart = ev => { ev.dataTransfer.setData('itemkey', key); }
 	return d1;
-}
-function startAnimatingPairs(pairlist) {
-	let ani = 'pulseFastInfinite'
-	DA.pairInfo = pairlist;
-	for (const pair of pairlist) {
-		let ids = pair.split(',');
-		for (const id of ids) {
-			let o = Items[id];
-			mClass(id, ani)
-		}
-	}
-}
-function startAnimatingPoints(idlist) {
-	let ani = 'pulseFastInfinite'
-	DA.pairInfo = idlist;
-	for (const id of idlist) {
-		mClass(id, ani)
-	}
-}
-function startPulsing(idlist) {
-	idlist.map(x => Items[x].div.classList.add('pulseFastInfinite'));
-}
-function stopAnimatingPairs() {
-	let ani = 'pulseFastInfinite'
-	if (nundef(DA.pairInfo)) DA.pairInfo = [];
-	for (const p of DA.pairInfo) {
-		let ids = p.split(',');
-		for (const id of ids) {
-			let o = Items[id];
-			if (nundef(o)) continue;
-			mClassRemove(id, ani)
-		}
-	}
-}
-function stopAnimatingPoints() {
-	let ani = 'pulseFastInfinite'
-	if (nundef(DA.pairInfo)) DA.pairInfo = [];
-	for (const p of DA.pairInfo) {
-		let o = Items[p]; console.log(o);
-		mClassRemove(p, ani)
-	}
-}
-function stopPulsing(idExcept = []) {
-	let drem = document.querySelectorAll('.pulseFastInfinite');
-	for (const d of drem) {
-		if (idExcept.includes(d.id)) continue;
-		d.classList.remove('pulseFastInfinite');
-	}
 }
 function testMouseMove(ev, pixelsByPair, ctx) {
 	const mouseX = ev.clientX;
@@ -2032,7 +1440,7 @@ function wsOffspringSymbol(dParent, styles = {}) {
 	mCenterFlex(dPaw)
 	mPlace(dPaw, 'tc')
 }
-async function wsOnclickCard(table, item, items) { }
+async function wsOnclickCard(table, item, items) { console.log('click',item) }
 
 function wsPowerText(item, d, styles = {}) {
 	mClear(d)

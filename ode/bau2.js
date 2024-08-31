@@ -1,25 +1,30 @@
 
 function lacunaStartMove() {
+	lockForLengthyProcess();
 	let t = getNow();
-	DA = { meeples: DA.meeples, dParent: DA.dParent, points: DA.points, sz: DA.sz };
+	h = { meeples: B.meeples, dParent: B.dParent, points: B.points, sz: B.sz };
 
-	let [points, dParent, sz] = [DA.points, DA.dParent, DA.sz];
+	let [points, dParent, sz] = [B.points, B.dParent, B.sz];
 	let result = findIsolatedPairs(points, sz*1.2); //console.log(result);
 
-	console.log('isolated', showPairs(result.isolatedPairs), result.isolatedPairs.length);
-	let isolated = DA.isolatedPairs = filterIsolatedPairs(result.isolatedPairs, DA.meeples,15);
-	console.log('isolated', showPairs(isolated), isolated.length);
+	//console.log('isolated', showPairs(result.isolatedPairs), result.isolatedPairs.length);
+	let isolated = B.isolatedPairs = filterIsolatedPairs(result.isolatedPairs, B.meeples, 15);
+	//console.log('isolated', showPairs(isolated), isolated.length);
 
 	t = showTimeSince(t, 'vor generateHotspots')
 
 	let [hotspots, linesByPair] = generateHotspots(dParent, isolated, sz, 'transparent');
-	DA.pairs = linesByPair; //console.log(DA.pairs)
-	DA.hotspotList = hotspots;
-	DA.hotspotDict = list2dict(hotspots, 'id');
+
+	B.hotspots=hotspots;
+	B.linesByPair = linesByPair;
+	B.pairs = linesByPair; //console.log(B.pairs)
+	B.hotspotList = hotspots;
+	B.hotspotDict = list2dict(hotspots, 'id');
 
 	dParent.onmousemove = highlightHotspots;
-	dParent.onclick = placeYourMeeple;
-	t = showTimeSince(t, 'move')
+	dParent.onclick = placeYourMeepleME;
+	t = showTimeSince(t, 'move');
+	unlock();
 }
 
 
