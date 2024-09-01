@@ -1,3 +1,346 @@
+
+async function showInstructionStandard(table, instruction) {
+  let myTurn = isMyTurn(table);
+  if (!myTurn) staticTitle(table); else animatedTitle();
+  if (nundef(instruction)) return;
+  let styleInstruction = { hmin:42, display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
+  let dinst = mBy('dInstruction');
+  if (nundef(dinst)) return;
+  mClear(dinst);
+  let html;
+  if (myTurn) {
+    styleInstruction.maleft = -30;
+    html = `
+        ${getWaitingHtml()}
+        <span style="color:red;font-weight:bold;max-height:25px">You</span>
+        &nbsp;${instruction};
+        `;
+  } else { html = `waiting for: ${getTurnPlayers(table)}` }
+  mDom(dinst, styleInstruction, { html });
+}
+async function showInstructionCompact(table, instruction) {
+  let myTurn = isMyTurn(table);
+  if (!myTurn) staticTitle(table); else animatedTitle();
+  if (nundef(instruction)) return;
+  let styleInstruction = { hmin:42, display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
+  let dinst = mBy('dInstruction');
+  if (nundef(dinst)) return;
+  mClear(dinst);
+  let html;
+  if (myTurn) {
+    styleInstruction.maleft = -30;
+    html = `
+        ${getWaitingHtml()}
+        <span style="color:red;font-weight:bold;max-height:25px">You</span>
+        &nbsp;${instruction};
+        `;
+  } else { html = `waiting for: ${getTurnPlayers(table)}` }
+  mDom(dinst, styleInstruction, { html });
+}
+
+async function updateTestButtonsPlayers(table) {
+	if (nundef(table)) table = T;
+	assertion(table, "NOT TABLE IN updateTestButtonsPlayers")
+	let d = mBy('dExtraRight'); mClear(d); //mFlexWrap(d);
+	let me = getUname();
+	let names = table.playerNames; //addIf(names,'mimi');
+	//addIf(names,me);
+	let dplayers = mDom(d);
+	for (const name of names) {
+		let idname = getButtonCaptionName(name);
+		let b = UI[idname] = mButton(name, async () => await switchToUser(name), dplayers, { maleft: 4, hpadding: 3, wmin: 50, className: 'button' });
+		if (me == name) mStyle(b, { bg: 'red', fg: 'white' });
+	}
+
+	if (!table.playerNames.includes(me)) return;
+
+	//mLinebreak(d)
+	// let dSwitches=mDom(d,{wmin:200,display:'flex',gap:20,justify:'end',align:'center'});
+	// let dbotswitch = mDom(dSwitches, { align: 'right', patop: 6, gap: 6 }, { html: 'BOT' }); mFlexLine(dbotswitch, 'end')
+	// let oSwitch = mSwitch(dbotswitch, {}, { id: 'bot', val: amIHuman(table) ? '' : 'checked' });
+	// oSwitch.inp.onchange = onchangeBotSwitch;
+
+	// let dautoswitch = mDom(dSwitches, { align: 'right', patop: 10, gap: 6 }, { html: 'AUTO' }); mFlexLine(dautoswitch, 'end')
+	// let oSwitch1 = mSwitch(dautoswitch, {}, { id: 'auto', val: DA.autoSwitch===true?'checked':'' });
+	// let inp1 = oSwitch1.inp;
+	// oSwitch1.inp.onchange = onchangeAutoSwitch;
+
+}
+
+async function showTable(id) {
+  let me = getUname();
+  let table = await mGetRoute('table', { id });  //console.log('table',table)
+  if (!table) { showMessage('table deleted!'); return await showTables('showTable'); }
+  let func = DA.funcs[table.game];
+  T = table;
+  clearMain();
+  let d = mBy('dExtraLeft');
+  d.innerHTML = `<h2>${getGameProp('friendly').toUpperCase()}: ${table.friendly} (${table.step})</h2>`; // title
+  let items = func.present(table);
+  func.stats(table);
+  if (table.status == 'over') { showGameover(table, 'dTitle'); return; }
+  assertion(table.status == 'started', `showTable status ERROR ${table.status}`);
+  await updateTestButtonsPlayers(table);
+  func.activate(table, items);
+}
+
+function instructionUpdate() {
+}
+function lacuna() {
+	function setup(table) {
+		let fen = {};
+
+		// table.options.numMeeples = 1;
+		// table.options.numPoints = 10;
+		// table.options.numColors = 2;
+
+		//console.log(table.options)
+		let [w, h, sz, n, neach] = [fen.w, fen.h, fen.sz, fen.n, fen.neach] = [900, 700, 20, table.options.numPoints, table.options.numPoints / table.options.numColors];
+		//console.log(n, neach);
+		fen.points = lacunaGeneratePoints(w, h, n, neach, sz, .6, true); //console.log(jsCopy(points[0]));
+
+		fen.colorsInUse = Array.from(new Set(fen.points.map(x=>x.bg))); console.log('colorsUsed',fen.colorsInUse)
+		for (const name in table.players) {
+			let pl = table.players[name];
+			pl.score = 0;
+			pl.positions = [];
+			pl.flowers = {};
+			for(const c of fen.colorsInUse){
+				pl.flowers[c]=0;
+			}
+		}
+
+		fen.meeples = [];
+		table.plorder = jsCopy(table.playerNames);
+		table.turn = [rChoose(table.playerNames)];
+
+		
+
+		return fen;
+	}
+
+	function stats(table) {
+		let [me, players] = [getUname(), table.players];
+		let style = { patop: 8, mabottom: 20, wmin: 80, bg: 'beige', fg: 'contrast' };
+		let player_stat_items = uiTypePlayerStats(table, me, 'dStats', 'colflex', style)
+		for (const plname in players) {
+			let pl = players[plname];
+			let item = player_stat_items[plname];
+			if (pl.playmode == 'bot') { mStyle(item.img, { rounding: 0 }); }
+			let d = iDiv(item); mCenterFlex(d); mLinebreak(d); mIfNotRelative(d);
+
+			
+			for(const c in pl.flowers){
+				let n=pl.flowers[c];
+				playerStatCount(c, n, d); //, {}, {id:`stat_${plname}_score`});	
+			}
+
+			
+			if (table.turn.includes(plname)) { mDom(d, { position: 'absolute', left: -3, top: 0 }, { html: getWaitingHtml() }); }
+		}
+
+	}
+
+	function present(table) {
+		B={};
+		let dTable = presentBgaRoundTable();
+		let fen = table.fen;
+		let [w, h, sz, n, neach, points, meeples] = [fen.w, fen.h, fen.sz, fen.n, fen.neach, jsCopy(fen.points), jsCopy(fen.meeples)];
+		let padding = 20;
+		mStyle(dTable, { bg: 'midnight_purple', position: 'relative', padding, wmin: w + 2 * padding, hmin: h + 2 * padding });
+		let dParent = B.dParent = mDom(dTable, { w, h, position: 'absolute', left: 2 * padding, top: 2 * padding }, { id: 'dCanvas' });
+		B.points = points; //console.log(points);
+		B.sz = sz;
+		B.diPoints = lacunaDrawPoints(dParent, points);
+		B.meeples = meeples;
+		B.diMeeples = lacunaDrawPoints(dParent, meeples);
+		//meeples.map(x=>showMeeple(dParent,x));
+		return B.points;
+	}
+
+	async function activate(table, items) {
+		//console.log('activate', table, items);
+		await instructionStandard(table, 'must place a meeple'); //browser tab and instruction if any
+		if (!isMyTurn(table)) return;
+		setTimeout(() => lacunaStartMove(), 10);
+	}
+
+	return { setup, present, stats, activate };
+}
+
+function drawLine1(p1,p2) {
+	// Calculate the distance between the two points (line length)
+	let [x1,y1,x2,y2]=[p1.cxPage,p1.cyPage,p2.cxPage,p2.cyPage];
+	const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+
+	// Calculate the angle between the two points
+	const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+
+	// Create the line div
+	const line = document.createElement('div');
+	line.className = 'line';
+	line.style.height = `${length}px`;
+	line.style.transform = `rotate(${angle}deg)`;
+	
+	// Position the line to be centered on the endpoints
+	line.style.left = `${x1}px`;
+	line.style.top = `${y1}px`;
+	
+	// Append the line to the body
+	document.body.appendChild(line);
+
+	return line;
+}
+function onMouseMoveLine1(event) {
+  const mouseX = event.clientX;
+  const mouseY = event.clientY;
+
+  DA.lines.forEach(line => {
+    const rect = line.getBoundingClientRect();
+    if (
+      mouseX >= rect.left && mouseX <= rect.right &&
+      mouseY >= rect.top && mouseY <= rect.bottom
+    ) {
+      line.style.backgroundColor = 'red'; // Change color on hover
+    } else {
+      line.style.backgroundColor = 'black'; // Reset color when not hovered
+    }
+  });
+}
+
+function pointLineDistance1(px, py, ax, ay, bx, by) {
+	const A = px - ax;
+	const B = py - ay;
+	const C = bx - ax;
+	const D = by - ay;
+	const dot = A * C + B * D;
+	const len_sq = C * C + D * D;
+	let param = (len_sq !== 0) ? dot / len_sq : -1;
+	let xx, yy;
+	if (param < 0) {
+		xx = ax;
+		yy = ay;
+	} else if (param > 1) {
+		xx = bx;
+		yy = by;
+	} else {
+		xx = ax + param * C;
+		yy = ay + param * D;
+	}
+	const dx = px - xx;
+	const dy = py - yy;
+	return Math.sqrt(dx * dx + dy * dy);
+}
+function pointToLineDistance2(x, y, x1, y1, x2, y2) {
+	const numerator = Math.abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1);
+	const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
+	const distance = numerator / denominator;
+	return distance;
+}
+
+function drawInteractiveLine0(p1, p2, color = 'black') {
+	const line = document.createElement('div');
+	let thickness = 10; let offs = thickness / 2;
+	let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
+
+	const distance = Math.hypot(x2 - x1, y2 - y1);
+	const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+	line.style.position = 'absolute';
+	line.style.transformOrigin = '0 0';
+	line.style.transform = `rotate(${angle}deg)`;
+	line.style.height = '2px';
+	line.style.outline = 'solid red 11px';
+	line.style.width = `${distance}px`;
+	line.style.backgroundColor = color;
+	line.style.left = `${x1}px`;
+	line.style.top = `${y1}px`;
+
+	line.addEventListener('mouseover', () => { line.style.backgroundColor = 'red'; });
+	line.addEventListener('mouseout', () => { line.style.backgroundColor = color; });
+
+	document.body.appendChild(line);
+	return line;
+}
+function drawInteractiveLine1(p1, p2, color = 'black') {
+	const line = document.createElement('div');
+	const thickness = 20; // Set the line thickness (height) to 20px
+	const offs = thickness / 2; 
+	let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
+
+	const distance = Math.hypot(x2 - x1, y2 - y1);
+	const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+
+	// Style the line
+	line.style.position = 'absolute';
+	line.style.transformOrigin = '0 50%';  // Rotate around the center of the thickness
+	line.style.transform = `rotate(${angle}deg)`;
+	line.style.height = `${thickness}px`;
+	line.style.width = `${distance}px`;
+	line.style.backgroundColor = color;
+
+	// Position the line so that it's centered on its original location
+	line.style.left = `${x1}px`;
+	line.style.top = `${y1 - offs}px`;  // Adjust top by half of thickness
+
+	// Interactive color change
+	line.addEventListener('mouseover', () => { line.style.backgroundColor = 'red'; });
+	line.addEventListener('mouseout', () => { line.style.backgroundColor = color; });
+
+	// Append the line to the body
+	document.body.appendChild(line);
+	return line;
+}
+function drawInteractiveLine2(p1, p2, color = 'black') {
+	const line = document.createElement('div');
+	const thickness = 20; // Set the line thickness (height) to 20px
+	const offs = thickness / 2; 
+	let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
+
+	const distance = Math.hypot(x2 - x1, y2 - y1);
+	const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+
+	// Style the line
+	line.style.position = 'absolute';
+	line.style.transformOrigin = '0 50%';  // Rotate around the center of the thickness
+	line.style.transform = `rotate(${angle}deg)`;
+	line.style.height = `${thickness}px`;
+	line.style.width = `${distance}px`;
+	line.style.backgroundColor = color;
+
+	// Position the line so that it's centered on its original location
+	line.style.left = `${x1}px`;
+	line.style.top = `${y1 - offs}px`;  // Adjust top by half of thickness
+
+	document.body.appendChild(line);
+	return line;
+}
+function drawInteractiveLine00(p1, p2, color='black') {
+	const line = document.createElement('div');
+	let thickness = 10; let offs = thickness/2;
+	let [x1,y1,x2,y2]=[p1.cxPage,p1.cyPage,p2.cxPage,p2.cyPage];
+	// let [x1,y1,x2,y2]=[p1.cxPage-offs,p1.cyPage-offs,p2.cxPage-offs,p2.cyPage-offs];
+	// let [x1,y1,x2,y2]=[p1.cxPage,p1.cyPage-offs,p2.cxPage,p2.cyPage-offs];
+
+	const distance = Math.hypot(x2 - x1, y2 - y1);
+	const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+	line.style.position = 'absolute';
+	line.style.transformOrigin = '0 0';
+	line.style.transform = `rotate(${angle}deg)`;
+	line.style.height = '2px';
+	line.style.outline = 'solid red 11px';
+	line.style.width = `${distance}px`;
+	line.style.backgroundColor = color;
+	line.style.left = `${x1}px`;
+	line.style.top = `${y1}px`;
+
+	line.addEventListener('mouseover', () => {		line.style.backgroundColor = 'red';	});
+	line.addEventListener('mouseout', () => {		line.style.backgroundColor = color;	});
+
+	document.body.appendChild(line);
+	return line;
+}
+
+
 //#region lacuna NOT in game
 function lacunaMakeSelectable() {
 	for (const id of B.endPoints) {

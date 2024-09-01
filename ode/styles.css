@@ -443,7 +443,7 @@ fieldset .disabled {
   padding: 5px 10px;
 }
 
-.p10hide:empty {
+.p10hide:empty, .phide {
   padding: 0;
   margin: 0;
   border: none;
@@ -2032,3 +2032,17 @@ input:checked+.slider:before {
 }
 
 /* #endregion */
+
+.line {
+  position: absolute;
+  background-color: black; /* Change to any color you prefer */
+  width: 1px;
+  transform-origin: 0 50%; /* Transform origin at the start of the div */
+}
+.line1 {
+  position: absolute;
+  height: 20px;
+  background-color: black;
+  transform-origin: 0 50%;
+}
+

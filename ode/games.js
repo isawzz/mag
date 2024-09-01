@@ -36,7 +36,7 @@ function button96() {
 		return items;
 	}
 	async function activate(table, items) {
-		await instructionStandard(table, 'must click a card'); //browser tab and instruction if any
+		await showInstructionStandard(table, 'must click a card'); //browser tab and instruction if any
 		if (!isMyTurn(table)) { return; }
 		for (const item of items) {
 			let d = iDiv(item);
@@ -155,7 +155,7 @@ function drawEllipseOnCanvas(canvas, cx, cy, w, h, color = 'orange', stroke = 0,
 	if (stroke > 0) { ctx.strokeStyle = border; ctx.lineWidth = stroke; ctx.stroke(); }
 	if (color) { ctx.fillStyle = color; ctx.fill(); }
 }
-function drawInteractiveLine(p1, p2) {
+function drawInteractiveLine_orig(p1, p2) {
 	const line = document.createElement('div');// mDom(d);
 	const distance = Math.hypot(p2.x - p1.x, p2.y - p1.y);
 	const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI);
@@ -246,7 +246,7 @@ function fishgame() {
 	function stats(table) { wsStats(table); }
 	function present(table) { wsPresent(table); }
 	async function activate(table, items) {
-		await instructionStandard(table, 'may pick your initial cards'); //browser tab and instruction if any
+		await showInstructionStandard(table, 'may pick your initial cards'); //browser tab and instruction if any
 		for (const item of items) {
 			let d = iDiv(item);
 			d.onclick = wsOnclickCard;
@@ -638,35 +638,6 @@ function pluralOf(s, n) {
 	di = { food: '', child: 'ren' };
 	return s + (n == 0 || n > 1 ? valf(di[s.toLowerCase()], 's') : '');
 }
-function pointLineDistance(px, py, ax, ay, bx, by) {
-	const A = px - ax;
-	const B = py - ay;
-	const C = bx - ax;
-	const D = by - ay;
-	const dot = A * C + B * D;
-	const len_sq = C * C + D * D;
-	let param = (len_sq !== 0) ? dot / len_sq : -1;
-	let xx, yy;
-	if (param < 0) {
-		xx = ax;
-		yy = ay;
-	} else if (param > 1) {
-		xx = bx;
-		yy = by;
-	} else {
-		xx = ax + param * C;
-		yy = ay + param * D;
-	}
-	const dx = px - xx;
-	const dy = py - yy;
-	return Math.sqrt(dx * dx + dy * dy);
-}
-function pointToLineDistance(x, y, x1, y1, x2, y2) {
-	const numerator = Math.abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1);
-	const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
-	const distance = numerator / denominator;
-	return distance;
-}
 function presentStandardBGA() {
 	let dTable = mDom('dMain');
 	mClass('dPage', 'wood');
@@ -682,24 +653,13 @@ function presentStandardRoundTable() {
 	mCenterCenter(dTable);
 	return dTable;
 }
-function presentBgaRoundTable() {
-	let d0=mDom('dMain');
-	let [dl,dr]=mColFlex(d0,[4,1]);
-	d = mDom(dl); mCenterFlex(d);
-	mDom(d, { className: 'instruction' }, { id: 'dInstruction' }); mLinebreak(d); // instruction
-	let minTableSize = 400;
-	let dTable = mDom(d, { hmin: minTableSize, wmin: minTableSize, hmargin: 20, round: true, className: 'wood' }, { id: 'dTable' });
-	mCenterCenter(dTable);
-	let dstats = mDom(dr, {}, { id: 'dStats' });
-	//mStyle(dstats,{display:'flex',direction:'rows'});
-	return dTable;
-}
 function roundToNearestMultiples(n, x = 10) {
 	const lower = Math.floor(n / x) * x;
 	const higher = Math.ceil(n / x) * x;
 	return { lower, higher };
 }
 function setgame() {
+
 	function setup(table) {
 		let fen = {};
 		for (const name in table.players) {
@@ -745,7 +705,7 @@ function setgame() {
 		return items;
 	}
 	async function activate(table, items) {
-		instructionStandard(table);
+		//showInstructionStandard(table);
 		if (!isMyTurn(table)) { return; }
 		for (const item of items) {
 			let d = iDiv(item);
@@ -929,7 +889,7 @@ function setgame() {
 		if (isSet) o.stepIfValid = step + 1;
 		let res = await mPostRoute('table', o); //console.log(res);
 	}
-	return { setup, present, stats, activate };
+	return { setup, present, stats, activate, hasInstruction:false };
 }
 async function showDashboard() {
 	let me = getUname();
@@ -1098,7 +1058,7 @@ async function updateExtra() {
 	mClear('dExtra');
 	let d = mDom('dExtra');
 	mStyle(d, { display: 'flex', justify: 'space-between' });
-	let [left, right] = [mDom(d, { hpadding: 10 }, { id: 'dExtraLeft' }), mDom(d, {}, { id: 'dExtraRight' })];
+	let [left, right] = [mDom(d, { }, { id: 'dExtraLeft' }), mDom(d, {}, { id: 'dExtraRight' })];
 	if (TESTING) await updateTestButtonsLogin();
 }
 async function updateTestButtonsLogin(names) {
@@ -1107,31 +1067,9 @@ async function updateTestButtonsLogin(names) {
 	let me = getUname();
 	for (const name of names) {
 		let idname = getButtonCaptionName(name);
-		let b = UI[idname] = mButton(name, async () => await switchToUser(name), d, { maright: 4, hpadding: 3, wmin: 50, className: 'button' });
+		let b = UI[idname] = mButton(name, async () => await switchToUser(name), d, { maleft: 4, hpadding: 3, wmin: 50, className: 'button' });
 		if (me == name) mStyle(b, { bg: 'red', fg: 'white' });
 	}
-}
-async function updateTestButtonsPlayers(table) {
-	if (nundef(table)) table = T;
-	assertion(table, "NOT TABLE IN updateTestButtonsPlayers")
-	let d = mBy('dExtraRight'); mClear(d); //mFlexWrap(d);
-	let me = getUname();
-	let names = table.playerNames; //addIf(names,'mimi');
-	//addIf(names,me);
-	let dplayers = mDom(d);
-	for (const name of names) {
-		let idname = getButtonCaptionName(name);
-		let b = UI[idname] = mButton(name, async () => await switchToUser(name), dplayers, { maright: 4, hpadding: 3, wmin: 50, className: 'button' });
-		if (me == name) mStyle(b, { bg: 'red', fg: 'white' });
-	}
-
-	if (!table.playerNames.includes(me)) return;
-	let dbotswitch = mDom(d, { align: 'right', patop: 10, gap: 6 }, { html: 'BOT' }); mFlexLine(dbotswitch, 'end')
-	let oSwitch = mSwitch(dbotswitch, {}, { id: 'bot', val: amIHuman(table) ? '' : 'checked' });
-	let inp = oSwitch.inp;
-	oSwitch.inp.onchange = onchangeBotSwitch;
-
-
 }
 function wsCard(d, w, h) {
 	let card = cBlank(d, { h, w, border: 'silver' }); //return;

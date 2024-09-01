@@ -357,7 +357,7 @@ function button96() {
     return items;
   }
   async function activate(table, items) {
-    await instructionStandard(table, 'must click a card'); //browser tab and instruction if any
+    await showInstructionStandard(table, 'must click a card'); //browser tab and instruction if any
     if (!isMyTurn(table)) { return; }
     for (const item of items) {
       let d = iDiv(item);
@@ -4717,27 +4717,6 @@ function inpToChecklist(ev, grid) {
   if (key == 'Enter') ev.preventDefault();
   if (isExpressionSeparator(key) || key == 'Enter') doYourThing(inp, grid);
 }
-async function instructionStandard(table, instruction) {
-  let myTurn = isMyTurn(table);
-  if (!myTurn) staticTitle(table); else animatedTitle();
-  if (nundef(instruction)) return;
-  let styleInstruction = { hmin:42, display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
-  let dinst = mBy('dInstruction');
-  if (nundef(dinst)) return;
-  mClear(dinst);
-  let html;
-  if (myTurn) {
-    styleInstruction.maleft = -30;
-    html = `
-        ${getWaitingHtml()}
-        <span style="color:red;font-weight:bold;max-height:25px">You</span>
-        &nbsp;${instruction};
-        `;
-  } else { html = `waiting for: ${getTurnPlayers(table)}` }
-  mDom(dinst, styleInstruction, { html });
-}
-function instructionUpdate() {
-}
 function intersection(arr1, arr2) {
   let res = [];
   for (const a of arr1) {
@@ -6357,7 +6336,7 @@ async function menuCloseSettings() { delete DA.settings; closeLeftSidebar(); cle
 
 function menuCloseSimple() { closeLeftSidebar(); clearMain(); }
 
-function menuCloseTable() { if (T) Tid = T.id; T = null; delete DA.pendingChanges; clearMain(); }
+function menuCloseTable() { if (T) Tid = T.id; T = null; delete DA.pendingChanges; clearMain(); mClass('dExtra','p10hide'); }
 
 function menuCommand(dParent, menuKey, key, html, open, close) {
   let cmd = mCommand(dParent, key, html, { open, close });
@@ -7046,6 +7025,7 @@ async function onsockTable(x) {
   let me = getUname();
 	console.log('menu',menu,'me',me,'turn',turn,'isNew',isNew)
   if (turn.includes(me) && menu == 'play') { Tid = id; await switchToMainMenu('table'); }
+  else if (isNew  && menu == 'play') { Tid = id; await switchToMainMenu('table'); }
   else if (menu == 'table') await showTable(id);
   else if (menu == 'play') await showTables();
 }
@@ -7338,20 +7318,6 @@ function presentFor(me) {
 function presentImageCropper(url) {
   let d = mDom('dMain', { position: 'absolute', h: 500, w: 500, bg: 'navy' });
   let img = mDom(d, { w: 300, h: 300, 'object-fit': 'cover', 'object-position': 'center center' }, { tag: 'img', src: url });
-}
-function presentStandardBGA() {
-  let dTable = mDom('dMain');
-  mClass('dPage', 'wood');
-  let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dTable); mFlexWrap(dOpenTable)
-  mDom(dRechts, {}, { id: 'dStats' });
-}
-function presentStandardRoundTable() {
-  d = mDom('dMain'); mCenterFlex(d);
-  mDom(d, { className: 'instruction' }, { id: 'dInstruction' }); mLinebreak(d); // instruction
-  mDom(d, {}, { id: 'dStats' }); mLinebreak(d);
-  let minTableSize = 400;
-  let dTable = mDom(d, { hmin: minTableSize, wmin: minTableSize, margin: 20, round: true, className: 'wood' }, { id: 'dTable' });
-  mCenterCenter(dTable);
 }
 function proceed(nextLevel) {
   if (nundef(nextLevel)) nextLevel = currentLevel;
@@ -8447,22 +8413,6 @@ function showRibbon(dParent, msg) {
   d = mDom(dParent, { bg, mabottom: 10, align: 'center', vpadding: 10, fz: 30, w100: true }, { html: msg, id: 'ribbon' });
   return d;
 }
-async function showTable(id) {
-  let me = getUname();
-  let table = await mGetRoute('table', { id });  //console.log('table',table)
-  if (!table) { showMessage('table deleted!'); return await showTables('showTable'); }
-  let func = DA.funcs[table.game];
-  T = table;
-  clearMain();
-  let d = mBy('dExtraLeft');
-  d.innerHTML = `<h2>${getGameProp('friendly').toUpperCase()}: ${table.friendly} (${table.step})</h2>`; // title
-  let items = func.present(table);
-  func.stats(table);
-  if (table.status == 'over') { showGameover(table, 'dTitle'); return; }
-  assertion(table.status == 'started', `showTable status ERROR ${table.status}`);
-  await updateTestButtonsPlayers(table);
-  func.activate(table, items);
-}
 async function showTables(from) {
   await updateTestButtonsLogin();
   let me = getUname();
@@ -8563,10 +8513,6 @@ async function showThemes() {
     let dmain = mDom(dsample, { padding: 10, fg: 'black', className: 'section' }, { html: getMotto() });
     dsample.onclick = onclickThemeSample;
   }
-}
-function showTitle(title, dParent = 'dTitle') {
-  mClear(dParent);
-  return mDom(dParent, { maleft: 20 }, { tag: 'h1', html: title, classes: 'title' });
 }
 function showTrick() {
   let dZone = Zones.table.dData;

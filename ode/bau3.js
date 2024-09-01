@@ -1,28 +1,69 @@
 
-async function showTable(id) {
-	let me = getUname(); //console.log('_________showTable', id)
-	let table = await mGetRoute('table', { id });  //console.log('table',table)
-	if (!table) { showMessage('table deleted!'); return await showTables('showTable'); }
+function prepInstruction(table){
+  if (isdef('dInstruction')) mRemove('dInstruction');
 
-	//console.log('lengthy',DA.LengthyProcessRunning);
-	DA.Interrupt = true;
-	while (DA.LengthyProcessRunning === true){
-		await mSleep(100);
-	} 
-	DA.Interrupt = false;
-	//console.log('____________showTable', table);
+  let myTurn = isMyTurn(table);
+  if (!myTurn) staticTitle(table); else animatedTitle();
 
-	let func = DA.funcs[table.game];
-	T = table;
-	clearMain();
-	let d = mBy('dExtraLeft');
-	d.innerHTML = `<h2>${getGameProp('friendly').toUpperCase()}: ${table.friendly} (${table.step})</h2>`; // title
-	let items = func.present(table);
-	func.stats(table);
-	if (table.status == 'over') { showGameover(table, 'dTitle'); return; }
-	assertion(table.status == 'started', `showTable status ERROR ${table.status}`);
-	await updateTestButtonsPlayers(table);
-	func.activate(table, items);
+	let d = mBy('dExtra'); 
+  let style = { matop:2,bg:'white',fg:'black',w100:true, box:true,display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
+	let dInst = mDom(d, style,{id:'dInstruction'});
+
+  let html;
+  if (myTurn) {
+    //mStyle(dInst,{maleft: -30});
+    html = `
+        ${getWaitingHtml(14)}
+        <span style="color:red;font-weight:bold;max-height:25px">You</span>
+        &nbsp;<span id='dInstructionText'></span>
+        `;
+  } else { html = `waiting for: ${getTurnPlayers(table)}` }
+  dInst.innerHTML = html;
+  //mDom(dInst, styleInstruction, { html });
+
+	//mStyle(d,{weight:'bold'});
+	// d.innerHTML = `<h2>${getGameProp('friendly').toUpperCase()}: ${table.friendly} (${table.step})</h2>`; // title
+	//d.innerHTML = `${getGameProp('friendly').toUpperCase()}: ${table.friendly}`; // (${table.step})`; // title
+}
+function setInstruction(s){mBy('dInstructionText').innerHTML = s;}
+function presentBgaRoundTable() {
+	let d0=mDom('dMain');
+	let [dl,dr]=mColFlex(d0,[4,1]);
+	d = mDom(dl); mCenterFlex(d);
+	if (nundef(mBy('dInstruction'))) mDom(d, { className: 'instruction' }, { id: 'dInstruction' }); mLinebreak(d); // instruction
+	let minTableSize = 400;
+	let dTable = mDom(d, { hmin: minTableSize, wmin: minTableSize, hmargin: 20, round: true, className: 'wood' }, { id: 'dTable' });
+	mCenterCenter(dTable);
+	let dstats = mDom(dr, {}, { id: 'dStats' });
+	//mStyle(dstats,{display:'flex',direction:'rows'});
+	return dTable;
+}
+function presentStandardBGA() {
+  let dTable = mDom('dMain');
+  mClass('dPage', 'wood');
+  let [dOben, dOpenTable, dMiddle, dRechts] = tableLayoutMR(dTable); mFlexWrap(dOpenTable)
+  mDom(dRechts, {}, { id: 'dStats' });
+}
+function presentStandardRoundTable() {
+  d = mDom('dMain'); mCenterFlex(d);
+  mDom(d, { className: 'instruction' }, { id: 'dInstruction' }); mLinebreak(d); // instruction
+  mDom(d, {}, { id: 'dStats' }); mLinebreak(d);
+  let minTableSize = 400;
+  let dTable = mDom(d, { hmin: minTableSize, wmin: minTableSize, margin: 20, round: true, className: 'wood' }, { id: 'dTable' });
+  mCenterCenter(dTable);
+}
+function showTitle(title, dParent = 'dTitle') {
+  mClear(dParent);
+  return mDom(dParent, { maleft: 20 }, { tag: 'h1', html: title, classes: 'title' });
+}
+function showTitleGame(table){
+
+	let d = mBy('dExtraLeft'); 
+	let html = `${getGameProp('friendly').toUpperCase()}: ${table.friendly}`;
+	mDom(d, { maleft:10,family:'algerian' },{html});
+	//mStyle(d,{weight:'bold'});
+	// d.innerHTML = `<h2>${getGameProp('friendly').toUpperCase()}: ${table.friendly} (${table.step})</h2>`; // title
+	//d.innerHTML = `${getGameProp('friendly').toUpperCase()}: ${table.friendly}`; // (${table.step})`; // title
 }
 
 

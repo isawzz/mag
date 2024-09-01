@@ -1,0 +1,59 @@
+status: started
+id: VJYgolU0Ik4GDa2E9H1Z
+fen:
+  points: >-
+    379_602_2 491_277_3 676_710_2 198_408_4 833_381_4 314_840_4 391_96_1
+    915_667_1 45_634_1 739_61_1
+  meeples: []
+game: lacuna
+owner: mimi
+friendly: showdown in Pristina
+players:
+  mimi:
+    name: mimi
+    color: '#ffe4e1'
+    texture: ../assets/textures/marble_rosa.jpeg
+    blendMode: normal
+    imgKey: mimi
+    palette:
+      - '#ffe4e1'
+      - '#c79f9b'
+      - '#9b8886'
+      - '#ae5031'
+      - '#cb765c'
+      - '#7c6d6f'
+      - '#b97876'
+      - '#d08d78'
+    playmode: human
+    score: 0
+    positions: []
+    flowers:
+      '0': 0
+      '1': 0
+  amanda:
+    name: amanda
+    color: '#046307'
+    texture: ../assets/textures/wall1.jpg
+    blendMode: overlay
+    imgKey: amanda
+    playmode: human
+    score: 0
+    positions: []
+    flowers:
+      '0': 0
+      '1': 0
+playerNames:
+  - mimi
+  - amanda
+options:
+  numPoints: 28
+  numColors: 4
+  numMeeples: 3
+  gamemode: multi
+step: 0
+moves: []
+plorder:
+  - mimi
+  - amanda
+turn:
+  - amanda

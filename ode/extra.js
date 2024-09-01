@@ -44,7 +44,7 @@ function setgame() {
     return items;
   }
   async function activate(table, items) {
-    instructionStandard(table);
+    showInstructionStandard(table);
     if (!isMyTurn(table)) { return; }
     for (const item of items) {
       let d = iDiv(item);

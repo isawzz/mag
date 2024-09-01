@@ -2,7 +2,27 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test173_lacuna(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 
-async function test173_lacuna(){
+async function test174_lacunaTest() {
+  let [w, h, sz, margin, n, neach] = [800, 800, 30, 30, 70, 7];
+  DA.sz = sz;
+  let points = DA.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
+  let d = clearDiv();
+  let dParent = DA.dParent = mDom(d, { w, h, position: 'absolute', left: 100, top: 50, bg: '#eee' }, { id: 'dCanvas' });
+  Items = lacunaDrawPoints(dParent, points); //console.log(Items)
+  DA.meeples = [];
+
+  let result = findIsolatedPairs(points, sz / 2); //sz*1.2); console.log(result);
+  let pairs = result.isolatedPairs;
+
+  let pair = pairs[0]; console.log(pair)
+
+  //drawInteractiveLine(pair[0],pair[1]);
+
+  let lines = []; DA.lines = lines;
+  pairs.map(x => lines.push(drawInteractiveLine(x[0], x[1], rColor(),1)));
+  document.onmousemove = onMouseMoveLine;
+}
+async function test173_lacuna() {
   // DA.gamename = 'lacuna';
   // await onclickStartGame();
   //localStorage.clear();
@@ -18,25 +38,33 @@ async function test173_lacuna(){
   //await startGame('lacuna',{mimi:''});
 }
 async function test172_lacunaTest() {
-	let [w, h, sz, margin, n, neach] = [800, 800, 20, 30, 49, 7];
-	DA.sz = sz;
-	let points = DA.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
-	let d = clearDiv();
-	let dParent = DA.dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' }, { id: 'dCanvas' });
-	Items = lacunaDrawPoints(dParent, points); //console.log(Items)
-	DA.meeples = [];
+  let [w, h, sz, margin, n, neach] = [800, 800, 30, 30, 70, 7];
+  DA.sz = sz;
+  let points = DA.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
+  let d = clearDiv();
+  let dParent = DA.dParent = mDom(d, { w, h, position: 'absolute', left: margin, top: margin, bg: '#eee' }, { id: 'dCanvas' });
+  Items = lacunaDrawPoints(dParent, points); //console.log(Items)
+  DA.meeples = [];
 
-	lacunaStartMove();
+  let result = findIsolatedPairs(points, sz / 2); //sz*1.2); console.log(result);
+  let pairs = result.isolatedPairs;
+
+  let pair = pairs[0]; console.log(pair)
+
+  //drawInteractiveLine(pair[0],pair[1]);
+
+  let lines = []; DA.lines = lines;
+  pairs.map(x => lines.push(drawInteractiveLine(x[0], x[1], rColor(),1)));
+  document.onmousemove = onMouseMoveLine;
 }
-
-async function test171_blank(){
+async function test171_blank() {
   //how do I start a game?
 }
 async function test170_crazu() {
   //let d=clearFlex();
   //let canvas = mCanvas
   let colors = { "Red": "#E63946", "Green": "#06D6A0", "Blue": "#118AB2", "Cyan": "#0F4C75", "Magenta": "#D81159", "Yellow": "#FFD166", "Orange": "#F4A261", "Purple": "#9D4EDD", "Pink": "#FF80AB", "Brown": "#8D6E63", "Lime": "#A7FF83", "Indigo": "#3A0CA3", "Violet": "#B5838D", "Gold": "#F5C518", "Teal": "#008080" };
-  
+
 
 }
 async function test162_asklist() {
@@ -146,7 +174,7 @@ async function prelims() {
       <div id="dNav" class="nav p10"></div>
       <div id="dMessage" style='height:0px;padding-left:10px' class="transh"></div>
     </div>
-    <div id="dBuffer" style="height:32px;width:100%"></div>
+    <div id="dBuffer" style="height:32px;width:100%" class="nav"></div>
     <div id="dExtra" class="p10hide nav"></div>
     <div id="dTitle"></div>
     <div id="dPage" style="display:grid;grid-template-columns: auto 1fr auto;">
