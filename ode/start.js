@@ -15,7 +15,7 @@ async function test176_lacunaTest() {
     p1 = pointAddMargin(p1,padding);
     p1.sz=sz;
     p1 = drawPoint(dParent, p1);
-    console.log(p1);
+    //console.log(p1);
   };
 }
 async function test175_lacunaTest() {
