@@ -1,4 +1,55 @@
 
+function pointFromFen(pfen,dParent,margin){
+  //a fen point is 'x_y_type_owner'
+  //result should be {x,y,type,owner,div,sz,bg} x on page,y on page,owner may be null
+  let rect=getRect(dParent); 
+  let [w,h,xoff,yoff] = [rect.w,rect.h,rect.x,rect.y];console.log(w,h,xoff,yoff)
+  console.log(pfen)
+  const [x, y, type, owner] = pfen.split('_').map(val => isNaN(val) ? val : parseInt(val, 10));
+  const p = {
+      x: Math.round((x / 1000) * w + xoff+margin), // Convert x to page coordinates
+      y: Math.round((y / 1000) * h + yoff+margin), // Convert y to page coordinates
+      type,
+      owner: owner === 'null' ? null : owner, // Handle null owner
+      div: null, // Placeholder for the div element
+      sz: 20, //Math.max(10,Math.round(20/1000 * Math.min(w,h))), // Default size (can be adjusted)
+      bg: rColor(),//'black' // Default background color (can be adjusted)
+  };
+  console.log(p)
+  p.div=mDom(dParent,{position:'absolute',w:p.sz,h:p.sz,left:p.x - p.sz / 2,top:p.y - p.sz / 2,bg:p.bg},{'data-type':p.type});
+  return p;
+}
+
+function pointFromFen(fen, w, h, margin, dParent) {
+  // Split the FEN string into components
+  const [x, y, type, owner] = fen.split('_').map(val => isNaN(val) ? val : parseInt(val, 10));
+
+  // Create a point object with page coordinates
+  const p = {
+      x: Math.round((x / 1000) * w) + margin, // Convert x to page coordinates
+      y: Math.round((y / 1000) * h) + margin, // Convert y to page coordinates
+      type,
+      owner: owner === 'null' ? null : owner, // Handle null owner
+      div: null, // Placeholder for the div element
+      sz: 10, // Default size (can be adjusted)
+      bg: 'black' // Default background color (can be adjusted)
+  };
+
+  // Create the div element representing the point
+  let d=mDom(dParent,{position:'absolute',w:p.sz,h:p.sz,left:p.x - p.sz / 2,top:p.y - p.sz / 2,bg:p.bg},{'data-type':p.type});
+  // point.div = document.createElement('div');
+  // point.div.style.position = 'absolute';
+  // point.div.style.width = `${point.sz}px`;
+  // point.div.style.height = `${point.sz}px`;
+  // point.div.style.left = `${point.x - point.sz / 2}px`; // Center the point div
+  // point.div.style.top = `${point.y - point.sz / 2}px`; // Center the point div
+  // point.div.style.backgroundColor = point.bg;
+  // point.div.setAttribute('data-type', point.type); // Store the type as a data attribute
+  // // Append the point div to the parent div
+  // dParent.appendChild(point.div);
+
+  return p;
+}
 async function showInstructionStandard(table, instruction) {
   let myTurn = isMyTurn(table);
   if (!myTurn) staticTitle(table); else animatedTitle();

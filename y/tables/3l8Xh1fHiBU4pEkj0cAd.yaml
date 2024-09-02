@@ -1,13 +1,21 @@
 status: started
-id: VJYgolU0Ik4GDa2E9H1Z
+id: 3l8Xh1fHiBU4pEkj0cAd
 fen:
-  points: >-
-    379_602_2 491_277_3 676_710_2 198_408_4 833_381_4 314_840_4 391_96_1
-    915_667_1 45_634_1 739_61_1
+  points:
+    - '399_622_0'
+    - '510_277_4'
+    - '656_725_4'
+    - '184_498_1'
+    - '799_312_3'
+    - '429_881_1'
+    - '285_141_3'
+    - '891_717_3'
+    - '59_675_1'
+    - '762_74_0'
   meeples: []
 game: lacuna
 owner: mimi
-friendly: showdown in Pristina
+friendly: showdown in San Juan
 players:
   mimi:
     name: mimi
@@ -30,12 +38,12 @@ players:
     flowers:
       '0': 0
       '1': 0
-  amanda:
-    name: amanda
-    color: '#046307'
-    texture: ../assets/textures/wall1.jpg
-    blendMode: overlay
-    imgKey: amanda
+  felix:
+    name: felix
+    color: '#0e1e76'
+    texture: ../assets/textures/marble_meer1.jpg
+    blendMode: normal
+    imgKey: felix
     playmode: human
     score: 0
     positions: []
@@ -44,7 +52,7 @@ players:
       '1': 0
 playerNames:
   - mimi
-  - amanda
+  - felix
 options:
   numPoints: 28
   numColors: 4
@@ -54,6 +62,6 @@ step: 0
 moves: []
 plorder:
   - mimi
-  - amanda
+  - felix
 turn:
-  - amanda
+  - mimi

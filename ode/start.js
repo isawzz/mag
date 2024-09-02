@@ -1,7 +1,37 @@
 onload = start;
 
-async function start() { TESTING = true; await prelims(); await test173_lacuna(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
+async function start() { TESTING = true; await prelims(); await test176_lacunaTest(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 
+async function test176_lacunaTest() {
+  let [w, h, sz, margin, padding, n, neach] = [600, 600, 20, 20, 20, 25, 5];
+  DA.sz = sz;
+  let points = ['0_0','90_90','0_90','90_0']; // 
+  points = lacunaGenerateFenPoints(n, neach, w-sz, h-sz); console.log(jsCopy(points));
+
+  let d = clearDiv();
+  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position:'relative', bg: '#eee' }, { id: 'dCanvas' });
+  for(const p of points){
+    let p1 = pointFromFenRaw(p); 
+    p1 = pointAddMargin(p1,padding);
+    p1.sz=sz;
+    p1 = drawPoint(dParent, p1);
+    console.log(p1);
+  };
+}
+async function test175_lacunaTest() {
+  let [w, h, sz, margin, n, neach] = [600, 600, 20, 30, 100, 5];
+  DA.sz = sz;
+  let points = lacunaGenerateFenPoints(n, neach, w-2*margin-sz/2, h-2*margin-sz/2); console.log(jsCopy(points));
+
+  let d = clearDiv();
+  let dParent = DA.dParent = mDom(d, { w, h, bg: '#eee', round:true }, { id: 'dCanvas' });
+  for(const p of points){
+    let p1 = pointFromFenRaw(p); 
+    p1 = pointAddMargin(p1,margin);
+    p1 = drawPoint(dParent, p1);
+    console.log(p1);
+  };
+}
 async function test174_lacunaTest() {
   let [w, h, sz, margin, n, neach] = [800, 800, 30, 30, 70, 7];
   DA.sz = sz;
