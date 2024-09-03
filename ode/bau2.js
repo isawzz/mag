@@ -27,7 +27,7 @@ function pointAddMargin(p, margin) {
 }
 function pointFromFenRaw(pfen) {
   const [x, y, type, owner] = pfen.split('_').map(val => isNaN(val) ? val : parseInt(val, 10));
-  return { x, y, type, owner: owner === 'null' ? null : owner };
+  return { x, y, type, owner: nundef(owner) ? null : owner };
 }
 
 

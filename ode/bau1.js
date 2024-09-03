@@ -8,7 +8,7 @@ function lacuna() {
 		let n = opts.numPoints;
 		let neach = opts.numPoints / opts.numColors;
 
-		let points = lacunaGenerateFenPoints(n, neach, 100, 100); // 243_500_1_felix, (x,y E [0,1000] und type E [1,numColors] hat, ?owner)
+		let points = lacunaGenerateFenPoints(n, neach, 1000, 1000); // 243_500_1_felix, (x,y E [0,1000] und type E [1,numColors] hat, ?owner)
 		//es ist auch simpel, wenn ich die points auf ein extra layer am document mache, alle coords absolute
 
 		let fen = { points }; console.log('points',points)
@@ -50,20 +50,22 @@ function lacuna() {
 	}
 
 	function present(table) {
+		let fen = table.fen; console.log(fen);
+
 		console.log(table.fen,table.players); 
 		B = {};
 		let dTable = presentBgaRoundTable(); 
 
+		B.points = lacunaPresentPoints(fen.points,dTable);
 		// let rect=getRect(dTable); 
 		// let [w,h,xoff,yoff] = [rect.w,rect.h,rect.x,rect.y];console.log(w,h,xoff,yoff)
 		// let pdiv=mDom(dTable,{position:'absolute',w:10,h:10,left:100+xoff,top:100+yoff,bg:rColor(),round:true},{'data-type':1});
 
-		let fen = table.fen; console.log(fen);
-		B.points = [];
+		// B.points = [];
 
-		for(const p of fen.points){
-			B.points.push(pointFromFen(p,dTable,20))
-		};
+		// for(const p of fen.points){
+		// 	B.points.push(pointFromFen(p,dTable,20))
+		// };
 		
 	}
 	function muell(table){

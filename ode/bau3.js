@@ -12,6 +12,9 @@ function generateRandomPointsRound(n, w, h, rand = 0.8) {
 	}
 	return points;
 }
+function mapRange(value, inMin, inMax, outMin, outMax) {
+  return Math.round((value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin);
+}
 function numTranslate(n, newmax, newmin = 0, oldmax = 1000, oldmin = 0) { return Math.round(newmin + (newmax - newmin) * (n - oldmin) / (oldmax - oldmin)); }
 function pointToFen(p) {
   //point is {x,y,type,owner,div,sz,bg} x on page,y on page,owner may be null
