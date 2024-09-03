@@ -1,4 +1,16 @@
 
+function drawPoint(dParent, p, addLabel = true) {
+  let html = isdef(p.owner) && addLabel ? p.owner[0].toUpperCase() : '';
+  addKeys({ sz: 20, bg: rColor(), id:getUID() }, p);
+  let d1 = p.div = mDom(dParent, { round: true, left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html, id: p.id });
+  d1.style.cursor = 'default';
+  if (isdef(p.border)) mStyle(d1, { outline: `solid ${p.border} 4px` });
+  let rect = getRect(d1);
+  p.cx = p.x + p.sz / 2; p.cy = p.y + p.sz / 2;
+  p.xPage = rect.x; p.yPage = rect.y;
+  p.cxPage = rect.x + p.sz / 2; p.cyPage = rect.y + p.sz / 2;
+	return p;
+}
 function generateRandomPointsRound(n, w, h, rand = 0.8) {
 	let [radx, rady] = [w / 2, h / 2];
 	const goldenAngle = Math.PI * (3 - Math.sqrt(5));
@@ -12,17 +24,40 @@ function generateRandomPointsRound(n, w, h, rand = 0.8) {
 	}
 	return points;
 }
+function lacunaGenerateFenPoints(n,nColors,w=1000,h=1000,rand=.8){
+	let pts=generateRandomPointsRound(n,w,h,rand);
+	return pts.map(p=>`${p.x}_${p.y}_${rChoose(range(nColors))}`); //.join(' ');
+}
+function lacunaPresentPoints(points,d){
+  let [w, h, sz, margin, padding] = [400, 400, 10, 10, 20];
+  DA.sz = sz;
+  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position:'relative', bg: '#eee' }, { id: 'dCanvas' });
+  for(const p of points){
+    let p1 = pointFromFenRaw(p); //console.log(p1);
+    p1.x=mapRange(p1.x,0,1000, 0,w-sz); 
+    p1.y=mapRange(p1.y, 0, 1000, 0, h-sz);
+    p1 = pointAddMargin(p1,padding);
+    p1.sz=sz;
+    p1 = drawPoint(dParent, p1);
+    //console.log(p1);
+  }
+}
 function mapRange(value, inMin, inMax, outMin, outMax) {
   return Math.round((value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin);
 }
-function numTranslate(n, newmax, newmin = 0, oldmax = 1000, oldmin = 0) { return Math.round(newmin + (newmax - newmin) * (n - oldmin) / (oldmax - oldmin)); }
+function pointAddMargin(p, margin) {
+  return { x: p.x + margin, y: p.y + margin, type: p.type, owner: p.owner };
+}
+function pointFromFenRaw(pfen) {
+  const [x, y, type, owner] = pfen.split('_').map(val => isNaN(val) ? val : parseInt(val, 10));
+  return { x, y, type, owner: nundef(owner) ? null : owner };
+}
 function pointToFen(p) {
   //point is {x,y,type,owner,div,sz,bg} x on page,y on page,owner may be null
   //result should be 'x_y_type_owner' (x,y in 0,1000 range)
 
 
 }
-
 function prepInstruction(table) {
   if (isdef('dInstruction')) mRemove('dInstruction');
 

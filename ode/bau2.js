@@ -1,5 +1,5 @@
 
-function drawPoint(dParent, p, addLabel = true) {
+function drawPointType(dParent, p, addLabel = true) {
   let html = isdef(p.owner) && addLabel ? p.owner[0].toUpperCase() : '';
   addKeys({ sz: 20, bg: rColor(), id:getUID() }, p);
   let d1 = p.div = mDom(dParent, { round: true, left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html, id: p.id });
@@ -13,21 +13,10 @@ function drawPoint(dParent, p, addLabel = true) {
 }
 function generateStar(dParent,x,y){
 	let html = `<svg width="100" height="100">
-  <polygon points="50 0 86.6 50 100 0 75 35 50 70.7 25 35 0 0" fill="yellow" />
-</svg>`;
-let d=mDom(dParent,{w:100,h:100,pos:'absolute',left:x,top:y},{html});
+			<polygon points="50 0 86.6 50 100 0 75 35 50 70.7 25 35 0 0" fill="yellow" />
+		</svg>`;
+	let d=mDom(dParent,{w:100,h:100,pos:'absolute',left:x,top:y},{html});
 	return html;
-}
-function lacunaGenerateFenPoints(n,nColors,w=1000,h=1000,rand=.8){
-	let pts=generateRandomPointsRound(n,w,h,rand);
-	return pts.map(p=>`${p.x}_${p.y}_${rChoose(range(nColors))}`); //.join(' ');
-}
-function pointAddMargin(p, margin) {
-  return { x: p.x + margin, y: p.y + margin, type: p.type, owner: p.owner };
-}
-function pointFromFenRaw(pfen) {
-  const [x, y, type, owner] = pfen.split('_').map(val => isNaN(val) ? val : parseInt(val, 10));
-  return { x, y, type, owner: nundef(owner) ? null : owner };
 }
 
 

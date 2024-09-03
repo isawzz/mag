@@ -1,4 +1,6 @@
 
+function numTranslate(n, newmax, newmin = 0, oldmax = 1000, oldmin = 0) { return Math.round(newmin + (newmax - newmin) * (n - oldmin) / (oldmax - oldmin)); }
+
 function pointFromFen(pfen,dParent,margin){
   //a fen point is 'x_y_type_owner'
   //result should be {x,y,type,owner,div,sz,bg} x on page,y on page,owner may be null

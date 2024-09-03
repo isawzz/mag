@@ -1,4 +1,26 @@
+beveled_star
+flower_star
+glowing_star
+flat_star
+eight_pointed_star
+ninja_star
+north_star_shuriken
+round_star
+star
+staryu
+star_shuriken
+seven_pointed_star
+laser-burst
+pentacle
+spikes
+spikes_init
+spikes_half
+spikes_full
+star_of_life
 
+
+
+monstera_leaf
 _______ TOC
 - wi: https://en.wikivoyage.org/wiki/Destinations
 - ode: crazu = lacuna canvas zeug

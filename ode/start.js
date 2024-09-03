@@ -8,23 +8,11 @@ async function test178_lacunaPresent() {
   let points = lacunaGenerateFenPoints(n, neach, 1000,1000,0.7); //console.log(jsCopy(points));
 
   let d = clearDiv();
+
+  //generateStar(d,100,200);return;
   
   lacunaPresentPoints(points,d); //present
 
-}
-function lacunaPresentPoints(points,d){
-  let [w, h, sz, margin, padding] = [600, 600, 20, 10, 20];
-  DA.sz = sz;
-  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position:'relative', bg: '#eee' }, { id: 'dCanvas' });
-  for(const p of points){
-    let p1 = pointFromFenRaw(p); //console.log(p1);
-    p1.x=mapRange(p1.x,0,1000, 0,w-sz); 
-    p1.y=mapRange(p1.y, 0, 1000, 0, h-sz);
-    p1 = pointAddMargin(p1,padding);
-    p1.sz=sz;
-    p1 = drawPoint(dParent, p1);
-    //console.log(p1);
-  }
 }
 async function test177_lacunaTest_mapRange() {
   let [w, h, sz, margin, padding, n, neach] = [600, 600, 20, 10, 20, 50, 10];
