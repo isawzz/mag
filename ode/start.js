@@ -2,32 +2,52 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start(){await test180();}
+async function start() { await test182(); }
 
-async function test181(){
-  let list = range(1, 9).map(x=> `../assets/icons/stars/blue${n}.png`);
+async function test182() {
+  let list = range(1, 9).map(n => `../assets/icons/stars/blue${n}.png`);
   let starImages = await preloadImages(list);
+  console.log('starImages', starImages);
+
+  let d1 = mDom(document.body,{className:'h100'},{html:'hallo'}); //margin-collapse problem!!!!
+  let d = mDom(d1, { w: 500, h: 500, bg: '#242430' });
+
+  let im=starImages[0];
+  let [w,h]=[im.width,im.height]; console.log('w,h',w,h);
+  
+  let img = cloneImage(starImages[0], d, 100,100,50,50)
+
 
 }
-async function test180(){
+async function test181() {
+  let list = range(1, 9).map(n => `../assets/icons/stars/blue${n}.png`);
+  let starImages = await preloadImages(list);
 
-	let d1=mDom(document.body,{className:'content'});
-	let d=mDom(d1,{w100:true,h100:true,bg:'#242430'})
+  let d1 = mDom(document.body, { className: 'h100' });
+  let wrapper = mDom(d1, { padding: 10 });
+  let d = mDom(wrapper, { w: 500, h: 500, bg: '#242430' })
 
 
-	for(const n of range(1,9)){
-		let url=`../assets/icons/stars/blue${n}.png`;
-		mDom(d, {w:100, h:100},{tag:'img',src:url});
-	}
+}
+async function test180() {
 
-	//cropImage('../assets/icons/stars_blue.jpg',d);
-	//loadAndDivideImage('../assets/icons/stars_blue.jpg',d);
-	//mDom(document.body,{hmin:300,bg:'violet',sdisplay:'flex',gap:20,justify:'center',align:'center'});
+  let d1 = mDom(document.body, { className: 'content' });
+  let d = mDom(d1, { w100: true, h100: true, bg: '#242430' })
+
+
+  for (const n of range(1, 9)) {
+    let url = `../assets/icons/stars/blue${n}.png`;
+    mDom(d, { w: 100, h: 100 }, { tag: 'img', src: url });
+  }
+
+  //cropImage('../assets/icons/stars_blue.jpg',d);
+  //loadAndDivideImage('../assets/icons/stars_blue.jpg',d);
+  //mDom(document.body,{hmin:300,bg:'violet',sdisplay:'flex',gap:20,justify:'center',align:'center'});
 }
 
 
 async function test179_image9() {
-  let d=mDom(document.body, { margin:0,padding:0,bg: 'black',h:'100vh' }); //,display:'flex',jcontent:'center',aitems:'center' });
+  let d = mDom(document.body, { margin: 0, padding: 0, bg: 'black', h: '100vh' }); //,display:'flex',jcontent:'center',aitems:'center' });
 
   // document.body.innerHTML=''; document.body.style.backgroundColor = 'black'; return;
   // let d = clearDiv({bg:'#242430',w100:true, h100:true},{html:'hallo'}); return;
@@ -266,10 +286,10 @@ async function prelims() {
     <div id="dExtra" class="p10hide nav"></div>
     <div id="dTitle"></div>
     <div id="dPage" style="display:grid;grid-template-columns: auto 1fr auto;">
-      <div id="dLeft" class="h100 over0 translow nav">
+      <div id="dLeft" class="mh100 over0 translow nav">
       </div>
       <div id="dMain"></div>
-      <div id="dRight" class="h100 over0 translow"></div>
+      <div id="dRight" class="mh100 over0 translow"></div>
     </div>
     <d id="dBottom"></d>
     

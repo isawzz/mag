@@ -68,6 +68,7 @@ dialog:-internal-dialog-in-top-layer {
   font-size: inherit;
   font-family: inherit;
 }
+
 /* #endregion */
 
 /* #region classes for cards */
@@ -102,9 +103,9 @@ dialog:-internal-dialog-in-top-layer {
   color: black;
 }
 
-.selectable{
-	outline: 6px solid yellow;
-	/* translate: -3px -3px; */
+.selectable {
+  outline: 6px solid yellow;
+  /* translate: -3px -3px; */
 }
 
 .selectable_parent {
@@ -149,13 +150,27 @@ dialog:-internal-dialog-in-top-layer {
 
 /* #endregion */
 
-body, html {
+body,
+html, 
+.h100 {
   font-family: opensans, sans-serif;
-  height:100%;
-  /* padding: 2px 12px; */
-  padding: 0;
-  margin: 0;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+body{
   background-color: var(--bgBody) !important;
+}
+.h100{
+  background-color: lightblue;
+}
+.centeredContent {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightblue;
 }
 
 /* #region all */
@@ -267,7 +282,7 @@ fieldset .disabled {
   outline-offset: -6px;
 }
 
-.h100 {
+.mh100 {
   /* border:1px red solid; */
   /* padding: 10px; */
   /* min-width: 20px; */
@@ -342,7 +357,7 @@ fieldset .disabled {
 .instruction {
   border-radius: 10px;
   border: 2px silver solid;
-  background: #ffffff; 
+  background: #ffffff;
   margin: 4px;
   padding: 4px;
   /* flex-wrap: wrap; */
@@ -444,7 +459,8 @@ fieldset .disabled {
   padding: 5px 10px;
 }
 
-.p10hide:empty, .phide {
+.p10hide:empty,
+.phide {
   padding: 0;
   margin: 0;
   border: none;
@@ -516,6 +532,7 @@ fieldset .disabled {
 .w80 {
   width: 80px;
 }
+
 /* #endregion */
 
 /* #region datalist */
@@ -1997,24 +2014,33 @@ input:checked+.slider:before {
 /* #region test border image */
 .image-container {
   position: relative;
-  width: fit-content; /* Adjust width as needed */
-  display: inline-block; /* Ensure div sizes to content */
+  width: fit-content;
+  /* Adjust width as needed */
+  display: inline-block;
+  /* Ensure div sizes to content */
 }
 
 .image-container::before {
   content: '';
   position: absolute;
-  top: 10px; /* Adjust top position as needed */
-  left: 10px; /* Adjust left position as needed */
-  right: 10px; /* Adjust right position as needed */
-  bottom: 10px; /* Adjust bottom position as needed */
-  border: 20px inset #000; /* Adjust border width and color */
-  z-index: -1; /* Ensure pseudo-element is behind the image */
+  top: 10px;
+  /* Adjust top position as needed */
+  left: 10px;
+  /* Adjust left position as needed */
+  right: 10px;
+  /* Adjust right position as needed */
+  bottom: 10px;
+  /* Adjust bottom position as needed */
+  border: 20px inset #000;
+  /* Adjust border width and color */
+  z-index: -1;
+  /* Ensure pseudo-element is behind the image */
 }
 
 .image-container img {
   display: block;
-  max-width: 100%; /* Ensure image does not exceed container width */
+  max-width: 100%;
+  /* Ensure image does not exceed container width */
 }
 
 
@@ -2028,7 +2054,7 @@ input:checked+.slider:before {
   width: 100%;
 }
 
-.sticky + .content {
+.sticky+.content {
   padding-top: 60px;
 }
 
@@ -2036,14 +2062,16 @@ input:checked+.slider:before {
 
 .line {
   position: absolute;
-  background-color: black; /* Change to any color you prefer */
+  background-color: black;
+  /* Change to any color you prefer */
   width: 1px;
-  transform-origin: 0 50%; /* Transform origin at the start of the div */
+  transform-origin: 0 50%;
+  /* Transform origin at the start of the div */
 }
+
 .line1 {
   position: absolute;
   height: 20px;
   background-color: black;
   transform-origin: 0 50%;
 }
-

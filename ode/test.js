@@ -2119,10 +2119,10 @@ async function test54_dynBody() {
 	<div id="dExtra" class="p10hide"></div>
 	<div id="dTitle"></div>
 	<div id="dPage" style="display:grid;grid-template-columns: auto 1fr auto;">
-		<div id="dLeft" class="h100 over0 translow">
+		<div id="dLeft" class="mh100 over0 translow">
 		</div>
 		<div id="dMain"></div>
-		<div id="dRight" class="h100 over0 translow"></div>
+		<div id="dRight" class="mh100 over0 translow"></div>
 	</div>
 	<d id="dBottom"></d>
   
