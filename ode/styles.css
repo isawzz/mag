@@ -149,8 +149,9 @@ dialog:-internal-dialog-in-top-layer {
 
 /* #endregion */
 
-body {
+body, html {
   font-family: opensans, sans-serif;
+  height:100%;
   /* padding: 2px 12px; */
   padding: 0;
   margin: 0;

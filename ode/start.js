@@ -1,31 +1,63 @@
 onload = start;
 
-async function start() { TESTING = true; await prelims(); await test178_lacunaPresent(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
+async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
+async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
+async function start(){await test180();}
 
+async function test181(){
+  let list = range(1, 9).map(x=> `../assets/icons/stars/blue${n}.png`);
+  let starImages = await preloadImages(list);
+
+}
+async function test180(){
+
+	let d1=mDom(document.body,{className:'content'});
+	let d=mDom(d1,{w100:true,h100:true,bg:'#242430'})
+
+
+	for(const n of range(1,9)){
+		let url=`../assets/icons/stars/blue${n}.png`;
+		mDom(d, {w:100, h:100},{tag:'img',src:url});
+	}
+
+	//cropImage('../assets/icons/stars_blue.jpg',d);
+	//loadAndDivideImage('../assets/icons/stars_blue.jpg',d);
+	//mDom(document.body,{hmin:300,bg:'violet',sdisplay:'flex',gap:20,justify:'center',align:'center'});
+}
+
+
+async function test179_image9() {
+  let d=mDom(document.body, { margin:0,padding:0,bg: 'black',h:'100vh' }); //,display:'flex',jcontent:'center',aitems:'center' });
+
+  // document.body.innerHTML=''; document.body.style.backgroundColor = 'black'; return;
+  // let d = clearDiv({bg:'#242430',w100:true, h100:true},{html:'hallo'}); return;
+  // loadAndDivideImage('../assets/icons/stars_blue.jpg',d);
+
+}
 async function test178_lacunaPresent() {
   //setup
   let [n, neach] = [50, 10];
-  let points = lacunaGenerateFenPoints(n, neach, 1000,1000,0.7); //console.log(jsCopy(points));
+  let points = lacunaGenerateFenPoints(n, neach, 1000, 1000, 0.7); //console.log(jsCopy(points));
 
   let d = clearDiv();
 
   //generateStar(d,100,200);return;
-  
-  lacunaPresentPoints(points,d); //present
+
+  lacunaPresentPoints(points, d); //present
 
 }
 async function test177_lacunaTest_mapRange() {
   let [w, h, sz, margin, padding, n, neach] = [600, 600, 20, 10, 20, 50, 10];
   DA.sz = sz;
-  let points = lacunaGenerateFenPoints(n, neach, 1000,1000,0.7); console.log(jsCopy(points));
+  let points = lacunaGenerateFenPoints(n, neach, 1000, 1000, 0.7); console.log(jsCopy(points));
   let d = clearDiv();
-  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position:'relative', bg: '#eee' }, { id: 'dCanvas' });
-  for(const p of points){
+  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position: 'relative', bg: '#eee' }, { id: 'dCanvas' });
+  for (const p of points) {
     let p1 = pointFromFenRaw(p); //console.log(p1);
-    p1.x=mapRange(p1.x,0,1000, 0,w-sz); 
-    p1.y=mapRange(p1.y, 0, 1000, 0, h-sz);
-    p1 = pointAddMargin(p1,padding);
-    p1.sz=sz;
+    p1.x = mapRange(p1.x, 0, 1000, 0, w - sz);
+    p1.y = mapRange(p1.y, 0, 1000, 0, h - sz);
+    p1 = pointAddMargin(p1, padding);
+    p1.sz = sz;
     p1 = drawPoint(dParent, p1);
     //console.log(p1);
   }
@@ -33,14 +65,14 @@ async function test177_lacunaTest_mapRange() {
 async function test176_lacunaTest_wh() {
   let [w, h, sz, margin, padding, n, neach] = [600, 600, 20, 20, 20, 50, 10];
   DA.sz = sz;
-  let points = ['0_0','90_90','0_90','90_0']; // 
-  points = lacunaGenerateFenPoints(n, neach, w-sz, h-sz); console.log(jsCopy(points));
+  let points = ['0_0', '90_90', '0_90', '90_0']; // 
+  points = lacunaGenerateFenPoints(n, neach, w - sz, h - sz); console.log(jsCopy(points));
   let d = clearDiv();
-  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position:'relative', bg: '#eee' }, { id: 'dCanvas' });
-  for(const p of points){
+  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position: 'relative', bg: '#eee' }, { id: 'dCanvas' });
+  for (const p of points) {
     let p1 = pointFromFenRaw(p); //console.log(p1);
-    p1 = pointAddMargin(p1,padding);
-    p1.sz=sz;
+    p1 = pointAddMargin(p1, padding);
+    p1.sz = sz;
     p1 = drawPoint(dParent, p1);
     //console.log(p1);
   }
@@ -48,12 +80,12 @@ async function test176_lacunaTest_wh() {
 async function test175_lacunaTest() {
   let [w, h, sz, margin, n, neach] = [600, 600, 20, 30, 100, 5];
   DA.sz = sz;
-  let points = lacunaGenerateFenPoints(n, neach, w-2*margin-sz/2, h-2*margin-sz/2); console.log(jsCopy(points));
+  let points = lacunaGenerateFenPoints(n, neach, w - 2 * margin - sz / 2, h - 2 * margin - sz / 2); console.log(jsCopy(points));
   let d = clearDiv();
-  let dParent = DA.dParent = mDom(d, { w, h, bg: '#eee', round:true }, { id: 'dCanvas' });
-  for(const p of points){
-    let p1 = pointFromFenRaw(p); 
-    p1 = pointAddMargin(p1,margin);
+  let dParent = DA.dParent = mDom(d, { w, h, bg: '#eee', round: true }, { id: 'dCanvas' });
+  for (const p of points) {
+    let p1 = pointFromFenRaw(p);
+    p1 = pointAddMargin(p1, margin);
     p1 = drawPoint(dParent, p1);
     console.log(p1);
   };
@@ -75,7 +107,7 @@ async function test174_lacunaTest() {
   //drawInteractiveLine(pair[0],pair[1]);
 
   let lines = []; DA.lines = lines;
-  pairs.map(x => lines.push(drawInteractiveLine(x[0], x[1], rColor(),1)));
+  pairs.map(x => lines.push(drawInteractiveLine(x[0], x[1], rColor(), 1)));
   document.onmousemove = onMouseMoveLine;
 }
 async function test173_lacuna() {
@@ -110,7 +142,7 @@ async function test172_lacunaTest() {
   //drawInteractiveLine(pair[0],pair[1]);
 
   let lines = []; DA.lines = lines;
-  pairs.map(x => lines.push(drawInteractiveLine(x[0], x[1], rColor(),1)));
+  pairs.map(x => lines.push(drawInteractiveLine(x[0], x[1], rColor(), 1)));
   document.onmousemove = onMouseMoveLine;
 }
 async function test171_blank() {

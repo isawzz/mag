@@ -1,4 +1,9 @@
 
+_________________________ images of stars ___________________________
+awaitable js function that loads images from a list of urls (without appending anything to the page) and returns them
+
+js function that clones an image and appends it to a div at the position x,y as the exact center of the image, and wth a width and height of w,h
+
 _________________________ hotspots 10x10 ___________________________
 js function that sorts a list of pairs of points {x,y} by least x in a pair
 

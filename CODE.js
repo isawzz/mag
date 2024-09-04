@@ -1,4 +1,11 @@
 
+function generateStar(dParent,x,y){
+	let html = `<svg width="100" height="100">
+			<polygon points="50 0 86.6 50 100 0 75 35 50 70.7 25 35 0 0" fill="yellow" />
+		</svg>`;
+	let d=mDom(dParent,{w:100,h:100,pos:'absolute',left:x,top:y},{html});
+	return html;
+}
 function numTranslate(n, newmax, newmin = 0, oldmax = 1000, oldmin = 0) { return Math.round(newmin + (newmax - newmin) * (n - oldmin) / (oldmax - oldmin)); }
 
 function pointFromFen(pfen,dParent,margin){
