@@ -1,9 +1,9 @@
 
-function cloneImage(img, targetDiv, x, y, w, h) {
+function cloneImage(img, targetDiv, x=100, y=100, w=100, h=100) {
   const clonedImage = img.cloneNode();
   clonedImage.style.position = 'absolute';
-  clonedImage.style.left = `${x}px`;
-  clonedImage.style.top = `${y}px`;
+  clonedImage.style.left = `${x-w/2}px`;
+  clonedImage.style.top = `${y-h/2}px`;
   clonedImage.style.width = `${w}px`;
   clonedImage.style.height = `${h}px`;
 

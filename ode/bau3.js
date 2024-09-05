@@ -42,6 +42,13 @@ function lacunaPresentPoints(points,d){
     //console.log(p1);
   }
 }
+async function loadStarImages(){
+  let list = range(1, 9).map(n => `../assets/icons/stars/blue${n}.png`);
+  let starImages = await preloadImages(list);
+  console.log('starImages', starImages);
+  M.starImages = starImages;
+  return starImages;
+}
 function mapRange(value, inMin, inMax, outMin, outMax) {
   return Math.round((value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin);
 }

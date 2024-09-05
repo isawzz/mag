@@ -158,12 +158,10 @@ html,
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
+  position: relative;
 }
 body{
   background-color: var(--bgBody) !important;
-}
-.h100{
-  background-color: lightblue;
 }
 .centeredContent {
   height: 100%;
@@ -172,6 +170,22 @@ body{
   align-items: center;
   background-color: lightblue;
 }
+.h100{
+  background-color: lightblue;
+}
+.lensBorder {
+  /* width: 200px; */
+  /* height: 200px; */
+  /* border-radius: 50%; */
+  background: radial-gradient(circle at center, #333, #000);
+  border: 8px solid #555; /* Outer border */
+  box-shadow: 
+    inset 5px 5px 10px rgba(255, 255, 255, 0.2),  /* Inner light highlight */
+    inset -5px -5px 15px rgba(0, 0, 0, 0.7),     /* Inner dark shadow */
+    5px 5px 15px rgba(0, 0, 0, 0.5),            /* Outer shadow for 3D effect */
+    -5px -5px 10px rgba(255, 255, 255, 0.1);    /* Subtle outer highlight */
+}
+
 
 /* #region all */
 .button {

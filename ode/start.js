@@ -2,20 +2,43 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start() { await test182(); }
+async function start() { await test183(); }
 
+async function test183() {
+  await loadStarImages();
+  let [n, neach] = [70, 9]; //types soll < 9 sein
+  let points = lacunaGenerateFenPoints(n, neach, 1000, 1000, 0.7); //console.log(jsCopy(points));
+  
+  let d1=clearDiv();
+  let [w,h,padding]=[500,500,40]; //25;
+  let d = mDom(d1, { w, h, bg: '#242430',margin:10, padding, round:true });
+  mClass(d,'lensBorder');
+  let sz = 30;
+  let starSizes = [1,.5,1,1,1,.3,1,.6,1]; //,.3,.2,.25,.4,.2,.1,.2,.1,1];
+  for(const p of points) {
+    let p1 = pointFromFenRaw(p); //console.log(p1);
+    p1.x=mapRange(p1.x,0,1000, 0,w); 
+    p1.y=mapRange(p1.y, 0, 1000, 0, h);
+    p1 = pointAddMargin(p1,padding);
+    let itype = p1.type%starSizes.length; //console.log('itype',itype);
+    p1.sz=sz = 20*starSizes[itype]; console.log('sz',sz);
+    let img = p.div = cloneImage(M.starImages[itype], d, p1.x,  p1.y, sz, sz);
+
+    //p1 = drawPoint(dParent, p1);
+  }  
+}
 async function test182() {
   let list = range(1, 9).map(n => `../assets/icons/stars/blue${n}.png`);
   let starImages = await preloadImages(list);
   console.log('starImages', starImages);
 
-  let d1 = mDom(document.body,{className:'h100'},{html:'hallo'}); //margin-collapse problem!!!!
-  let d = mDom(d1, { w: 500, h: 500, bg: '#242430' });
+  let d1 = mDom(document.body,{className:'h100',hline:0},{html:'&nbsp;'}); //margin-collapse problem!!!!
+  let d = mDom(d1, { w: 500, h: 500, bg: '#242430',margin:10 });
 
   let im=starImages[0];
   let [w,h]=[im.width,im.height]; console.log('w,h',w,h);
   
-  let img = cloneImage(starImages[0], d, 100,100,50,50)
+  let img = cloneImage(starImages[0], d)
 
 
 }
