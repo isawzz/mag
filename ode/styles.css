@@ -857,7 +857,7 @@ fieldset .disabled {
 }
 
 .pulseInfinite {
-  animation: pulse_animation 800ms ease-in-out 0s infinite alternate;
+  animation: pulse_animation_big 800ms ease-in-out 0s infinite alternate;
 }
 
 .pulseFastInfinite {
@@ -1369,6 +1369,15 @@ fieldset .disabled {
 
   100% {
     transform: scale(1.5);
+  }
+}
+@keyframes pulse_animation_big {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(3);
   }
 }
 

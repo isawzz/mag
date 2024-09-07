@@ -123,17 +123,57 @@ async function lacunaOnclick(ev) {
   console.log('lacunaOnclick',DA.counter++);//,ev.target);
   let linesActivated = getRedLines();
   console.log('linesActivated', linesActivated);
+  B.selectedPoints = [];
 
 
+  if (linesActivated.length == 1) {
+    //grab these points and finish move
+    B.selectedPoints.push(linesActivated[0].p1);
+    B.selectedPoints.push(linesActivated[0].p2);
+  }
+  animateEndpointsOfActivatedLines(linesActivated)
 
 
 }
 function animateEndpointsOfActivatedLines(lines){
-  for(const l of lines) {animatePoint(l.p1);animatePoint(l.p2);}
+  for(const l of lines) {animatePoint(l.p1,l);animatePoint(l.p2,l);}
 }
 function animatePoint(p){
-
+  mClass(iDiv(p), 'pulseFastInfinite');
 }
+function potentialSelectedPoint(p,l){
+  animatePoint(p);
+  iDiv(p).onclick = lacunaSelectPointNeu(p,l)
+}
+async function lacunaSelectPointNeu(p,l) {
+	let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
+	let id = evToId(ev);
+	let p = B.diPoints[id];
+	//console.log('selecting point', p.id);
+	lookupAddIfToList(B, ['selectedPoints'], id); //console.log(B.selectedPoints.length)
+	assertion(B.selectedPoints.length >= 1, "WTF");
+	if (B.selectedPoints.length == 1) {
+		let eps = [];
+		//console.log('possiblePairs', B.possiblePairs);
+		for (const pair of B.possiblePairs.map(x => x.split(',').map(x => B.diPoints[x]))) {
+			let p1 = pair[0];
+			let p2 = pair[1];
+			if (p1.id != id && p2.id != id) continue;
+			if (p1.id == id) addIf(eps, p2.id); else addIf(eps, p1.id);
+		}
+		let unselect = B.endPoints.filter(x => !eps.includes(x));
+		unselect.map(x => lacunaUnselectable(x));
+		B.endPoints = eps; //console.log('endPoints remaining', B.endPoints);
+		if (B.endPoints.length < 2) {
+			B.selectedPoints.push(B.endPoints[0]);
+			await lacunaMoveCompletedME(B.selectedPoints);
+		}
+	} else {
+		assertion(B.selectedPoints.length == 2, "WTF2!!!!!!!!!!!!!");
+		await lacunaMoveCompletedME(B.selectedPoints);
+	}
+}
+
 function getRedLines() {
   let res = [];
   for (const l of DA.lines) {

@@ -10,7 +10,7 @@ async function test183() {
   let fenpoints = lacunaGenerateFenPoints(n, nTypes, 1000, 1000, 0.7); //console.log(jsCopy(points));
   
   let d1=clearDiv();
-  let [w,h,padding]=[500,500,40]; //25;
+  let [w,h,padding]=[500,500,50]; //25;
   let d = mDom(d1, { w, h, bg: '#242430',margin:10, padding, round:true },{id:'dCanvas'});
   mClass(d,'lensBorder');
   let sz = 30;
