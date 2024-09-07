@@ -2,7 +2,8 @@
 function drawInteractiveLine(p1, p2, color = 'black', thickness = 10) {
 	const line = document.createElement('div');
 	const offs = thickness / 2;
-	let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
+	//let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
+	let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
 
 	const distance = Math.hypot(x2 - x1, y2 - y1);
 	const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
@@ -15,6 +16,7 @@ function drawInteractiveLine(p1, p2, color = 'black', thickness = 10) {
 	line.style.left = `${x1}px`;
 	line.style.top = `${y1 - offs}px`;
 	line.style.backgroundColor = color;
+	line.style.opacity = .5;
 
 	// Store line data
 	line.dataset.x1 = x1;
@@ -28,11 +30,30 @@ function drawInteractiveLine(p1, p2, color = 'black', thickness = 10) {
 	return line;
 	//lines.push(line); // Store the line for later reference
 }
-function findIsolatedPairs(nodes, threshold = 3) {
+function drawInteractiveLine(p1, p2, color = 'black', thickness = 10) {
+	const offs = thickness / 2;
+	//let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
+	let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
+
+	const distance = Math.hypot(x2 - x1, y2 - y1);
+	const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+
+	const line = mDom(document.body, { left:x1,top:y1-offs,bg:color,opacity:.1,className: 'line1', w: distance, h: thickness, transform: `rotate(${angle}deg)` })
+
+	// Store line data
+	line.dataset.x1 = x1;
+	line.dataset.y1 = y1;
+	line.dataset.x2 = x2;
+	line.dataset.y2 = y2;
+	line.dataset.thickness = thickness;
+
+	return line;
+}
+function findIsolatedPairs(nodes, prop='bg',threshold = 3) {
 	const isolatedPairs = [], obstaclePairs = [];
 	for (let i = 0; i < nodes.length; i++) {
 		for (let j = i + 1; j < nodes.length; j++) {
-			if (nodes[i].bg != nodes[j].bg) continue;
+			if (nodes[i][prop] != nodes[j][prop]) continue;
 			const [ax, ay] = [nodes[i].x, nodes[i].y];
 			const [bx, by] = [nodes[j].x, nodes[j].y];
 			let isIsolated = true;
@@ -71,9 +92,11 @@ function onMouseMoveLine(event){
     const distance = pointToLineDistance(mouseX, mouseY, x1, y1, x2, y2);
 
     if (distance <= thickness / 2) {
-      line.style.backgroundColor = 'red'; // Change color on hover
+			mStyle(line,{opacity:1,bg:'red'});
+      //line.style.backgroundColor = 'red'; // Change color on hover
     } else {
-      line.style.backgroundColor = 'black'; // Reset color when not hovered
+			mStyle(line,{opacity:.1,bg:'white'});
+      // line.style.backgroundColor = 'white'; // Reset color when not hovered
     }
   });
 

@@ -185,7 +185,25 @@ body{
     5px 5px 15px rgba(0, 0, 0, 0.5),            /* Outer shadow for 3D effect */
     -5px -5px 10px rgba(255, 255, 255, 0.1);    /* Subtle outer highlight */
 }
+.line {
+  position: absolute;
+  background-color: white;
+  /* Change to any color you prefer */
+  width: 1px;
+  transform-origin: 0 50%;
+  /* Transform origin at the start of the div */
+}
 
+.line1 {
+  position: absolute;
+  height: 20px;
+  /* opacity: .5; */
+  /* background-color: black; */
+  transform-origin: 0 50%;
+}
+/* .line1:hover{
+  background-color: yellow;
+} */
 
 /* #region all */
 .button {
@@ -2074,18 +2092,3 @@ input:checked+.slider:before {
 
 /* #endregion */
 
-.line {
-  position: absolute;
-  background-color: black;
-  /* Change to any color you prefer */
-  width: 1px;
-  transform-origin: 0 50%;
-  /* Transform origin at the start of the div */
-}
-
-.line1 {
-  position: absolute;
-  height: 20px;
-  background-color: black;
-  transform-origin: 0 50%;
-}

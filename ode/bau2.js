@@ -8,6 +8,7 @@ function cloneImage(img, targetDiv, x=100, y=100, w=100, h=100) {
   clonedImage.style.height = `${h}px`;
 
   targetDiv.appendChild(clonedImage);
+  return clonedImage;
 }
 function cropImage(imageUrl,d) {
   const img = new Image();
@@ -118,4 +119,41 @@ async function preloadImages(imageUrls) {
   return await Promise.all(promises);
 }
 
+async function lacunaOnclick(ev) {
+  //let d=document.getElementsByClassName('lensBorder')[0];
+  let d=document.getElementsById('dCanvas')[0];
+  
+
+
+}
+async function placeYourMeepleGame(ev){
+	let [fen,players,pl]=[T.fen,T.players,T.players[getUname()]]
+	stopPulsing();
+	d = mBy('dCanvas');
+	d.onmousemove = null;
+	d.onclick = null;
+	for (const p of B.hotspotList) { mStyle(p.div, { z: 0 }) }
+	for (const p of B.points) { p.div.style.zIndex = 1000; }
+	let sz = 20;
+	x = ev.clientX - d.offsetLeft - d.parentNode.offsetLeft;
+	y = ev.clientY - d.offsetTop - d.parentNode.offsetTop;
+	let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border:getPlayerProp('color'), id: getUID(), owner: getUname() };
+
+	fen.meeples.push(jsCopy(pMeeple));//**** */
+
+	showMeeple(d,pMeeple);
+	B.meeples.push(pMeeple); //console.log('B.meeples', B.meeples);
+	//TODO: if only 2 points are selectable, just grab them and finish move!
+	if (B.endPoints.length == 0) {
+		//finish move without grabbing any flowers
+		await lacunaMoveCompletedME([]);
+
+	} else if (B.endPoints.length == 2) {
+		//grab those flowers and finish move
+		B.selectedPoints.push(B.endPoints[0]);
+		B.selectedPoints.push(B.endPoints[1]);
+		await lacunaMoveCompletedME(B.selectedPoints);
+
+	} else lacunaMakeSelectableME();
+}
 
