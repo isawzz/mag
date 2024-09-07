@@ -125,7 +125,6 @@ async function lacunaOnclick(ev) {
   console.log('linesActivated', linesActivated);
   B.selectedPoints = [];
 
-
   if (linesActivated.length == 1) {
     //grab these points and finish move
     B.selectedPoints.push(linesActivated[0].p1);
@@ -146,9 +145,9 @@ function potentialSelectedPoint(p,l){
   iDiv(p).onclick = lacunaSelectPointNeu(p,l)
 }
 async function lacunaSelectPointNeu(p,l) {
-	let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
+	//let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
 	let id = evToId(ev);
-	let p = B.diPoints[id];
+	let p1 = B.diPoints[id];
 	//console.log('selecting point', p.id);
 	lookupAddIfToList(B, ['selectedPoints'], id); //console.log(B.selectedPoints.length)
 	assertion(B.selectedPoints.length >= 1, "WTF");
