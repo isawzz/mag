@@ -120,11 +120,29 @@ async function preloadImages(imageUrls) {
 }
 
 async function lacunaOnclick(ev) {
-  //let d=document.getElementsByClassName('lensBorder')[0];
-  let d=document.getElementsById('dCanvas')[0];
-  
+  console.log('lacunaOnclick',DA.counter++);//,ev.target);
+  let linesActivated = getRedLines();
+  console.log('linesActivated', linesActivated);
 
 
+
+
+}
+function animateEndpointsOfActivatedLines(lines){
+  for(const l of lines) {animatePoint(l.p1);animatePoint(l.p2);}
+}
+function animatePoint(p){
+
+}
+function getRedLines() {
+  let res = [];
+  for (const l of DA.lines) {
+    let d=iDiv(l);
+    let bg = mGetStyle(d,'bg');
+    let opa = mGetStyle(d,'opacity'); console.log(bg, opa);
+    if (bg == 'red' || opa == 1) res.push(l);
+  }
+  return res;
 }
 async function placeYourMeepleGame(ev){
 	let [fen,players,pl]=[T.fen,T.players,T.players[getUname()]]

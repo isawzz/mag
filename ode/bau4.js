@@ -79,23 +79,23 @@ function findIsolatedPairs(nodes, prop='bg',threshold = 3) {
 }
 function onMouseMoveLine(event){
   const mouseX = event.clientX;
-  const mouseY = event.clientY;
+  const mouseY = event.clientY+2;
 
   DA.lines.forEach(line => {
-    const x1 = parseFloat(line.dataset.x1);
-    const y1 = parseFloat(line.dataset.y1);
-    const x2 = parseFloat(line.dataset.x2);
-    const y2 = parseFloat(line.dataset.y2);
-    const thickness = 20; // parseFloat(line.dataset.thickness);
+    const x1 = parseFloat(iDiv(line).dataset.x1);
+    const y1 = parseFloat(iDiv(line).dataset.y1);
+    const x2 = parseFloat(iDiv(line).dataset.x2);
+    const y2 = parseFloat(iDiv(line).dataset.y2);
+    const thickness = DA.triggerThreshold; // parseFloat(line.dataset.thickness);
 
     // Calculate the perpendicular distance from the mouse to the line segment
     const distance = pointToLineDistance(mouseX, mouseY, x1, y1, x2, y2);
 
     if (distance <= thickness / 2) {
-			mStyle(line,{opacity:1,bg:'red'});
+			mStyle(iDiv(line),{opacity:1,bg:'red'});
       //line.style.backgroundColor = 'red'; // Change color on hover
     } else {
-			mStyle(line,{opacity:.1,bg:'white'});
+			mStyle(iDiv(line),{opacity:.1,bg:'white'});
       // line.style.backgroundColor = 'white'; // Reset color when not hovered
     }
   });

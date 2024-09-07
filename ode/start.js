@@ -6,8 +6,8 @@ async function start() { await test183(); }
 
 async function test183() {
   await loadStarImages();
-  let [n, neach] = [45, 5]; //types soll < 9 sein
-  let fenpoints = lacunaGenerateFenPoints(n, neach, 1000, 1000, 0.7); //console.log(jsCopy(points));
+  let [n, nTypes] = [49, 7]; //types soll < 9 sein
+  let fenpoints = lacunaGenerateFenPoints(n, nTypes, 1000, 1000, 0.7); //console.log(jsCopy(points));
   
   let d1=clearDiv();
   let [w,h,padding]=[500,500,40]; //25;
@@ -27,8 +27,9 @@ async function test183() {
     points.push(p1);
     //p1 = drawPoint(dParent, p1);
   }
-  console.log(points[0])
-  let result = findIsolatedPairs(points, 'type', sz / 2); //sz*1.2); console.log(result);
+  console.log(points[0], getSetOfDifferentTypesOfPoints(points));
+  DA.obstacleThreshold = 10; DA.triggerThreshold = 8;
+  let result = findIsolatedPairs(points, 'type', DA.obstacleThreshold); //je groesser threshold umso mehr obstacles werden detected!
   let pairs = result.isolatedPairs;
 
   let pair = pairs[0]; //console.log(pairs)
@@ -36,11 +37,20 @@ async function test183() {
   //drawInteractiveLine(pair[0],pair[1],'white',1); return;
 
   let lines = []; DA.lines = lines;
-  pairs.map(pair => lines.push(drawInteractiveLine(pair[0], pair[1], 'lightblue', 1))); //rColor(), 1)));
+  pairs.map(pair => lines.push({p1:pair[0],p2:pair[1],div:drawInteractiveLine(pair[0], pair[1], 'lightblue', 1)})); //rColor(), 1)));
   d.onmousemove = onMouseMoveLine;
-  d.onclick = lacunaOnclick;
+
+  DA.counter = 0;
+  //d.onclick = lacunaOnclick;
+  document.onclick = lacunaOnclick; // ()=>console.log('click',DA.counter++)
+  
+
+  //console.log(lines[0]);
 
 
+}
+function getSetOfDifferentTypesOfPoints(points){
+  let types = new Set(); for(const p of points) types.add(p.type); return types;
 }
 async function test182() {
   let list = range(1, 9).map(n => `../assets/icons/stars/blue${n}.png`);
