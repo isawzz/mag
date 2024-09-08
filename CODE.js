@@ -1,4 +1,36 @@
 
+function drawInteractiveLine0(p1, p2, color = 'black', thickness = 10) {
+	const line = document.createElement('div');
+	const offs = thickness / 2;
+	//let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
+	let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
+
+	const distance = Math.hypot(x2 - x1, y2 - y1);
+	const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
+
+	// Style the line
+	line.className = 'line1';
+	line.style.width = `${distance}px`;
+	line.style.height = `${thickness}px`;
+	line.style.transform = `rotate(${angle}deg)`;
+	line.style.left = `${x1}px`;
+	line.style.top = `${y1 - offs}px`;
+	line.style.backgroundColor = color;
+	line.style.opacity = .5;
+
+	// Store line data
+	line.dataset.x1 = x1;
+	line.dataset.y1 = y1;
+	line.dataset.x2 = x2;
+	line.dataset.y2 = y2;
+	line.dataset.thickness = thickness;
+
+	// Append the line to the body
+	document.body.appendChild(line);
+	return line;
+	//lines.push(line); // Store the line for later reference
+}
+
 function generateStar(dParent,x,y){
 	let html = `<svg width="100" height="100">
 			<polygon points="50 0 86.6 50 100 0 75 35 50 70.7 25 35 0 0" fill="yellow" />

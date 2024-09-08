@@ -18,7 +18,7 @@ async function test183() {
   let starSizes = [1,.5,1,1,1,.3,1,.6,1]; //,.3,.2,.25,.4,.2,.1,.2,.1,1];
   let points = [];
   for(const p of fenpoints) {
-    let p1 = pointFromFenRaw(p); console.log(p1);
+    let p1 = pointFromFenRaw(p); // console.log(p1);
     p1.x=mapRange(p1.x,0,1000, 0,w); 
     p1.y=mapRange(p1.y, 0, 1000, 0, h);
     p1 = pointAddMargin(p1,padding);
@@ -45,6 +45,7 @@ async function test183() {
 
   DA.counter = 0;
   //d.onclick = lacunaOnclick;
+  //for some reason geht das onclick  auf d nicht immer!
   document.onclick = lacunaOnclick; // ()=>console.log('click',DA.counter++)
   
 
