@@ -31,22 +31,22 @@ async function test183() {
   }
   B.diPoints = list2dict(points, 'id');
   console.log(points[0], getSetOfDifferentTypesOfPoints(points));
-  DA.obstacleThreshold = 10; DA.triggerThreshold = 8;
-  let result = findIsolatedPairs(points, 'type', DA.obstacleThreshold); //je groesser threshold umso mehr obstacles werden detected!
+  B.obstacleThreshold = 10; B.triggerThreshold = 8;
+  let result = findIsolatedPairs(points, 'type', B.obstacleThreshold); //je groesser threshold umso mehr obstacles werden detected!
   let pairs = result.isolatedPairs;
 
   let pair = pairs[0]; //console.log(pairs)
 
   //drawInteractiveLine(pair[0],pair[1],'white',1); return;
 
-  let lines = []; DA.lines = lines;
+  let lines = []; B.lines = lines;
   pairs.map(pair => lines.push({ p1: pair[0], p2: pair[1], div: drawInteractiveLine(pair[0], pair[1], 'lightblue', 1) })); //rColor(), 1)));
   d.onmousemove = onMouseMoveLine;
 
-  DA.counter = 0;
+  B.counter = 0;
   //d.onclick = lacunaOnclick;
   //for some reason geht das onclick  auf d nicht immer!
-  document.onclick = lacunaOnclick; // ()=>console.log('click',DA.counter++)
+  document.onclick = lacunaOnclick; // ()=>console.log('click',B.counter++)
 
 
   //console.log(lines[0]);
@@ -120,10 +120,10 @@ async function test178_lacunaPresent() {
 }
 async function test177_lacunaTest_mapRange() {
   let [w, h, sz, margin, padding, n, neach] = [600, 600, 20, 10, 20, 50, 10];
-  DA.sz = sz;
+  B.sz = sz;
   let points = lacunaGenerateFenPoints(n, neach, 1000, 1000, 0.7); console.log(jsCopy(points));
   let d = clearDiv();
-  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position: 'relative', bg: '#eee' }, { id: 'dCanvas' });
+  let dParent = B.dParent = mDom(d, { w, h, margin, padding, position: 'relative', bg: '#eee' }, { id: 'dCanvas' });
   for (const p of points) {
     let p1 = pointFromFenRaw(p); //console.log(p1);
     p1.x = mapRange(p1.x, 0, 1000, 0, w - sz);
@@ -136,11 +136,11 @@ async function test177_lacunaTest_mapRange() {
 }
 async function test176_lacunaTest_wh() {
   let [w, h, sz, margin, padding, n, neach] = [600, 600, 20, 20, 20, 50, 10];
-  DA.sz = sz;
+  B.sz = sz;
   let points = ['0_0', '90_90', '0_90', '90_0']; // 
   points = lacunaGenerateFenPoints(n, neach, w - sz, h - sz); console.log(jsCopy(points));
   let d = clearDiv();
-  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position: 'relative', bg: '#eee' }, { id: 'dCanvas' });
+  let dParent = B.dParent = mDom(d, { w, h, margin, padding, position: 'relative', bg: '#eee' }, { id: 'dCanvas' });
   for (const p of points) {
     let p1 = pointFromFenRaw(p); //console.log(p1);
     p1 = pointAddMargin(p1, padding);
@@ -151,10 +151,10 @@ async function test176_lacunaTest_wh() {
 }
 async function test175_lacunaTest() {
   let [w, h, sz, margin, n, neach] = [600, 600, 20, 30, 100, 5];
-  DA.sz = sz;
+  B.sz = sz;
   let points = lacunaGenerateFenPoints(n, neach, w - 2 * margin - sz / 2, h - 2 * margin - sz / 2); console.log(jsCopy(points));
   let d = clearDiv();
-  let dParent = DA.dParent = mDom(d, { w, h, bg: '#eee', round: true }, { id: 'dCanvas' });
+  let dParent = B.dParent = mDom(d, { w, h, bg: '#eee', round: true }, { id: 'dCanvas' });
   for (const p of points) {
     let p1 = pointFromFenRaw(p);
     p1 = pointAddMargin(p1, margin);
@@ -164,12 +164,12 @@ async function test175_lacunaTest() {
 }
 async function test174_lacunaTest() {
   let [w, h, sz, margin, n, neach] = [800, 800, 30, 30, 70, 7];
-  DA.sz = sz;
-  let points = DA.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
+  B.sz = sz;
+  let points = B.points = lacunaGeneratePointsMargin(w, h, margin, n, neach, sz, .6); //console.log(jsCopy(points[0]));
   let d = clearDiv();
-  let dParent = DA.dParent = mDom(d, { w, h, position: 'absolute', left: 100, top: 50, bg: '#eee' }, { id: 'dCanvas' });
+  let dParent = B.dParent = mDom(d, { w, h, position: 'absolute', left: 100, top: 50, bg: '#eee' }, { id: 'dCanvas' });
   Items = lacunaDrawPoints(dParent, points); //console.log(Items)
-  DA.meeples = [];
+  B.meeples = [];
 
   let result = findIsolatedPairs(points, sz / 2); //sz*1.2); console.log(result);
   let pairs = result.isolatedPairs;
@@ -178,10 +178,11 @@ async function test174_lacunaTest() {
 
   //drawInteractiveLine(pair[0],pair[1]);
 
-  let lines = []; DA.lines = lines;
+  let lines = []; B.lines = lines;
   pairs.map(x => lines.push(drawInteractiveLine(x[0], x[1], rColor(), 1)));
   document.onmousemove = onMouseMoveLine;
 }
+// *** ab da ist DA ***
 async function test173_lacuna() {
   // DA.gamename = 'lacuna';
   // await onclickStartGame();

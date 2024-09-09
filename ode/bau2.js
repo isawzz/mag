@@ -1,15 +1,16 @@
 
 
 async function lacunaOnclick(ev) {
-  //console.log('lacunaOnclick',DA.counter++);//,ev.target);
-  let linesActivated = getActivatedLines(DA.lines);
+  //console.log('lacunaOnclick',B.counter++);//,ev.target);
+  let linesActivated = B.linesActivated = getActivatedLines(B.lines);
   console.log('linesActivated', linesActivated);
   B.selectedPoints = [];
 
   if (linesActivated.length == 1) {
     //grab these points and finish move
-    B.selectedPoints.push(linesActivated[0].p1);
-    B.selectedPoints.push(linesActivated[0].p2);
+    B.selectedPoints.push(linesActivated[0].p1.id);
+    B.selectedPoints.push(linesActivated[0].p2.id);
+		let res = await lacunaMoveComplete(B.selectedPoints); console.log('res',res);
   }
   animateEndpointsOfActivatedLines(linesActivated)
 
@@ -23,23 +24,22 @@ function animatePoint(p){
 }
 function potentialSelectedPoint(p,l){
   animatePoint(p);
-  iDiv(p).onclick = lacunaSelectPointNeu(p,l)
+  iDiv(p).onclick = ev => lacunaSelectPointNeu(p,l)
 }
 async function lacunaSelectPointNeu(p,l) {
 	//let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
-	let id = evToId(ev);
-	let p1 = B.diPoints[id];
-	//console.log('selecting point', p.id);
+	let id = p1.id;
 	lookupAddIfToList(B, ['selectedPoints'], id); //console.log(B.selectedPoints.length)
 	assertion(B.selectedPoints.length >= 1, "WTF");
 	if (B.selectedPoints.length == 1) {
 		let eps = [];
 		//console.log('possiblePairs', B.possiblePairs);
-		for (const pair of B.possiblePairs.map(x => x.split(',').map(x => B.diPoints[x]))) {
-			let p1 = pair[0];
-			let p2 = pair[1];
+		for(const line of B.linesActivated) {
+			let p1 = line.p1;
+			let p2 = line.p2;
 			if (p1.id != id && p2.id != id) continue;
 			if (p1.id == id) addIf(eps, p2.id); else addIf(eps, p1.id);
+
 		}
 		let unselect = B.endPoints.filter(x => !eps.includes(x));
 		unselect.map(x => lacunaUnselectable(x));

@@ -168,8 +168,8 @@ function lacunaGenerateFenPoints(n,nColors,w=1000,h=1000,rand=.8){
 }
 function lacunaPresentPoints(points,d){
   let [w, h, sz, margin, padding] = [400, 400, 10, 10, 20];
-  DA.sz = sz;
-  let dParent = DA.dParent = mDom(d, { w, h, margin, padding, position:'relative', bg: '#eee' }, { id: 'dCanvas' });
+  B.sz = sz;
+  let dParent = B.dParent = mDom(d, { w, h, margin, padding, position:'relative', bg: '#eee' }, { id: 'dCanvas' });
   for(const p of points){
     let p1 = pointFromFenRaw(p); //console.log(p1);
     p1.x=mapRange(p1.x,0,1000, 0,w-sz); 
@@ -220,12 +220,12 @@ function onMouseMoveLine(event){
   const mouseX = event.clientX;
   const mouseY = event.clientY+2;
 
-  DA.lines.forEach(line => {
+  B.lines.forEach(line => {
     const x1 = parseFloat(iDiv(line).dataset.x1);
     const y1 = parseFloat(iDiv(line).dataset.y1);
     const x2 = parseFloat(iDiv(line).dataset.x2);
     const y2 = parseFloat(iDiv(line).dataset.y2);
-    const thickness = DA.triggerThreshold; // parseFloat(line.dataset.thickness);
+    const thickness = B.triggerThreshold; // parseFloat(line.dataset.thickness);
 
     // Calculate the perpendicular distance from the mouse to the line segment
     const distance = pointToLineDistance(mouseX, mouseY, x1, y1, x2, y2);
