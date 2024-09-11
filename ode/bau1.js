@@ -4,6 +4,7 @@ async function lacunaOnclick(ev) {
   let linesActivated = B.linesActivated = getActivatedLines(B.lines);
   console.log('linesActivated', linesActivated);
   B.selectedPoints = [];
+	B.endPoints = [];
 
   if (linesActivated.length == 1) {
     //grab these points and finish move

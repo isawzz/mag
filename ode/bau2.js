@@ -1,13 +1,16 @@
 
 
 function animateEndpointsOfActivatedLines(lines) {
+	function animatePoint(p) { mClass(iDiv(p), 'pulseFastInfinite'); }
+
+	function potentialSelectedPoint(p, l) {
+		animatePoint(p);
+		addIf(B.endPoints, p.id);
+		iDiv(p).onclick = ev => lacunaSelectPointNeu(p, l)
+	}
 	for (const l of lines) { potentialSelectedPoint(l.p1, l); potentialSelectedPoint(l.p2, l); }
 }
-function animatePoint(p) { mClass(iDiv(p), 'pulseFastInfinite'); }
-function potentialSelectedPoint(p, l) {
-	animatePoint(p);
-	iDiv(p).onclick = ev => lacunaSelectPointNeu(p, l)
-}
+
 async function lacunaSelectPointNeu(p, l) {
 	//let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
 	let id = p1.id;
