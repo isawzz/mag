@@ -861,7 +861,7 @@ fieldset .disabled {
 }
 
 .pulseFastInfinite {
-  animation: pulse_animation 400ms ease-in-out 0s infinite alternate;
+  animation: pulse_animation_big 400ms ease-in-out 0s infinite alternate;
 }
 
 .rubberBand {

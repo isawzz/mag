@@ -1,32 +1,14 @@
 
 
-async function lacunaOnclick(ev) {
-  //console.log('lacunaOnclick',B.counter++);//,ev.target);
-  let linesActivated = B.linesActivated = getActivatedLines(B.lines);
-  console.log('linesActivated', linesActivated);
-  B.selectedPoints = [];
-
-  if (linesActivated.length == 1) {
-    //grab these points and finish move
-    B.selectedPoints.push(linesActivated[0].p1.id);
-    B.selectedPoints.push(linesActivated[0].p2.id);
-		let res = await lacunaMoveComplete(B.selectedPoints); console.log('res',res);
-  }
-  animateEndpointsOfActivatedLines(linesActivated)
-
-
+function animateEndpointsOfActivatedLines(lines) {
+	for (const l of lines) { potentialSelectedPoint(l.p1, l); potentialSelectedPoint(l.p2, l); }
 }
-function animateEndpointsOfActivatedLines(lines){
-  for(const l of lines) {potentialSelectedPoint(l.p1,l);potentialSelectedPoint(l.p2,l);}
+function animatePoint(p) { mClass(iDiv(p), 'pulseFastInfinite'); }
+function potentialSelectedPoint(p, l) {
+	animatePoint(p);
+	iDiv(p).onclick = ev => lacunaSelectPointNeu(p, l)
 }
-function animatePoint(p){
-  mClass(iDiv(p), 'pulseFastInfinite');
-}
-function potentialSelectedPoint(p,l){
-  animatePoint(p);
-  iDiv(p).onclick = ev => lacunaSelectPointNeu(p,l)
-}
-async function lacunaSelectPointNeu(p,l) {
+async function lacunaSelectPointNeu(p, l) {
 	//let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
 	let id = p1.id;
 	lookupAddIfToList(B, ['selectedPoints'], id); //console.log(B.selectedPoints.length)
@@ -34,7 +16,7 @@ async function lacunaSelectPointNeu(p,l) {
 	if (B.selectedPoints.length == 1) {
 		let eps = [];
 		//console.log('possiblePairs', B.possiblePairs);
-		for(const line of B.linesActivated) {
+		for (const line of B.linesActivated) {
 			let p1 = line.p1;
 			let p2 = line.p2;
 			if (p1.id != id && p2.id != id) continue;
@@ -54,8 +36,8 @@ async function lacunaSelectPointNeu(p,l) {
 	}
 }
 
-async function placeYourMeepleGame(ev){
-	let [fen,players,pl]=[T.fen,T.players,T.players[getUname()]]
+async function placeYourMeepleGame(ev) {
+	let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
 	stopPulsing();
 	d = mBy('dCanvas');
 	d.onmousemove = null;
@@ -65,11 +47,11 @@ async function placeYourMeepleGame(ev){
 	let sz = 20;
 	x = ev.clientX - d.offsetLeft - d.parentNode.offsetLeft;
 	y = ev.clientY - d.offsetTop - d.parentNode.offsetTop;
-	let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border:getPlayerProp('color'), id: getUID(), owner: getUname() };
+	let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border: getPlayerProp('color'), id: getUID(), owner: getUname() };
 
 	fen.meeples.push(jsCopy(pMeeple));//**** */
 
-	showMeeple(d,pMeeple);
+	showMeeple(d, pMeeple);
 	B.meeples.push(pMeeple); //console.log('B.meeples', B.meeples);
 	//TODO: if only 2 points are selectable, just grab them and finish move!
 	if (B.endPoints.length == 0) {
