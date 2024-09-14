@@ -8,7 +8,8 @@ function animateEndpointsOfActivatedLines(lines) {
 		addIf(B.endPoints, p.id);
 		iDiv(p).onclick = ev => lacunaSelectPointNeu(p, l)
 	}
-	for (const l of lines) { potentialSelectedPoint(l.p1, l); potentialSelectedPoint(l.p2, l); }
+	for (const l of lines) { B.possiblePairs.push(l); potentialSelectedPoint(l.p1, l); potentialSelectedPoint(l.p2, l); }
+
 }
 
 async function lacunaSelectPointNeu(p, l) {
@@ -19,7 +20,7 @@ async function lacunaSelectPointNeu(p, l) {
 	if (B.selectedPoints.length == 1) {
 		let eps = [];
 		//console.log('possiblePairs', B.possiblePairs);
-		for (const line of B.linesActivated) {
+		for (const line of B.possiblePairs) {
 			let p1 = line.p1;
 			let p2 = line.p2;
 			if (p1.id != id && p2.id != id) continue;
@@ -27,7 +28,7 @@ async function lacunaSelectPointNeu(p, l) {
 
 		}
 		let unselect = B.endPoints.filter(x => !eps.includes(x));
-		unselect.map(x => lacunaUnselectable(x));
+		unselect.map(x => {let d=mBy(id);mClassRemove(div, 'pulseFastInfinite');d.onclick = null;});
 		B.endPoints = eps; //console.log('endPoints remaining', B.endPoints);
 		if (B.endPoints.length < 2) {
 			B.selectedPoints.push(B.endPoints[0]);

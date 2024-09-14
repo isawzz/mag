@@ -44,9 +44,10 @@ async function test183() {
   d.onmousemove = onMouseMoveLine;
 
   B.counter = 0;
+  B.meeples = [];
   //d.onclick = lacunaOnclick;
   //for some reason geht das onclick  auf d nicht immer!
-  document.onclick = lacunaOnclick; // ()=>console.log('click',B.counter++)
+  document.onclick = placeYourMeeple; // ()=>console.log('click',B.counter++)
 
 
   //console.log(lines[0]);
