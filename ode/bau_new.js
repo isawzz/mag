@@ -153,6 +153,7 @@ function generateRandomPointsRound(n, w, h, rand = 0.8) {
 	return points;
 }
 function getActivatedLines(lines) {
+  if (nundef(lines)) return [];
   let res = [];
   for (const l of lines) {
     let d=iDiv(l);

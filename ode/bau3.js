@@ -1,5 +1,6 @@
 
 async function lacunaMoveComplete(idlist) {
+	console.log('lacunaMoveComplete', idlist);return;
 	let [fen, players, me, table] = [T.fen, T.players, T.players[getUname()], T]
 	B.endPoints.map(x => lacunaUnselectable(x));
 	showMessage("________Move completed, removing", idlist);

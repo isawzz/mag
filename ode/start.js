@@ -2,30 +2,53 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start() { await test183(); }
+async function start() { await test185_placeMeeple(); }
 
+async function test185_placeMeeple(){
+  let d1 = clearDiv();
+  let [w, h, margin, padding] = [500, 500, 0,0]; //25;
+  let d = mDom(d1, { w, h, bg: '#242430', margin, padding}, { id: 'dCanvas' }); //, position:'relative'
+  mClass(d, 'lensBorder');
+  mStyle(d,{wbox:true})
+
+  document.onclick = ev=>{
+    let d=mBy('dCanvas');
+    let sz=rNumber(10,50);
+    mDom(d,{w:sz,h:sz,bg:'red',position:'absolute',left:ev.clientX,top:ev.clientY});
+  }
+
+}
+async function test184_placeMeeple(){
+  let d1 = clearDiv();
+  let [w, h, padding] = [500, 500, 50]; //25;
+  let d = mDom(d1, { w, h, bg: '#242430', margin: 10, padding, round: true}, { id: 'dCanvas' }); //, position:'relative'
+  mClass(d, 'lensBorder');
+  mStyle(d,{wbox:true})
+
+  document.onclick = ev=>{
+    let d=mBy('dCanvas');
+    let sz=rNumber(10,50);
+    mDom(d,{w:sz,h:sz,bg:'red',position:'absolute',left:ev.clientX,top:ev.clientY});
+  }
+
+}
 async function test183() {
   B = {};
   await loadStarImages();
   let [n, nTypes] = [49, 7]; //types soll < 9 sein
   let fenpoints = lacunaGenerateFenPoints(n, nTypes, 1000, 1000, 0.7); //console.log(jsCopy(points));
-
   let d1 = clearDiv();
   let [w, h, padding] = [500, 500, 50]; //25;
   let d = mDom(d1, { w, h, bg: '#242430', margin: 10, padding, round: true }, { id: 'dCanvas' });
   mClass(d, 'lensBorder');
   let sz = 30;
-  let starSizes = [1, .5, 1, 1, 1, .3, 1, .6, 1]; //,.3,.2,.25,.4,.2,.1,.2,.1,1];
   let points = [];
   for (const p of fenpoints) {
     let p1 = pointFromFenRaw(p); // console.log(p1);
     p1.x = mapRange(p1.x, 0, 1000, 0, w);
     p1.y = mapRange(p1.y, 0, 1000, 0, h);
     p1 = pointAddMargin(p1, padding);
-    let itype = p1.type % starSizes.length; //console.log('itype',itype);
-    p1.sz = sz = 20 * starSizes[itype]; //console.log('sz',sz);
-    let img = p1.div = cloneImage(M.starImages[itype], d, p1.x, p1.y, sz, sz);
-    img.id = p1.id = `p${p1.x}_${p1.y}`;
+    drawPointStar(p1,d,sz);
     points.push(p1);
     //p1 = drawPoint(dParent, p1);
   }
