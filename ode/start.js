@@ -2,19 +2,44 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start() { await test185_placeMeeple(); }
+async function start() { await test189_placeMeeple(); }
 
-async function test185_placeMeeple(){
+async function test189_placeMeeple(){ //margin collapse
+  let d=mDom(document.body, {w:500, h:400, bg: '#242430', margin:10, padding:0}, { id: 'dCanvas' });
+  showBox(d,0,0)
+}
+async function test189a_placeMeeple(){ //geht!!!
+  let d=mDom(document.body, {w:500, h:400, bg: '#242430', margin:0, padding:0}, { id: 'dCanvas' });
+  showBox(d,0,0)
+}
+async function test188_placeMeeple(){ //geht!!!
+  let d=mDom(document.body);
+  showBox(d,0,0)
+}
+async function test187_placeMeeple(){ //geht!!!
+  showBox(document.body,0,0)
+}
+async function test186_placeMeeple(){
   let d1 = clearDiv();
-  let [w, h, margin, padding] = [500, 500, 0,0]; //25;
-  let d = mDom(d1, { w, h, bg: '#242430', margin, padding}, { id: 'dCanvas' }); //, position:'relative'
-  mClass(d, 'lensBorder');
-  mStyle(d,{wbox:true})
+
+  // let [w, h, margin, padding] = [500, 500, 0,0]; //25;
+  let d2 = mDom(d1, { w:500, h:400, bg: '#242430', margin:0, padding:0}, { id: 'dCanvas' }); //, position:'relative'
+  // mClass(d, 'lensBorder');
+  // mStyle(d,{wbox:true})
 
   document.onclick = ev=>{
     let d=mBy('dCanvas');
     let sz=rNumber(10,50);
     mDom(d,{w:sz,h:sz,bg:'red',position:'absolute',left:ev.clientX,top:ev.clientY});
+  }
+
+}
+async function test185_placeMeeple(){ //GEHT!!!
+  let d1 = clearDiv();
+  document.onclick = ev=>{
+    let d=mBy('dCanvas');
+    let sz=rNumber(10,50);
+    mDom(d1,{w:sz,h:sz,bg:'red',position:'absolute',left:ev.clientX,top:ev.clientY});
   }
 
 }

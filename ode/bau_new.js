@@ -1,5 +1,15 @@
 
+function animateEndpointsOfActivatedLines(lines) {
+	function animatePoint(p) { mClass(iDiv(p), 'pulseFastInfinite'); }
 
+	function potentialSelectedPoint(p, l) {
+		animatePoint(p);
+		addIf(B.endPoints, p.id);
+		iDiv(p).onclick = ev => lacunaSelectPointNeu(p, l)
+	}
+	for (const l of lines) { B.possiblePairs.push(l); potentialSelectedPoint(l.p1, l); potentialSelectedPoint(l.p2, l); }
+
+}
 function cloneImage(img, targetDiv, x=100, y=100, w=100, h=100) {
   const clonedImage = img.cloneNode();
   clonedImage.style.position = 'absolute';
@@ -87,6 +97,28 @@ function drawInteractiveLine(p1, p2, color = 'black', thickness = 10) {
 
 	return line;
 }
+function drawMeeple(dParent, p) {
+  //console.log(pMeeple.owner)
+  // lacunaDrawPoints(d, [pMeeple], false);
+  let addLabel = true;
+  let html = isdef(p.owner) && addLabel ? p.owner[0].toUpperCase() : ''; //p.id.substring(1) : ''
+  let d1 = p.div = mDom(dParent, { fz: p.sz * .75, left: p.x + p.sz / 2, top: p.y + p.sz / 2, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, fg: 'contrast' }, { html, id: p.id });
+  mCenterCenterFlex(d1);
+
+  d1.style.cursor = 'default';
+  //if (isdef(p.border)) mStyle(d1, { outline: `solid ${p.border} 4px` });
+
+  // let rect = getRect(d1);
+  // p.cx = p.x + p.sz / 2; p.cy = p.y + p.sz / 2;
+  // p.xPage = rect.x; p.yPage = rect.y;
+  // p.cxPage = rect.x + p.sz / 2; p.cyPage = rect.y + p.sz / 2;
+
+  // let color = getPlayerProp('color',pMeeple.owner); //console.log('color', color)
+  // let letter = pMeeple.owner[0].toUpperCase();
+
+  // mStyle(iDiv(pMeeple), { border: `${color} 5px solid` });
+  // iDiv(pMeeple).innerHTML = letter;
+}
 function drawPoint(dParent, p, addLabel = true) {
   let html = isdef(p.owner) && addLabel ? p.owner[0].toUpperCase() : '';
   addKeys({ sz: 20, bg: rColor(), id:getUID() }, p);
@@ -98,6 +130,14 @@ function drawPoint(dParent, p, addLabel = true) {
   p.xPage = rect.x; p.yPage = rect.y;
   p.cxPage = rect.x + p.sz / 2; p.cyPage = rect.y + p.sz / 2;
 	return p;
+}
+function drawPointStar(p1, d, sz) {
+  let starSizes = [1, .5, 1, 1, 1, .3, 1, .6, 1]; //,.3,.2,.25,.4,.2,.1,.2,.1,1];
+  let itype = p1.type % starSizes.length; //console.log('itype',itype);
+  p1.sz = sz = 20 * starSizes[itype]; //console.log('sz',sz);
+  let img = p1.div = cloneImage(M.starImages[itype], d, p1.x, p1.y, sz, sz);
+  img.id = p1.id = `p${p1.x}_${p1.y}`;
+
 }
 function drawPointType(dParent, p, addLabel = true) {
   let html = isdef(p.owner) && addLabel ? p.owner[0].toUpperCase() : '';
@@ -167,6 +207,30 @@ function lacunaGenerateFenPoints(n,nColors,w=1000,h=1000,rand=.8){
 	let pts=generateRandomPointsRound(n,w,h,rand);
 	return pts.map(p=>`${p.x}_${p.y}_${rChoose(range(nColors))}`); //.join(' ');
 }
+async function lacunaMoveComplete(idlist) {
+	console.log('lacunaMoveComplete', idlist);return;
+	let [fen, players, me, table] = [T.fen, T.players, T.players[getUname()], T]
+	B.endPoints.map(x => lacunaUnselectable(x));
+	showMessage("________Move completed, removing", idlist);
+	assertion(idlist.length == 2 || idlist.length == 0, `WTF3!!! ${idlist.length}`);
+	if (idlist.length == 2) {
+		fen.points = fen.points.filter(x => x.id != idlist[0] && x.id != idlist[1]);
+		let color = B.diPoints[idlist[0]].bg; //console.log('color', color);
+		let flower = lacunaColorName(color); //console.log('flower', flower);
+		let n = lookup(me, ['flowers', color]);
+		lookupSetOverride(me, ['flowers', color], n ? n + 2 : 2);
+	}
+
+	//table.turn=[arrNext(table.plorder,getUname())]; //console.log('turn changed to',table.turn);
+	let nextPlayer = findPlayerWithMeeplesLeft(getUname()); console.log('nextPlayer', nextPlayer);
+	if (nextPlayer) {
+		table.turn = [nextPlayer];
+		let o = { id: table.id, name: me, step: table.step + 1, table };
+		let res = await mPostRoute('table', o); //console.log(res);
+	} else await lacunaGameover();
+
+
+}
 function lacunaPresentPoints(points,d){
   let [w, h, sz, margin, padding] = [400, 400, 10, 10, 20];
   B.sz = sz;
@@ -180,6 +244,63 @@ function lacunaPresentPoints(points,d){
     p1 = drawPoint(dParent, p1);
     //console.log(p1);
   }
+}
+async function placeYourMeepleGame(ev) {
+	let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
+	stopPulsing();
+	d = mBy('dCanvas');
+	d.onmousemove = null;
+	d.onclick = null;
+	for (const p of B.hotspotList) { mStyle(p.div, { z: 0 }) }
+	for (const p of B.points) { p.div.style.zIndex = 1000; }
+	let sz = 20;
+	x = ev.clientX - d.offsetLeft - d.parentNode.offsetLeft;
+	y = ev.clientY - d.offsetTop - d.parentNode.offsetTop;
+	let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border: getPlayerProp('color'), id: getUID(), owner: getUname() };
+
+	fen.meeples.push(jsCopy(pMeeple));//**** */
+
+	showMeeple(d, pMeeple);
+	B.meeples.push(pMeeple); //console.log('B.meeples', B.meeples);
+	//TODO: if only 2 points are selectable, just grab them and finish move!
+	if (B.endPoints.length == 0) {
+		//finish move without grabbing any flowers
+		await lacunaMoveCompletedME([]);
+
+	} else if (B.endPoints.length == 2) {
+		//grab those flowers and finish move
+		B.selectedPoints.push(B.endPoints[0]);
+		B.selectedPoints.push(B.endPoints[1]);
+		await lacunaMoveCompletedME(B.selectedPoints);
+
+	} else lacunaMakeSelectableME();
+}
+async function lacunaSelectPointNeu(p, l) {
+	//let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
+	let id = p1.id;
+	lookupAddIfToList(B, ['selectedPoints'], id); //console.log(B.selectedPoints.length)
+	assertion(B.selectedPoints.length >= 1, "WTF");
+	if (B.selectedPoints.length == 1) {
+		let eps = [];
+		//console.log('possiblePairs', B.possiblePairs);
+		for (const line of B.possiblePairs) {
+			let p1 = line.p1;
+			let p2 = line.p2;
+			if (p1.id != id && p2.id != id) continue;
+			if (p1.id == id) addIf(eps, p2.id); else addIf(eps, p1.id);
+
+		}
+		let unselect = B.endPoints.filter(x => !eps.includes(x));
+		unselect.map(x => {let d=mBy(id);mClassRemove(div, 'pulseFastInfinite');d.onclick = null;});
+		B.endPoints = eps; //console.log('endPoints remaining', B.endPoints);
+		if (B.endPoints.length < 2) {
+			B.selectedPoints.push(B.endPoints[0]);
+			await lacunaMoveCompletedME(B.selectedPoints);
+		}
+	} else {
+		assertion(B.selectedPoints.length == 2, "WTF2!!!!!!!!!!!!!");
+		await lacunaMoveCompletedME(B.selectedPoints);
+	}
 }
 function loadAndDivideImage(imageUrl,dParent) {
   const img = new Image();
@@ -240,6 +361,37 @@ function onMouseMoveLine(event){
     }
   });
 
+}
+async function placeYourMeeple(ev) {
+  //console.log('placeYourMeeple',B.counter++);//,ev.target);
+  let d = mBy('dCanvas');
+ // document.onclick = null;
+  d.onmousemove = null;
+  let sz = rChoose(range(10,40)); //10;
+  x = ev.pageX; //clientX;
+  y = ev.clientY;
+  // x = ev.clientX - sz / 2 - d.offsetLeft - d.parentNode.offsetLeft;
+  // y = ev.clientY - sz / 2 - d.offsetTop - d.parentNode.offsetTop;
+  // x = ev.clientX - sz / 2;// - d.offsetLeft - d.parentNode.offsetLeft;
+  // y = ev.clientY - sz / 2;// - d.offsetTop - d.parentNode.offsetTop;
+  // let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border: getPlayerProp('color'), id: getUID(), owner: getUname() };
+  let pMeeple = { x, y, sz, bg: 'red', border: 'gold', id: getUID(), owner: 'hallo' };
+  // fen.meeples.push(jsCopy(pMeeple));//**** */
+  drawMeeple(d, pMeeple);
+  lookupAddToList(B,['meeples'],pMeeple);
+  let linesActivated = B.linesActivated = getActivatedLines(B.lines);
+  console.log('linesActivated', linesActivated);
+  B.selectedPoints = [];
+  B.endPoints = [];
+  B.possiblePairs = [];
+  if (linesActivated.length == 1) {
+    //grab these points and finish move
+    B.selectedPoints.push(linesActivated[0].p1.id);
+    B.selectedPoints.push(linesActivated[0].p2.id);
+    let res = await lacunaMoveComplete(B.selectedPoints); console.log('res', res);
+  } else {
+    animateEndpointsOfActivatedLines(linesActivated);
+  }
 }
 function pointAddMargin(p, margin) {
   return { x: p.x + margin, y: p.y + margin, type: p.type, owner: p.owner };
