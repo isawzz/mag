@@ -2,9 +2,71 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start() { await test189_placeMeeple(); }
+async function start() { await lacunaPresent(); }
 
-async function test189_placeMeeple(){ //margin collapse
+async function test190(){
+  lacunaPresent();
+}
+async function test189_placeMeeple(){ //geht!!!
+  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
+  let [w, h, margin, padding, border] = [500, 500, 25, 0, 7]; //25;
+  let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding, round:true, className:'lensBorder'}, { id: 'dCanvas' });
+  d.onclick=ev=>{
+    console.log('click',ev.clientX-d.offsetLeft,ev.clientY-d.offsetTop);
+    let sz=rNumber(10,50);
+    let [x,y]= [ev.clientX-d.offsetLeft-sz/2-border, ev.clientY-d.offsetTop-sz/2-border];
+    mDom(d, { w: sz, h: sz, bg: 'red', position: 'absolute', left: x, top: y });
+  }
+}
+async function test189h_placeMeeple(){ //geht!!!
+  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
+  let [w, h, margin, padding, border] = [500, 500, 25, 0, 7]; //25;
+  let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding, round:true, className:'lensBorder'}, { id: 'dCanvas' });
+  d.onclick=ev=>{
+    console.log('click',ev.clientX-d.offsetLeft,ev.clientY-d.offsetTop);
+    let sz=rNumber(10,50);
+    let [x,y]= [ev.clientX-d.offsetLeft-sz/2-border, ev.clientY-d.offsetTop-sz/2-border];
+    mDom(d, { w: sz, h: sz, bg: 'red', position: 'absolute', left: x, top: y });
+  }
+}
+async function test189g_placeMeeple(){ //geht!!!
+  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
+  let [w, h, margin, padding, border] = [500, 500, 25, 0, 7]; //25;
+  let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding, round:true, className:'lensBorder'}, { id: 'dCanvas' });
+  // showBox(d,0,0); 
+  d.onclick=ev=>{
+    console.log('click',ev.clientX-d.offsetLeft,ev.clientY-d.offsetTop);
+    //let d=mBy('dCanvas');
+    let sz=rNumber(10,50);
+    let [x,y]= [ev.clientX-d.offsetLeft-sz/2-border, ev.clientY-d.offsetTop-sz/2-border];
+    mDom(d, { w: sz, h: sz, bg: 'red', position: 'absolute', left: x, top: y });
+
+    // showBox(d, ev.clientX-d.offsetLeft-sz/2, ev.clientY-d.offsetTop-sz/2);
+    // mDom(d,{w:sz,h:sz,bg:'red',position:'absolute',left:ev.clientX,top:ev.clientY});
+  }
+}
+async function test189f_placeMeeple(){ //geht!!!
+  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
+  let d=mDom(d1, {position:'relative', w:500, h:400, bg: '#242430', margin:30, padding:0}, { id: 'dCanvas' });
+  showBox(d,0,0); 
+  d.onclick=ev=>console.log('click',ev.clientX-d.offsetLeft,ev.clientY-d.offsetTop);
+}
+async function test189e_placeMeeple(){ //geht!!!
+  let d1 = mDom(document.body,{hline:0,margin:10},{html:'&nbsp;'});
+  let d=mDom(d1, {w:500, h:400, bg: '#242430', margin:10, padding:0}, { id: 'dCanvas' });
+  showBox(d,0+d.offsetLeft,0+d.offsetTop); 
+}
+async function test189d_placeMeeple(){ //geht!!!
+  let d1 = mDom(document.body,{hline:0},{html:'&nbsp;'});
+  let d=mDom(d1, {w:500, h:400, bg: '#242430', margin:10, padding:0}, { id: 'dCanvas' });
+  showBox(d,0+d.offsetLeft,0+d.offsetTop); 
+}
+async function test189c_placeMeeple(){ //geht!!!
+  let d1 = mDom(document.body,{hline:0},{html:'&nbsp;'});
+  let d=mDom(d1, {w:500, h:400, bg: '#242430', margin:10, padding:0}, { id: 'dCanvas' });
+  showBox(d,0,0); 
+}
+async function test189b_placeMeeple(){ //margin collapse
   let d=mDom(document.body, {w:500, h:400, bg: '#242430', margin:10, padding:0}, { id: 'dCanvas' });
   showBox(d,0,0)
 }
@@ -61,14 +123,14 @@ async function test183() {
   B = {};
   await loadStarImages();
   let [n, nTypes] = [49, 7]; //types soll < 9 sein
-  let fenpoints = lacunaGenerateFenPoints(n, nTypes, 1000, 1000, 0.7); //console.log(jsCopy(points));
+  let fenPoints = lacunaGenerateFenPoints(n, nTypes, 1000, 1000, 0.7); //console.log(jsCopy(points));
   let d1 = clearDiv();
   let [w, h, padding] = [500, 500, 50]; //25;
   let d = mDom(d1, { w, h, bg: '#242430', margin: 10, padding, round: true }, { id: 'dCanvas' });
   mClass(d, 'lensBorder');
   let sz = 30;
   let points = [];
-  for (const p of fenpoints) {
+  for (const p of fenPoints) {
     let p1 = pointFromFenRaw(p); // console.log(p1);
     p1.x = mapRange(p1.x, 0, 1000, 0, w);
     p1.y = mapRange(p1.y, 0, 1000, 0, h);
@@ -101,9 +163,6 @@ async function test183() {
   //console.log(lines[0]);
 
 
-}
-function getSetOfDifferentTypesOfPoints(points) {
-  let types = new Set(); for (const p of points) types.add(p.type); return types;
 }
 async function test182() {
   let list = range(1, 9).map(n => `../assets/icons/stars/blue${n}.png`);
