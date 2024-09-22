@@ -1,4 +1,27 @@
-
+function _generateGridPoints(n,w,h){
+	const points = [];
+	let { rows, cols } = divideRectangleIntoGrid(w, h * .8, n);
+	const xSpacing = w / (cols + 1);
+	const ySpacing = h / (rows + 1); //console.log(xSpacing, ySpacing);
+	let dmin = 10;
+	let x, y, xfix, yfix, xlast = -dmin, ylast = -dmin;
+	for (let i = 0; i < rows; i++) {
+		yfix = (i + .75) * ySpacing;
+		for (let j = 0; j < cols; j++) {
+			xfix = (j + .75) * xSpacing;
+			if (points.length < n) {
+				let dx = rand * (Math.random() - 0.5) * xSpacing; if (coin()) dx = -dx;
+				let dy = rand * (Math.random() - 0.5) * ySpacing; if (coin()) dy = -dy;
+				x = xfix + dx; if (x > xlast && x - xlast < dmin) x += dmin;
+				y = yfix + dy; if (y > ylast && y - ylast < dmin) y += dmin;
+				xlast = x;
+				points.push({ x: Math.round(x), y: Math.round(y) });
+			}
+			ylast = y
+		}
+	}
+	return points;
+}
 function drawInteractiveLine0(p1, p2, color = 'black', thickness = 10) {
 	const line = document.createElement('div');
 	const offs = thickness / 2;

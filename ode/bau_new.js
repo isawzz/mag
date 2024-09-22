@@ -78,7 +78,7 @@ function cropImage(imageUrl, d) {
   };
   img.src = imageUrl;
 }
-function drawInteractiveLine(p1, p2, color = 'black', thickness = 10) {
+function drawInteractiveLine(d, p1, p2, color = 'black', thickness = 10) {
   const offs = thickness / 2;
   //let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
   let [x1, y1, x2, y2] = [p1.x, p1.y, p2.x, p2.y];
@@ -86,7 +86,7 @@ function drawInteractiveLine(p1, p2, color = 'black', thickness = 10) {
   const distance = Math.hypot(x2 - x1, y2 - y1);
   const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
 
-  const line = mDom(document.body, { left: x1, top: y1 - offs, bg: color, opacity: .1, className: 'line1', w: distance, h: thickness, transform: `rotate(${angle}deg)` })
+  const line = mDom(d, { left: x1, top: y1 - offs, bg: color, opacity: .1, className: 'line1', w: distance, h: thickness, transform: `rotate(${angle}deg)` })
 
   // Store line data
   line.dataset.x1 = x1;
@@ -203,6 +203,9 @@ function getActivatedLines(lines) {
   }
   return res;
 }
+function getSetOfDifferentTypesOfPoints(points) {
+  let types = new Set(); for (const p of points) types.add(p.type); return types;
+}
 async function lacunaMoveComplete(idlist) {
   console.log('lacunaMoveComplete', idlist); return;
   let [fen, players, me, table] = [T.fen, T.players, T.players[getUname()], T]
@@ -240,6 +243,20 @@ function lacunaPresentPoints(points, d) {
     p1 = drawPoint(dParent, p1);
     //console.log(p1);
   }
+}
+function logMinMax(fenPoints){
+	//output min x, max x, min y max y from points
+	let xValues = fenPoints.map(p => parseInt(p.split('_')[0]));
+	let yValues = fenPoints.map(p => parseInt(p.split('_')[1]));
+	let minX = Math.min(...xValues);
+	let maxX = Math.max(...xValues);
+	let minY = Math.min(...yValues);
+	let maxY = Math.max(...yValues);
+	console.log('Min X:', minX);
+	console.log('Max X:', maxX);
+	console.log('Min Y:', minY);
+	console.log('Max Y:', maxY);
+
 }
 async function placeYourMeepleGame(ev) {
   let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
@@ -494,6 +511,10 @@ function presentStandardRoundTable() {
   mCenterCenter(dTable);
 }
 function setInstruction(s) { mBy('dInstructionText').innerHTML = s; }
+function showBox(d, x, y) {
+  let sz = rNumber(10, 50);
+  mDom(d, { w: sz, h: sz, bg: 'red', position: 'absolute', left: x, top: y });
+}
 function showTitle(title, dParent = 'dTitle') {
   mClear(dParent);
   return mDom(dParent, { maleft: 20 }, { tag: 'h1', html: title, classes: 'title' });

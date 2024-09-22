@@ -2,7 +2,7 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start() { await lacunaPresent(); }
+async function start() { await test190(); }
 
 async function test190(){
   lacunaPresent();
