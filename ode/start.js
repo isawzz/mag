@@ -5,6 +5,12 @@ async function start() { await test179_image9(); } //async function start() { TE
 async function start() { await test190(); }
 
 async function test190(){
+
+  // console.log(divideRectangleIntoGrid(500,500,8)); // 3,3
+  // console.log(divideRectangleIntoGrid(800,500,8)); // 2,4
+  // console.log(divideRectangleIntoGrid(500,500,22)); //5,5 
+  // console.log(divideRectangleIntoGrid(800,500,22)); // 4,6
+
   lacunaPresent();
 }
 async function test189_placeMeeple(){ //geht!!!

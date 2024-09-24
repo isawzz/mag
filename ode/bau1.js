@@ -4,7 +4,7 @@ async function lacunaPresent() {
   await loadStarImages();
 
 	//this is setup
-  let [n, nTypes] = [4, 1]; //types soll < 9 sein
+  let [n, nTypes] = [13, 1]; //types soll < 9 sein
   let fenPoints = lacunaGenerateFenPoints(n, nTypes, 1000, 1000, 0); logMinMax(fenPoints);
 
 	//this is present
