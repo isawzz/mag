@@ -1,15 +1,4 @@
 
-function animateEndpointsOfActivatedLines(lines) {
-  function animatePoint(p) { mClass(iDiv(p), 'pulseFastInfinite'); }
-
-  function potentialSelectedPoint(p, l) {
-    animatePoint(p);
-    addIf(B.endPoints, p.id);
-    iDiv(p).onclick = ev => lacunaSelectPointNeu(p, l)
-  }
-  for (const l of lines) { B.possiblePairs.push(l); potentialSelectedPoint(l.p1, l); potentialSelectedPoint(l.p2, l); }
-
-}
 function cloneImage(img, targetDiv, x = 100, y = 100, w = 100, h = 100) {
   const clonedImage = img.cloneNode();
   clonedImage.style.position = 'absolute';
@@ -207,7 +196,7 @@ function getSetOfDifferentTypesOfPoints(points) {
   let types = new Set(); for (const p of points) types.add(p.type); return types;
 }
 async function lacunaMoveComplete(idlist) {
-  console.log('lacunaMoveComplete', idlist); return;
+  console.log('lacunaMoveComplete', idlist); return idlist;
   let [fen, players, me, table] = [T.fen, T.players, T.players[getUname()], T]
   B.endPoints.map(x => lacunaUnselectable(x));
   showMessage("________Move completed, removing", idlist);
@@ -287,33 +276,6 @@ async function placeYourMeepleGame(ev) {
     await lacunaMoveCompletedME(B.selectedPoints);
 
   } else lacunaMakeSelectableME();
-}
-async function lacunaSelectPointNeu(p, l) {
-  //let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
-  let id = p1.id;
-  lookupAddIfToList(B, ['selectedPoints'], id); //console.log(B.selectedPoints.length)
-  assertion(B.selectedPoints.length >= 1, "WTF");
-  if (B.selectedPoints.length == 1) {
-    let eps = [];
-    //console.log('possiblePairs', B.possiblePairs);
-    for (const line of B.possiblePairs) {
-      let p1 = line.p1;
-      let p2 = line.p2;
-      if (p1.id != id && p2.id != id) continue;
-      if (p1.id == id) addIf(eps, p2.id); else addIf(eps, p1.id);
-
-    }
-    let unselect = B.endPoints.filter(x => !eps.includes(x));
-    unselect.map(x => { let d = mBy(id); mClassRemove(div, 'pulseFastInfinite'); d.onclick = null; });
-    B.endPoints = eps; //console.log('endPoints remaining', B.endPoints);
-    if (B.endPoints.length < 2) {
-      B.selectedPoints.push(B.endPoints[0]);
-      await lacunaMoveCompletedME(B.selectedPoints);
-    }
-  } else {
-    assertion(B.selectedPoints.length == 2, "WTF2!!!!!!!!!!!!!");
-    await lacunaMoveCompletedME(B.selectedPoints);
-  }
 }
 function loadAndDivideImage(imageUrl, dParent) {
   const img = new Image();

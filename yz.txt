@@ -39,7 +39,29 @@ plan fuer heute:
 2. muell weg
 _____ di 24.9.24 airport D!!! 180
 11:14 AM 9/24/2024 anziehen warm
+_____ mi 25.9.24 airport D!!! 180 flugplatz!!!
+- wenn margin setze geht das onmousemove nicht mehr!!!
+- sein x,y ist muss jetzt -margin genommen werden
+- NEIN! es muss einfach nur bei document.onmousemove bleiben!!!
+margin is fine solange document.onmousemove mache!
+placeYourMeeple geht jetzt auch
+- jetzt brauch ich selection von star
+- brauch nur noch den case wo mehr als 1 activated line!
+- 
 
+
+
+
+
+
+
+
+
+
+
+
+TÜRKENSCHANZPARK-Nähe, sonnige 47 m2 Neubau mit 4 m2 Balkon,
+Wohnküche, 1 Zimmer, Wannenbad, Parketten, Bastiengasse
 
 
 absolute Ruhelage im Grünen mit Pool

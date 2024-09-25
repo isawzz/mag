@@ -4,13 +4,13 @@ async function lacunaPresent() {
   await loadStarImages();
 
 	//this is setup
-  let [n, nTypes] = [13, 1]; //types soll < 9 sein
+  let [n, nTypes] = [14, 1]; //types soll < 9 sein
   let fenPoints = lacunaGenerateFenPoints(n, nTypes, 1000, 1000, 0); logMinMax(fenPoints);
 
 	//this is present
   B = {};
   let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
-  let [w, h, margin, padding, border] = [500, 500, 0, 0, 0]; //25;
+  let [w, h, margin, padding, border] = [500, 500, 20, 30, 8]; //25;
   // let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding, round:true, className:'lensBorder'}, { id: 'dCanvas' });
   let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding}, { id: 'dCanvas' });
 
