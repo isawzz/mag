@@ -4,16 +4,18 @@ async function start() { TESTING = true; await prelims(); await test179_image9()
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test191_starImages(); }
 
-async function test191_starImages(){
+async function test191_starImages() {
   await loadStarImages();
-  let d=leinwand();  
-  let g=mDom(d,{display:'grid',gridCols:6})
-  let sz=50;
-  for(const img of M.starImages){
-    mDom(g, {w:sz, h:sz}, {tag:'img',src:img.src})
+  let d = leinwand(900,900,'white'); //return;
+  let g = mDom(d, { display: 'grid', gridCols: 6 , gap:50 })
+  //mStyle(g,{bg: '#242430'})
+  let sz = 100;
+  for (const img of M.starImages) {
+    let d1=mDom(g, { w: sz, h: sz }, { tag: 'img', src: img.src })
+    //mClass(d1,'pulseFastInfinite');
   }
 }
-async function test190(){
+async function test190() {
 
   // console.log(divideRectangleIntoGrid(500,500,8)); // 3,3
   // console.log(divideRectangleIntoGrid(800,500,8)); // 2,4
@@ -22,115 +24,115 @@ async function test190(){
 
   lacunaPresent();
 }
-async function test189_placeMeeple(){ //geht!!!
-  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
+async function test189_placeMeeple() { //geht!!!
+  let d1 = mDom(document.body, { hline: 0, margin: 0 }, { html: '&nbsp;' });
   let [w, h, margin, padding, border] = [500, 500, 25, 0, 7]; //25;
-  let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding, round:true, className:'lensBorder'}, { id: 'dCanvas' });
-  d.onclick=ev=>{
-    console.log('click',ev.clientX-d.offsetLeft,ev.clientY-d.offsetTop);
-    let sz=rNumber(10,50);
-    let [x,y]= [ev.clientX-d.offsetLeft-sz/2-border, ev.clientY-d.offsetTop-sz/2-border];
+  let d = mDom(d1, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg: '#242430', margin, padding, round: true, className: 'lensBorder' }, { id: 'dCanvas' });
+  d.onclick = ev => {
+    console.log('click', ev.clientX - d.offsetLeft, ev.clientY - d.offsetTop);
+    let sz = rNumber(10, 50);
+    let [x, y] = [ev.clientX - d.offsetLeft - sz / 2 - border, ev.clientY - d.offsetTop - sz / 2 - border];
     mDom(d, { w: sz, h: sz, bg: 'red', position: 'absolute', left: x, top: y });
   }
 }
-async function test189h_placeMeeple(){ //geht!!!
-  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
+async function test189h_placeMeeple() { //geht!!!
+  let d1 = mDom(document.body, { hline: 0, margin: 0 }, { html: '&nbsp;' });
   let [w, h, margin, padding, border] = [500, 500, 25, 0, 7]; //25;
-  let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding, round:true, className:'lensBorder'}, { id: 'dCanvas' });
-  d.onclick=ev=>{
-    console.log('click',ev.clientX-d.offsetLeft,ev.clientY-d.offsetTop);
-    let sz=rNumber(10,50);
-    let [x,y]= [ev.clientX-d.offsetLeft-sz/2-border, ev.clientY-d.offsetTop-sz/2-border];
+  let d = mDom(d1, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg: '#242430', margin, padding, round: true, className: 'lensBorder' }, { id: 'dCanvas' });
+  d.onclick = ev => {
+    console.log('click', ev.clientX - d.offsetLeft, ev.clientY - d.offsetTop);
+    let sz = rNumber(10, 50);
+    let [x, y] = [ev.clientX - d.offsetLeft - sz / 2 - border, ev.clientY - d.offsetTop - sz / 2 - border];
     mDom(d, { w: sz, h: sz, bg: 'red', position: 'absolute', left: x, top: y });
   }
 }
-async function test189g_placeMeeple(){ //geht!!!
-  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
+async function test189g_placeMeeple() { //geht!!!
+  let d1 = mDom(document.body, { hline: 0, margin: 0 }, { html: '&nbsp;' });
   let [w, h, margin, padding, border] = [500, 500, 25, 0, 7]; //25;
-  let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding, round:true, className:'lensBorder'}, { id: 'dCanvas' });
+  let d = mDom(d1, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg: '#242430', margin, padding, round: true, className: 'lensBorder' }, { id: 'dCanvas' });
   // showBox(d,0,0); 
-  d.onclick=ev=>{
-    console.log('click',ev.clientX-d.offsetLeft,ev.clientY-d.offsetTop);
+  d.onclick = ev => {
+    console.log('click', ev.clientX - d.offsetLeft, ev.clientY - d.offsetTop);
     //let d=mBy('dCanvas');
-    let sz=rNumber(10,50);
-    let [x,y]= [ev.clientX-d.offsetLeft-sz/2-border, ev.clientY-d.offsetTop-sz/2-border];
+    let sz = rNumber(10, 50);
+    let [x, y] = [ev.clientX - d.offsetLeft - sz / 2 - border, ev.clientY - d.offsetTop - sz / 2 - border];
     mDom(d, { w: sz, h: sz, bg: 'red', position: 'absolute', left: x, top: y });
 
     // showBox(d, ev.clientX-d.offsetLeft-sz/2, ev.clientY-d.offsetTop-sz/2);
     // mDom(d,{w:sz,h:sz,bg:'red',position:'absolute',left:ev.clientX,top:ev.clientY});
   }
 }
-async function test189f_placeMeeple(){ //geht!!!
-  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
-  let d=mDom(d1, {position:'relative', w:500, h:400, bg: '#242430', margin:30, padding:0}, { id: 'dCanvas' });
-  showBox(d,0,0); 
-  d.onclick=ev=>console.log('click',ev.clientX-d.offsetLeft,ev.clientY-d.offsetTop);
+async function test189f_placeMeeple() { //geht!!!
+  let d1 = mDom(document.body, { hline: 0, margin: 0 }, { html: '&nbsp;' });
+  let d = mDom(d1, { position: 'relative', w: 500, h: 400, bg: '#242430', margin: 30, padding: 0 }, { id: 'dCanvas' });
+  showBox(d, 0, 0);
+  d.onclick = ev => console.log('click', ev.clientX - d.offsetLeft, ev.clientY - d.offsetTop);
 }
-async function test189e_placeMeeple(){ //geht!!!
-  let d1 = mDom(document.body,{hline:0,margin:10},{html:'&nbsp;'});
-  let d=mDom(d1, {w:500, h:400, bg: '#242430', margin:10, padding:0}, { id: 'dCanvas' });
-  showBox(d,0+d.offsetLeft,0+d.offsetTop); 
+async function test189e_placeMeeple() { //geht!!!
+  let d1 = mDom(document.body, { hline: 0, margin: 10 }, { html: '&nbsp;' });
+  let d = mDom(d1, { w: 500, h: 400, bg: '#242430', margin: 10, padding: 0 }, { id: 'dCanvas' });
+  showBox(d, 0 + d.offsetLeft, 0 + d.offsetTop);
 }
-async function test189d_placeMeeple(){ //geht!!!
-  let d1 = mDom(document.body,{hline:0},{html:'&nbsp;'});
-  let d=mDom(d1, {w:500, h:400, bg: '#242430', margin:10, padding:0}, { id: 'dCanvas' });
-  showBox(d,0+d.offsetLeft,0+d.offsetTop); 
+async function test189d_placeMeeple() { //geht!!!
+  let d1 = mDom(document.body, { hline: 0 }, { html: '&nbsp;' });
+  let d = mDom(d1, { w: 500, h: 400, bg: '#242430', margin: 10, padding: 0 }, { id: 'dCanvas' });
+  showBox(d, 0 + d.offsetLeft, 0 + d.offsetTop);
 }
-async function test189c_placeMeeple(){ //geht!!!
-  let d1 = mDom(document.body,{hline:0},{html:'&nbsp;'});
-  let d=mDom(d1, {w:500, h:400, bg: '#242430', margin:10, padding:0}, { id: 'dCanvas' });
-  showBox(d,0,0); 
+async function test189c_placeMeeple() { //geht!!!
+  let d1 = mDom(document.body, { hline: 0 }, { html: '&nbsp;' });
+  let d = mDom(d1, { w: 500, h: 400, bg: '#242430', margin: 10, padding: 0 }, { id: 'dCanvas' });
+  showBox(d, 0, 0);
 }
-async function test189b_placeMeeple(){ //margin collapse
-  let d=mDom(document.body, {w:500, h:400, bg: '#242430', margin:10, padding:0}, { id: 'dCanvas' });
-  showBox(d,0,0)
+async function test189b_placeMeeple() { //margin collapse
+  let d = mDom(document.body, { w: 500, h: 400, bg: '#242430', margin: 10, padding: 0 }, { id: 'dCanvas' });
+  showBox(d, 0, 0)
 }
-async function test189a_placeMeeple(){ //geht!!!
-  let d=mDom(document.body, {w:500, h:400, bg: '#242430', margin:0, padding:0}, { id: 'dCanvas' });
-  showBox(d,0,0)
+async function test189a_placeMeeple() { //geht!!!
+  let d = mDom(document.body, { w: 500, h: 400, bg: '#242430', margin: 0, padding: 0 }, { id: 'dCanvas' });
+  showBox(d, 0, 0)
 }
-async function test188_placeMeeple(){ //geht!!!
-  let d=mDom(document.body);
-  showBox(d,0,0)
+async function test188_placeMeeple() { //geht!!!
+  let d = mDom(document.body);
+  showBox(d, 0, 0)
 }
-async function test187_placeMeeple(){ //geht!!!
-  showBox(document.body,0,0)
+async function test187_placeMeeple() { //geht!!!
+  showBox(document.body, 0, 0)
 }
-async function test186_placeMeeple(){
+async function test186_placeMeeple() {
   let d1 = clearDiv();
 
   // let [w, h, margin, padding] = [500, 500, 0,0]; //25;
-  let d2 = mDom(d1, { w:500, h:400, bg: '#242430', margin:0, padding:0}, { id: 'dCanvas' }); //, position:'relative'
+  let d2 = mDom(d1, { w: 500, h: 400, bg: '#242430', margin: 0, padding: 0 }, { id: 'dCanvas' }); //, position:'relative'
   // mClass(d, 'lensBorder');
   // mStyle(d,{wbox:true})
 
-  document.onclick = ev=>{
-    let d=mBy('dCanvas');
-    let sz=rNumber(10,50);
-    mDom(d,{w:sz,h:sz,bg:'red',position:'absolute',left:ev.clientX,top:ev.clientY});
+  document.onclick = ev => {
+    let d = mBy('dCanvas');
+    let sz = rNumber(10, 50);
+    mDom(d, { w: sz, h: sz, bg: 'red', position: 'absolute', left: ev.clientX, top: ev.clientY });
   }
 
 }
-async function test185_placeMeeple(){ //GEHT!!!
+async function test185_placeMeeple() { //GEHT!!!
   let d1 = clearDiv();
-  document.onclick = ev=>{
-    let d=mBy('dCanvas');
-    let sz=rNumber(10,50);
-    mDom(d1,{w:sz,h:sz,bg:'red',position:'absolute',left:ev.clientX,top:ev.clientY});
+  document.onclick = ev => {
+    let d = mBy('dCanvas');
+    let sz = rNumber(10, 50);
+    mDom(d1, { w: sz, h: sz, bg: 'red', position: 'absolute', left: ev.clientX, top: ev.clientY });
   }
 
 }
-async function test184_placeMeeple(){
+async function test184_placeMeeple() {
   let d1 = clearDiv();
   let [w, h, padding] = [500, 500, 50]; //25;
-  let d = mDom(d1, { w, h, bg: '#242430', margin: 10, padding, round: true}, { id: 'dCanvas' }); //, position:'relative'
+  let d = mDom(d1, { w, h, bg: '#242430', margin: 10, padding, round: true }, { id: 'dCanvas' }); //, position:'relative'
   mClass(d, 'lensBorder');
-  mStyle(d,{wbox:true})
+  mStyle(d, { wbox: true })
 
-  document.onclick = ev=>{
-    let d=mBy('dCanvas');
-    let sz=rNumber(10,50);
-    mDom(d,{w:sz,h:sz,bg:'red',position:'absolute',left:ev.clientX,top:ev.clientY});
+  document.onclick = ev => {
+    let d = mBy('dCanvas');
+    let sz = rNumber(10, 50);
+    mDom(d, { w: sz, h: sz, bg: 'red', position: 'absolute', left: ev.clientX, top: ev.clientY });
   }
 
 }
@@ -150,7 +152,7 @@ async function test183() {
     p1.x = mapRange(p1.x, 0, 1000, 0, w);
     p1.y = mapRange(p1.y, 0, 1000, 0, h);
     p1 = pointAddMargin(p1, padding);
-    drawPointStar(p1,d,sz);
+    drawPointStar(p1, d, sz);
     points.push(p1);
     //p1 = drawPoint(dParent, p1);
   }

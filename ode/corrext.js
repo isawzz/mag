@@ -17,6 +17,28 @@ function mColFlex(dParent, chflex = [1, 5, 1], bgs) {
   }
   return res;
 }
+function mStyle(elem, styles = {}) {
+	elem = toElem(elem);
+  let bg, fg;
+  if (isdef(styles.bg) || isdef(styles.fg)) {
+    [bg, fg] = colorsFromBFA(styles.bg, styles.fg, styles.alpha);
+    elem.style.backgroundColor = bg;
+    elem.style.color = fg;
+  }
+	if (isdef(styles.w100)) elem.style.width = '100%';
+	if (isdef(styles.h100)) elem.style.height = '100%';
+	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
+	if (isdef(styles.round)) { elem.style.setProperty('border-radius', '50%'); }
+	let styleParams = STYLE_PARAMS;
+	for (const k in styles) {
+		if (['bg','fg','w100', 'h100', 'round', 'box'].includes(k)) continue;
+		let val = styles[k];
+		let key = valf(styleParams[k],k);
+		if (k.includes('class')) elem.classList.add(val); 
+    else if (k.startsWith('grid')) elem.style.setProperty(key, `repeat(${val}, 1fr)`);
+		else elem.style.setProperty(key, isNumber(val) ? val + 'px' : val);
+	}
+}
 
 
 

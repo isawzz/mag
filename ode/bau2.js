@@ -7,17 +7,17 @@ function drawPointStar(p1, d, sz) {
   img.id = p1.id = `p${p1.x}_${p1.y}`;
 
 }
-function leinwand(w=500,h=500){
-  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
+function leinwand(w = 500, h = 500, bg = '#242430') {
+  let d1 = mDom(document.body, { hline: 0, margin: 0 }, { html: '&nbsp;' });
   let [margin, padding, border] = [25, 0, 7]; //25;
-  let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding, className:'lensBorder'}, { id: 'dCanvas' });
+  let d = mDom(d1, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg, margin, padding, className: 'lensBorder' }, { id: 'dCanvas' });
   return d;
 }
 async function loadStarImages() {
-  let list=[];
-  for(let i=0;i<9;i++){
-    for(const name of ['blue','new','blu']){
-      list.push(`../assets/icons/stars/${name}${i+1}.png`);      
+  let list = [];
+  for (let i = 0; i < 9; i++) {
+    for (const name of ['blue', 'bl', 'blu']) {
+      list.push(`../assets/icons/stars/${name}${i + 1}.png`);
     }
   }
   // let list1 = range(1, 9).map(n => `../assets/icons/stars/blue${n}.png`);

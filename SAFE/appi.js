@@ -2,14 +2,7 @@ const sharp = require('sharp');
 const path = require("path");
 const assetsDirectory = path.join(__dirname, '..', 'assets');
 
-/**
- * Changes all pixels darker than a lightness threshold to transparent in a PNG image.
- * 
- * @param {string} inputPath - Path to the input .png file.
- * @param {string} outputPath - Path to save the output .png file.
- * @param {number} lightnessThreshold - The lightness threshold (0-100) below which pixels become transparent.
- */
-async function changeDarkPixelsToTransparent(inputPath, outputPath, lightnessThreshold = 50) {
+async function changeDarkPixelsToTransparent(inputPath, outputPath, lightnessThreshold = 50, blueThreshold = 12) {
   try {
     // Load the image
     const image = sharp(inputPath).ensureAlpha();
@@ -29,8 +22,10 @@ async function changeDarkPixelsToTransparent(inputPath, outputPath, lightnessThr
       const { l } = rgbToHsl(r, g, b);
 
       // If the lightness is below the threshold, make the pixel transparent
-      if (l <= lightnessThreshold && a > 0) {
-        // Set the alpha channel to 0 (transparent)
+      // if (l <= lightnessThreshold && a > 0 && b>g && b>r) {
+      // if (l <= lightnessThreshold && a > 0 && b>g && b>r) {
+      if (l <= lightnessThreshold && a > 0 && (b<=g+blueThreshold || b<=r+blueThreshold)) {
+          // Set the alpha channel to 0 (transparent)
         pixels[i + 3] = 0;
       }
     }
@@ -45,14 +40,6 @@ async function changeDarkPixelsToTransparent(inputPath, outputPath, lightnessThr
   }
 }
 
-/**
- * Converts RGB values to HSL.
- * 
- * @param {number} r - Red value (0-255).
- * @param {number} g - Green value (0-255).
- * @param {number} b - Blue value (0-255).
- * @returns {object} - The HSL representation with hue (h), saturation (s), and lightness (l).
- */
 function rgbToHsl(r, g, b) {
   r /= 255;
   g /= 255;
@@ -81,9 +68,9 @@ function rgbToHsl(r, g, b) {
 
 // Example usage: Change all pixels darker than a threshold to transparent
 
-for(let i=1;i<=9;i++){
+for(let i of [3,7]){
   let fname = path.join(assetsDirectory, 'icons', 'stars', `blue${i}.png`);
-  let outname = path.join(assetsDirectory, 'icons', 'stars', `new${i}.png`);
-  changeDarkPixelsToTransparent(fname, outname, 24);
+  let outname = path.join(assetsDirectory, 'icons', 'stars', `bl${i}.png`);
+  changeDarkPixelsToTransparent(fname, outname, 18, 24);
 }
 
