@@ -2,8 +2,17 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start() { await test190(); }
+async function start() { await test191_starImages(); }
 
+async function test191_starImages(){
+  await loadStarImages();
+  let d=leinwand();  
+  let g=mDom(d,{display:'grid',gridCols:6})
+  let sz=50;
+  for(const img of M.starImages){
+    mDom(g, {w:sz, h:sz}, {tag:'img',src:img.src})
+  }
+}
 async function test190(){
 
   // console.log(divideRectangleIntoGrid(500,500,8)); // 3,3

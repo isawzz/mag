@@ -120,14 +120,6 @@ function drawPoint(dParent, p, addLabel = true) {
   p.cxPage = rect.x + p.sz / 2; p.cyPage = rect.y + p.sz / 2;
   return p;
 }
-function drawPointStar(p1, d, sz) {
-  let starSizes = [1, .5, 1, 1, 1, .3, 1, .6, 1]; //,.3,.2,.25,.4,.2,.1,.2,.1,1];
-  let itype = p1.type % starSizes.length; //console.log('itype',itype);
-  p1.sz = sz = 20 * starSizes[itype]; //console.log('sz',sz);
-  let img = p1.div = cloneImage(M.starImages[itype], d, p1.x, p1.y, sz, sz);
-  img.id = p1.id = `p${p1.x}_${p1.y}`;
-
-}
 function drawPointType(dParent, p, addLabel = true) {
   let html = isdef(p.owner) && addLabel ? p.owner[0].toUpperCase() : '';
   addKeys({ sz: 20, bg: rColor(), id: getUID() }, p);
@@ -247,6 +239,60 @@ function logMinMax(fenPoints){
 	console.log('Max Y:', maxY);
 
 }
+function loadAndDivideImage(imageUrl, dParent) {
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    const imgWidthThird = img.width / 3;
+    const imgHeightThird = img.height / 3;
+
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        const subCanvas = document.createElement('canvas');
+        subCanvas.width = imgWidthThird;
+        subCanvas.height = imgHeightThird;
+        const subCtx = subCanvas.getContext('2d');
+        subCtx.drawImage(img, i * imgWidthThird, j * imgHeightThird, imgWidthThird, imgHeightThird, 0, 0, imgWidthThird, imgHeightThird);
+
+        // Do something with the subCanvas, e.g., add it to the DOM:
+        dParent.appendChild(subCanvas);
+      }
+    }
+  };
+  img.src = imageUrl;
+}
+function mapRange(value, inMin, inMax, outMin, outMax) {
+  return Math.round((value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin);
+}
+function onMouseMoveLine(event) {
+  const mouseX = event.clientX;
+  const mouseY = event.clientY + 2;
+
+  B.lines.forEach(line => {
+    const x1 = parseFloat(iDiv(line).dataset.x1);
+    const y1 = parseFloat(iDiv(line).dataset.y1);
+    const x2 = parseFloat(iDiv(line).dataset.x2);
+    const y2 = parseFloat(iDiv(line).dataset.y2);
+    const thickness = B.triggerThreshold; // parseFloat(line.dataset.thickness);
+
+    // Calculate the perpendicular distance from the mouse to the line segment
+    const distance = pointToLineDistance(mouseX, mouseY, x1, y1, x2, y2);
+
+    if (distance <= thickness / 2) {
+      mStyle(iDiv(line), { opacity: 1, bg: 'red' });
+      //line.style.backgroundColor = 'red'; // Change color on hover
+    } else {
+      mStyle(iDiv(line), { opacity: .1, bg: 'white' });
+      // line.style.backgroundColor = 'white'; // Reset color when not hovered
+    }
+  });
+
+}
 async function placeYourMeepleGame(ev) {
   let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
   stopPulsing();
@@ -276,66 +322,6 @@ async function placeYourMeepleGame(ev) {
     await lacunaMoveCompletedME(B.selectedPoints);
 
   } else lacunaMakeSelectableME();
-}
-function loadAndDivideImage(imageUrl, dParent) {
-  const img = new Image();
-  img.onload = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-
-    const imgWidthThird = img.width / 3;
-    const imgHeightThird = img.height / 3;
-
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        const subCanvas = document.createElement('canvas');
-        subCanvas.width = imgWidthThird;
-        subCanvas.height = imgHeightThird;
-        const subCtx = subCanvas.getContext('2d');
-        subCtx.drawImage(img, i * imgWidthThird, j * imgHeightThird, imgWidthThird, imgHeightThird, 0, 0, imgWidthThird, imgHeightThird);
-
-        // Do something with the subCanvas, e.g., add it to the DOM:
-        dParent.appendChild(subCanvas);
-      }
-    }
-  };
-  img.src = imageUrl;
-}
-async function loadStarImages() {
-  let list = range(1, 9).map(n => `../assets/icons/stars/blue${n}.png`);
-  let starImages = await preloadImages(list); //console.log('starImages', starImages);
-  M.starImages = starImages;
-  return starImages;
-}
-function mapRange(value, inMin, inMax, outMin, outMax) {
-  return Math.round((value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin);
-}
-function onMouseMoveLine(event) {
-  const mouseX = event.clientX;
-  const mouseY = event.clientY + 2;
-
-  B.lines.forEach(line => {
-    const x1 = parseFloat(iDiv(line).dataset.x1);
-    const y1 = parseFloat(iDiv(line).dataset.y1);
-    const x2 = parseFloat(iDiv(line).dataset.x2);
-    const y2 = parseFloat(iDiv(line).dataset.y2);
-    const thickness = B.triggerThreshold; // parseFloat(line.dataset.thickness);
-
-    // Calculate the perpendicular distance from the mouse to the line segment
-    const distance = pointToLineDistance(mouseX, mouseY, x1, y1, x2, y2);
-
-    if (distance <= thickness / 2) {
-      mStyle(iDiv(line), { opacity: 1, bg: 'red' });
-      //line.style.backgroundColor = 'red'; // Change color on hover
-    } else {
-      mStyle(iDiv(line), { opacity: .1, bg: 'white' });
-      // line.style.backgroundColor = 'white'; // Reset color when not hovered
-    }
-  });
-
 }
 async function placeYourMeeple(ev) {
   //console.log('placeYourMeeple',B.counter++);//,ev.target);

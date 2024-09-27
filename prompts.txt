@@ -1,5 +1,8 @@
 
 _________________________ images of stars ___________________________
+
+write a js function (can be node js) that, given a path and a hue opens a .png file and changes all pixels of that hue to transparent, then saves the file
+
 these are my styles:
   body,
   html {

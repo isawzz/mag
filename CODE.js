@@ -1,3 +1,37 @@
+
+async function placeYourMeeple(ev) {
+  //console.log('placeYourMeeple',B.counter++);//,ev.target);
+  let d = mBy('dCanvas');
+  document.onclick = null;
+  d.onmousemove = null;
+  let sz = rChoose(range(10, 40)); //10;
+  let b = mGetStyle(d, 'border-width'); //console.log(b);
+  let p = mGetStyle(d, 'padding'); console.log(p);
+  x = ev.clientX - d.offsetLeft - b - sz;
+  y = ev.clientY - d.offsetTop - b - sz;
+  // x = ev.clientX - sz / 2 - d.offsetLeft - d.parentNode.offsetLeft;
+  // y = ev.clientY - sz / 2 - d.offsetTop - d.parentNode.offsetTop;
+  // x = ev.clientX - sz / 2;// - d.offsetLeft - d.parentNode.offsetLeft;
+  // y = ev.clientY - sz / 2;// - d.offsetTop - d.parentNode.offsetTop;
+  // let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border: getPlayerProp('color'), id: getUID(), owner: getUname() };
+  let pMeeple = { x, y, sz, bg: 'red', border: 'gold', id: getUID(), owner: 'hallo' };
+  // fen.meeples.push(jsCopy(pMeeple));//**** */
+  drawMeeple(d, pMeeple);
+  lookupAddToList(B, ['meeples'], pMeeple);
+  let linesActivated = B.linesActivated = getActivatedLines(B.lines);
+  console.log('linesActivated', linesActivated);
+  B.selectedPoints = [];
+  B.endPoints = [];
+  B.possiblePairs = [];
+  if (linesActivated.length == 1) {
+    //grab these points and finish move
+    B.selectedPoints.push(linesActivated[0].p1.id);
+    B.selectedPoints.push(linesActivated[0].p2.id);
+    let res = await lacunaMoveComplete(B.selectedPoints); console.log('res', res);
+  } else {
+    animateEndpointsOfActivatedLines();
+  }
+}
 function _generateGridPoints(n,w,h){
 	const points = [];
 	let { rows, cols } = divideRectangleIntoGrid(w, h * .8, n);
