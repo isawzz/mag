@@ -39,7 +39,7 @@ async function lacunaPresent() {
   let result = findIsolatedPairs(points, 'type', B.obstacleThreshold); //je groesser threshold umso mehr obstacles werden detected!
   let pairs = result.isolatedPairs;
 
-  return;
+  //return;
   //let pair = pairs[0]; //console.log(pairs)
 
   //drawInteractiveLine(pair[0],pair[1],'white',1); return;

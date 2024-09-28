@@ -1,6 +1,6 @@
 
 function drawPointStar(p1, d, sz) {
-	let starSizes = [1, .6, 1, 1, 1, .8, 1, .6, 1]; //,.3,.2,.25,.4,.2,.1,.2,.1,1];
+	let starSizes = [1, .4, 1, 1, 1, .8, 1, .6, 1]; //,.3,.2,.25,.4,.2,.1,.2,.1,1];
 	let itype = p1.type % starSizes.length; //console.log('itype',itype);
 	p1.sz = sz = 30 * starSizes[itype]; //console.log('sz',sz);
 	let img = p1.div = cloneImage(M.starImages[itype], d, p1.x, p1.y, sz, sz);
