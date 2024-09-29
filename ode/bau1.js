@@ -30,13 +30,10 @@ function colorsFromBFA(bg, fg, alpha) {
   }
   return [bg, fg];
 }
-
 function centerVerticalOneLine(elem,h){
 	if (nundef(h)) h = elem.offsetHeight;
 	mStyle(elem.hline,h);
 }
-
-
 function styler(elem, k, v) {
 	let key = STYLE_PARAMS_2[k];
 	let val = isNumber(v) ? '' + Number(v) + 'px' : v;
@@ -52,7 +49,6 @@ function styler(elem, k, v) {
 
 
 }
-
 function _mStyle(elem, styles = {}, unit = 'px') {
 	elem = toElem(elem);
 	let style = styles = jsCopy(styles);
