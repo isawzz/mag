@@ -1877,19 +1877,6 @@ function colormapAsStringOrig() {
    `;
   return html;
 }
-function colorsFromBFA(bg, fg, alpha) {
-  if (fg == 'contrast') {
-    if (bg != 'inherit') bg = colorFrom(bg, alpha);
-    fg = colorIdealText(bg);
-  } else if (bg == 'contrast') {
-    fg = colorFrom(fg);
-    bg = colorIdealText(fg);
-  } else {
-    if (isdef(bg) && bg != 'inherit') bg = colorFrom(bg, alpha);
-    if (isdef(fg) && fg != 'inherit') fg = colorFrom(fg);
-  }
-  return [bg, fg];
-}
 function conslog(s) { console.log(s, window[s]) }
 
 function contains(s, sSub) { return s.toLowerCase().includes(sSub.toLowerCase()); }

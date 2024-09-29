@@ -17,18 +17,19 @@ function mColFlex(dParent, chflex = [1, 5, 1], bgs) {
   }
   return res;
 }
-function mStyle(elem, styles = {}) {
+function _mStyle(elem, styles = {}) {
   styles = jsCopy(styles);
 	elem = toElem(elem);
 
   if (isdef(styles.bg) || isdef(styles.fg)) {
+    console.log(styles.bg,styles.fg);
     let [bg,fg] = [styles.bg, styles.fg] = colorsFromBFA(styles.bg, styles.fg, styles.alpha); console.log(bg,fg);
 
   }
-	if (isdef(styles.w100)) styles.w = '100%';
-	if (isdef(styles.h100)) styles.h = '100%';
-	if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
-	if (isdef(styles.round)) styles.rounding = '50%';
+	if (isdef(styles.w100)) {delete styles.w100; styles.w = '100%';}
+	if (isdef(styles.h100)) {delete styles.h100; styles.h = '100%';}
+	if (isdef(styles.box)) {delete styles.box; styles['box-sizing'] = 'border-box';}
+	if (isdef(styles.round)) {delete styles.round; styles.rounding = '50%';}
 	let styleParams = STYLE_PARAMS;
 	for (const k in styles) {
 		if (['w100', 'h100', 'round', 'box'].includes(k)) continue;

@@ -2,72 +2,29 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start() { await test192(); } //test191_starImages(); }
+async function start() { await test01(); } //test191_starImages(); }
 
+async function test01() {
+  let d1 = mDom(document.body, { bg:'red',hline: 0, margin: 0 }, { html: '&nbsp;' });
+  let [w, h, margin, padding, border, sz] = [500, 500, 20, 30, 8, 50]; //25;
+  let dParent = mDom(d1,{w,h,bg:'inherit',fg:'inherit'}); //, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg: '#242430', margin, padding }, { id: 'dCanvas' });
+  showStyles(dParent);
+  let d=mDom(dParent,{w:sz,h:sz,margin},{html:'hallo'}); //default is bg=rgba(0,0,0,0) fg=rgb(0,0,0)
+  showStyles(d);
+
+}
+function showStyles(elem){let st=mGetStyles(elem,['bg','fg']); console.log('styles',st); }
 async function test192() {
   lacunaPresent();
 }
-async function lacunaPresent() {
-	//this is prelims
-  await loadStarImages();
-
-	//this is setup
-  let [n, nTypes] = [49, 7]; //types soll <= 9 sein
-  let fenPoints = lacunaGenerateFenPoints(n, nTypes, 1000, 1000, 0); logMinMax(fenPoints);
-
-	//this is present
-  B = {};
-  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
-  let [w, h, margin, padding, border] = [500, 500, 20, 30, 8]; //25;
-  // let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding, round:true, className:'lensBorder'}, { id: 'dCanvas' });
-  let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding}, { id: 'dCanvas' });
-
-  let sz = 30;
-  let points = [];
-  for (const p of fenPoints) {
-    let p1 = pointFromFenRaw(p); // console.log(p1);
-    p1.x = mapRange(p1.x, 0, 1000, 0, w);
-    p1.y = mapRange(p1.y, 0, 1000, 0, h);
-    p1 = pointAddMargin(p1, padding);
-    drawPointStar(p1,d,sz);
-    points.push(p1);
-    //p1 = drawPoint(dParent, p1);
-  }
-  B.diPoints = list2dict(points, 'id');
-  console.log(points[0], getSetOfDifferentTypesOfPoints(points));
-  B.obstacleThreshold = 10; B.triggerThreshold = 8;
-  let result = findIsolatedPairs(points, 'type', B.obstacleThreshold); //je groesser threshold umso mehr obstacles werden detected!
-  let pairs = result.isolatedPairs;
-
-  //return;
-  //let pair = pairs[0]; //console.log(pairs)
-
-  //drawInteractiveLine(pair[0],pair[1],'white',1); return;
-
-  let lines = []; B.lines = lines;
-  pairs.map(pair => lines.push({ p1: pair[0], p2: pair[1], div: drawInteractiveLine(d, pair[0], pair[1], 'lightblue', 1) })); //rColor(), 1)));
-  d.onmousemove = onMouseMoveLine;
-
-  B.counter = 0;
-  B.meeples = [];
-  //d.onclick = lacunaOnclick;
-  //for some reason geht das onclick  auf d nicht immer!
-  document.onclick = placeYourMeeple; // ()=>console.log('click',B.counter++)
-
-
-  //console.log(lines[0]);
-
-
-}
-
 async function test191_starImages() {
   await loadStarImages();
-  let d = leinwand(900,900,'#242430'); //return;
-  let g = mDom(d, { display: 'grid', gridCols: 6 ,margin:20, gap:50 })
+  let d = leinwand(900, 900, '#242430'); //return;
+  let g = mDom(d, { display: 'grid', gridCols: 6, margin: 20, gap: 50 })
   //mStyle(g,{bg: '#242430'})
   let sz = 100;
   for (const img of M.starImages) {
-    let d1=mDom(g, { w: sz, h: sz }, { tag: 'img', src: img.src })
+    let d1 = mDom(g, { w: sz, h: sz }, { tag: 'img', src: img.src })
     //mClass(d1,'pulseFastInfinite');
   }
 }
