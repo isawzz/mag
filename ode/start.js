@@ -2,9 +2,9 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start() { await test01(); } //test191_starImages(); }
+async function start() { await test0(); } //test191_starImages(); }
 
-async function test01() {
+async function test0() {
   let d1 = mDom(document.body, { bg: 'red', hline: 0, margin: 0 }, { html: '&nbsp;' });
   let [w, h, margin, padding, border, sz] = [500, 500, 20, 30, 8, 50]; //25;
   let dParent = mDom(d1, { w, h, bg: 'inherit', fg: 'inherit' }); //, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg: '#242430', margin, padding }, { id: 'dCanvas' });

@@ -1,12 +1,20 @@
 
-async function start() { test11(); }
+async function start() { test12(); }
 
 async function test12(){
-	let list = await codeParseFile('../ode/closure.js');
-	console.log('list', list);
+	let names = ["../ode/closure.js","../ode/games.js","../ode/corrext.js","../ode/bauclosure.js","../ode/baugames.js","../ode/bau_old.js","../ode/bau_new.js","../ode/bau1.js","../ode/bau2.js","../ode/bau3.js","../ode/bau4.js"];
+	let di={};
+	for(const name of names){
+		let list = await codeParseFile(name);
+		let dilist = list2dict(list,'key');
+		copyKeys(dilist,di);
+	}
+	let list1=dict2list(di);
+	list1.sort((a,b)=>a.key.localeCompare(b.key));
+	console.log('list', list1);
 	let text = '';
 	//let keys = Object.keys(bykey);
-	for (const o of list) {
+	for (const o of list1) {
 		text += o.code + '\r\n';
 	}
 	downloadAsText(text, 'output', 'js');
