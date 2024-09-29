@@ -5,15 +5,15 @@ async function start() { await test179_image9(); } //async function start() { TE
 async function start() { await test01(); } //test191_starImages(); }
 
 async function test01() {
-  let d1 = mDom(document.body, { bg:'red',hline: 0, margin: 0 }, { html: '&nbsp;' });
+  let d1 = mDom(document.body, { bg: 'red', hline: 0, margin: 0 }, { html: '&nbsp;' });
   let [w, h, margin, padding, border, sz] = [500, 500, 20, 30, 8, 50]; //25;
-  let dParent = mDom(d1,{w,h,bg:'inherit',fg:'inherit'}); //, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg: '#242430', margin, padding }, { id: 'dCanvas' });
+  let dParent = mDom(d1, { w, h, bg: 'inherit', fg: 'inherit' }); //, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg: '#242430', margin, padding }, { id: 'dCanvas' });
   showStyles(dParent);
-  let d=mDom(dParent,{w:sz,h:sz,margin},{html:'hallo'}); //default is bg=rgba(0,0,0,0) fg=rgb(0,0,0)
+  let d = mDom(dParent, { w: sz, h: sz, margin }, { html: 'hallo' }); //default is bg=rgba(0,0,0,0) fg=rgb(0,0,0)
   showStyles(d);
 
 }
-function showStyles(elem){let st=mGetStyles(elem,['bg','fg']); console.log('styles',st); }
+function showStyles(elem) { let st = mGetStyles(elem, ['bg', 'fg']); console.log('styles', st); }
 async function test192() {
   lacunaPresent();
 }

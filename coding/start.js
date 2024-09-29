@@ -1,6 +1,28 @@
 
-async function start() { test10(); }
+async function start() { test11(); }
 
+async function test12(){
+	let list = await codeParseFile('../ode/closure.js');
+	console.log('list', list);
+	let text = '';
+	//let keys = Object.keys(bykey);
+	for (const o of list) {
+		text += o.code + '\r\n';
+	}
+	downloadAsText(text, 'output', 'js');
+	//AU.ta.value = text;
+}
+async function test11(){
+	let list = await codeParseFile('../ode/closure.js');
+	console.log('list', list);
+	let text = '';
+	//let keys = Object.keys(bykey);
+	for (const o of list) {
+		text += o.code + '\r\n';
+	}
+	downloadAsText(text, 'output', 'js');
+	//AU.ta.value = text;
+}
 async function test10(){
 	//await _sortFunctionsOfAFile();
 	await _integrate(`../ode/closure.js`,'../ode/corrext.js');
