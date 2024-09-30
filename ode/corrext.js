@@ -40,6 +40,31 @@ function _mStyle(elem, styles = {}) {
 		else elem.style.setProperty(key, isNumber(val) ? val + 'px' : val);
 	}
 }
+function colorToHex79(c) {
+  if (colorIsHex79(c)) return c;
+  ColorDi = M.colorByName;
+  let tString = isString(c), tArr = isList(c), tObj = isDict(c);
+  if (tString && c[0] == '#') return colorHex45ToHex79(c);
+  else if (tString && isdef(ColorDi) && lookup(ColorDi, [c])) return ColorDi[c].hex;
+  else if (tString && c.startsWith('rand')) {
+    let spec = capitalize(c.substring(4));
+    let func = window['color' + spec];
+    c = isdef(func) ? func() : rColor();
+    assertion(colorIsHex79(c), 'ERROR coloFrom!!!!!!!!! (rand)');
+    return c;
+  } else if (tString && (c.startsWith('linear') || c.startsWith('radial'))) return c;
+  else if (tString && c.startsWith('rgb')) return colorRgbStringToHex79(c);
+  else if (tString && c.startsWith('hsl')) return colorHsl360StringToHex79(c);
+  else if (tString && c == 'transparent') return '#00000000';
+  else if (tString && c == 'inherit') return 'inherit';
+  else if (tString) { ensureColorDict(); let c1 = ColorDi[c]; assertion(isdef(c1), `UNKNOWN color ${c}`); return c1.hex; }
+  else if (tArr && (c.length == 3 || c.length == 4) && isNumber(c[0])) return colorRgbArrayToHex79(c);
+  else if (tArr) return colorToHex79(rChoose(tArr));
+  else if (tObj && 'h' in c && c.h > 1) { return colorHsl360ObjectToHex79(c); } //console.log('!!!');
+  else if (tObj && 'h' in c) return colorHsl01ObjectToHex79(c);
+  else if (tObj && 'r' in c) return colorRgbArgsToHex79(c.r, c.g, c.b, c.a);
+  assertion(false, `NO COLOR FOUND FOR ${c}`);
+}
 
 
 

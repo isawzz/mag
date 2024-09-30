@@ -2,7 +2,7 @@ onload = start;
 
 async function start() { TESTING = true; await prelims(); await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
 async function start() { await test179_image9(); } //async function start() { TESTING = true; await prelims(); }async function start() { TESTING = true; await test155(); }
-async function start() { await test0(); } //test191_starImages(); }
+async function start() { await test183(); } //test0(); } //test191_starImages(); }
 
 async function test0() {
   let d1 = mDom(document.body, { bg: 'red', hline: 0, margin: 0 }, { html: '&nbsp;' });
@@ -11,7 +11,6 @@ async function test0() {
   showStyles(dParent);
   let d = mDom(dParent, { w: sz, h: sz, margin }, { html: 'hallo' }); //default is bg=rgba(0,0,0,0) fg=rgb(0,0,0)
   showStyles(d);
-
 }
 function showStyles(elem) { let st = mGetStyles(elem, ['bg', 'fg']); console.log('styles', st); }
 async function test192() {
@@ -180,7 +179,7 @@ async function test183() {
   //drawInteractiveLine(pair[0],pair[1],'white',1); return;
 
   let lines = []; B.lines = lines;
-  pairs.map(pair => lines.push({ p1: pair[0], p2: pair[1], div: drawInteractiveLine(pair[0], pair[1], 'lightblue', 1) })); //rColor(), 1)));
+  pairs.map(pair => lines.push({ p1: pair[0], p2: pair[1], div: drawInteractiveLine(d,pair[0], pair[1], 'lightblue', 1) })); //rColor(), 1)));
   d.onmousemove = onMouseMoveLine;
 
   B.counter = 0;
@@ -317,7 +316,7 @@ async function test174_lacunaTest() {
   //drawInteractiveLine(pair[0],pair[1]);
 
   let lines = []; B.lines = lines;
-  pairs.map(x => lines.push(drawInteractiveLine(x[0], x[1], rColor(), 1)));
+  pairs.map(x => lines.push(drawInteractiveLine(d,x[0], x[1], rColor(), 1)));
   document.onmousemove = onMouseMoveLine;
 }
 // *** ab da ist DA ***
@@ -353,7 +352,7 @@ async function test172_lacunaTest() {
   //drawInteractiveLine(pair[0],pair[1]);
 
   let lines = []; DA.lines = lines;
-  pairs.map(x => lines.push(drawInteractiveLine(x[0], x[1], rColor(), 1)));
+  pairs.map(x => lines.push(drawInteractiveLine(d,x[0], x[1], rColor(), 1)));
   document.onmousemove = onMouseMoveLine;
 }
 async function test171_blank() {

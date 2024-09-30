@@ -1,7 +1,13 @@
 onload = start;
 
-async function start() { await test1(); } 
+async function start() { await test2(); } 
 
+async function test2() {
+	let dPage = mPage({bg:'lightblue'});
+	mDom(dPage,{},{html:'hallo'}); return;
+  let [w, h, margin, padding, border, sz] = [500, 500, 20, 30, 8, 50]; //25;
+  let dParent = mDom(dPage, { w, h, bg: 'inherit', fg: 'contrast' },{html:'Hello!'}); //, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg: '#242430', margin, padding }, { id: 'dCanvas' });
+}
 async function test1() {
   let d1 = mDom(document.body, { bg: 'red', hline: 0, margin: 0 }, { html: '&nbsp;' });
   let [w, h, margin, padding, border, sz] = [500, 500, 20, 30, 8, 50]; //25;

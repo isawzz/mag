@@ -1990,6 +1990,7 @@ function colorSortByLightness(list) {
   return sorted;
 }
 function colorToHex79(c) {
+  console.log(c)
   if (colorIsHex79(c)) return c;
   ColorDi = M.colorByName;
   let tString = isString(c), tArr = isList(c), tObj = isDict(c);
@@ -2005,6 +2006,7 @@ function colorToHex79(c) {
   else if (tString && c.startsWith('rgb')) return colorRgbStringToHex79(c);
   else if (tString && c.startsWith('hsl')) return colorHsl360StringToHex79(c);
   else if (tString && c == 'transparent') return '#00000000';
+  else if (tString && c == 'inherit') return c;
   else if (tString) { ensureColorDict(); let c1 = ColorDi[c]; assertion(isdef(c1), `UNKNOWN color ${c}`); return c1.hex; }
   else if (tArr && (c.length == 3 || c.length == 4) && isNumber(c[0])) return colorRgbArrayToHex79(c);
   else if (tArr) return colorToHex79(rChoose(tArr));
