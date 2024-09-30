@@ -1990,7 +1990,7 @@ function colorSortByLightness(list) {
   return sorted;
 }
 function colorToHex79(c) {
-  console.log(c)
+  //console.log(c)
   if (colorIsHex79(c)) return c;
   ColorDi = M.colorByName;
   let tString = isString(c), tArr = isList(c), tObj = isDict(c);
