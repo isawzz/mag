@@ -155,7 +155,7 @@ function _mStyle(elem, styles = {}, unit = 'px') {
 		}
 	}
 }
-function mStyle(elem, styles = {}) {
+function _mStyle(elem, styles = {}) {
 	elem = toElem(elem);
 	styles = jsCopy(styles);
 

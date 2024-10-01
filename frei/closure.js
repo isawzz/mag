@@ -329,6 +329,20 @@ function annotate(sp) {
     }
   }
 }
+function applyOpts(d,opts={}){
+  const aliases = {
+    classes: 'className',
+    inner: 'innerHTML',
+    html: 'innerHTML',
+    w: 'width',
+    h: 'height',
+  };
+  for (const opt in opts) {
+    let name = valf(aliases[opt], opt), val = opts[opt];
+    if (['style', 'tag', 'innerHTML', 'className', 'checked', 'value'].includes(name) || name.startsWith('on')) d[name] = val;
+    else d.setAttribute(name, val);
+  }
+}
 function arrAllSameOrDifferent(arr) {
   if (arr.length === 0) {
     return true;
@@ -6609,18 +6623,7 @@ function mDom(dParent, styles = {}, opts = {}) {
   let d = document.createElement(tag);
   if (isdef(dParent)) mAppend(dParent, d);
   if (tag == 'textarea') styles.wrap = 'hard';
-  const aliases = {
-    classes: 'className',
-    inner: 'innerHTML',
-    html: 'innerHTML',
-    w: 'width',
-    h: 'height',
-  };
-  for (const opt in opts) {
-    let name = valf(aliases[opt], opt), val = opts[opt];
-    if (['style', 'tag', 'innerHTML', 'className', 'checked', 'value'].includes(name) || name.startsWith('on')) d[name] = val;
-    else d.setAttribute(name, val);
-  }
+  applyOpts(d,opts);
   mStyle(d, styles);
   return d;
 }
@@ -8233,7 +8236,7 @@ function paletteTrans(color, from = 0.1, to = 1, step = 0.2) {
   return res;
 }
 function paletteTransWhiteBlack(n = 9) {
-  let c = colorHex('white');
+  let c = 'white';
   let pal = [c];
   let [iw, ib] = [Math.floor(n / 2) - 1, Math.floor((n - 1) / 2) - 1];
   let [incw, incb] = [1 / (iw + 1), 1 / (ib + 1)];
@@ -8242,7 +8245,7 @@ function paletteTransWhiteBlack(n = 9) {
     pal.push(colorTrans(c, alpha));
   }
   pal.push('transparent');
-  c = colorHex('black');
+  c = 'black';
   for (let i = 1; i < ib; i++) {
     let alpha = i * incb;
     pal.push(colorTrans(c, alpha));

@@ -9,16 +9,36 @@ async function test4() {
 	let d1 = mDom(d0, { bg: 'lightblue', w: '100%', h: '100%' });
 }
 async function test3() {
-	let d0 = document.body;
-	mClass(d0, 'reset100'); console.log(d0.offsetWidth, d0.offsetHeight);
-	let [dTop,dSideLeft,dMain,dSideRight,dFooter]=layout5(d0);
-	let [dPageTitle,dTopMenu,dUser]=layout3Test(dTop);
-	
+	let d1=mBodyResetter('crimson');
 
-}
-function mLine(dParent) {
-	let d = mDiv(dParent, { bg:rColor() });
-	return d;
+	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
+	dTop.innerHTML = '';
+	// let [dPageTitle, dTopMenu, dUser] = mLayoutLine3(dTop);
+	let [dSymLeft,dPageTitle, dTopMenu, dUser,dSymRight] = mLayoutLine5(dTop);
+
+	mDom(dPageTitle, { margin: 10, wbox: true }, { tag: 'h1', html: 'My Place' });
+	let bHome = mDom(dTopMenu, { margin: 10, wbox: true }, { tag: 'button', html: 'Home' });
+	mDom(dUser, { margin: 10, wbox: true }, { html: 'Guest' });
+
+	let divs = [dTop, dSideLeft, dMain, dSideRight, dFooter];
+	let palette = paletteTransWhiteBlack(7);
+	console.log(palette);
+	//give each div bg from palette
+	//for (let i = 0; i < divs.length; i++) divs[i].style.backgroundColor = palette[i];
+	divs.forEach((div, i) => mStyle(div, { bg: palette[i + 1], fg: 'contrast' }));
+
+	// dSymLeft.innerHTML =  getMenuSymbol();
+	// dSymRight.innerHTML =  getMenuSymbol();
+	dSideLeft.innerHTML = 'Side Left';
+	dSideRight.innerHTML = 'Side Right';
+	dFooter.innerHTML = 'Footer';
+
+	sidebarStyle(dSideLeft);
+	sidebarControl(dSymLeft, dSideLeft);
+	sidebarStyle(dSideRight);
+	sidebarControl(dSymRight, dSideRight);
+	bHome.onclick = () => sidebarToggle(dSideLeft);
+
 }
 
 async function test2() {
