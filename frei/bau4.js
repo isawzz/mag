@@ -1,5 +1,5 @@
 
-function getMenuSymbol(){ return '☰';}
+function getMenuSymbol() { return '☰'; }
 function mDomTest(dParent, styles = {}, opts = {}) {
 	addKeys({ bg: rColor(), fg: 'contrast' }, styles);
 	let id = getUID('div');
@@ -18,7 +18,7 @@ function mLayout5(d0, testing = false) {
 	let [dTop, dMiddle, dFooter] = [func(dg0), func(dg0), func(dg0)];
 	dMiddle.innerHTML = '';
 
-	let dg1 = mDom(dMiddle, { display: 'grid', gridCols: 'auto 1fr auto', w: '100%', h: '100%'});
+	let dg1 = mDom(dMiddle, { display: 'grid', gridCols: 'auto 1fr auto', w: '100%', h: '100%' });
 	let [dSideLeft, dMain, dSideRight] = [func(dg1), func(dg1), func(dg1)];
 	//dSideLeft.innerHTML='left';
 	//dSideRight.innerHTML='right';
@@ -40,10 +40,10 @@ function mLayoutLine5(dParent, testing = false) {
 	let func = testing ? mDomTest : mDom;
 	let [dl, dr] = [func(dParent), func(dParent)];
 	mStyle(dl, { display: 'flex', aitems: 'baseline' });
-	let [dSymLeft,dLeft, dMiddle] = [func(dl),func(dl), func(dl)];
+	let [dSymLeft, dLeft, dMiddle] = [func(dl), func(dl), func(dl)];
 	mStyle(dr, { display: 'flex', aitems: 'baseline' });
-	let [dRight,dSymRight] = [func(dr),func(dr)];
-	return [dSymLeft,dLeft, dMiddle, dRight,dSymRight];
+	let [dRight, dSymRight] = [func(dr), func(dr)];
+	return [dSymLeft, dLeft, dMiddle, dRight, dSymRight];
 }
 function mPage(styles = {}, opts = {}) {
 	addKeys({ w: '100vw', h: '100vh', wbox: true, hline: 0, margin: 0 }, styles);
@@ -52,38 +52,36 @@ function mPage(styles = {}, opts = {}) {
 	return d1;// mDom(d1, styles, opts);
 }
 function paletteTransWhiteBlack(n = 9) {
-  let c = 'white';
-  let pal = [c];
-  let [iw, ib] = [Math.floor(n / 2), Math.floor((n - 1) / 2)];
-  let [incw, incb] = [1 / (iw + 1), 1 / (ib + 1)];
-  for (let i = 1; i < iw; i++) {
-    let alpha = 1 - i * incw;
-    pal.push(colorTrans(c, alpha));
-  }
-  pal.push('transparent');
-  c = 'black';
-  for (let i = 1; i < ib; i++) {
-    let alpha = i * incb;
-    pal.push(colorTrans(c, alpha));
-  }
-  pal.push(c);
-  return pal;
+	let c = 'white';
+	let pal = [c];
+	let [iw, ib] = [Math.floor(n / 2), Math.floor((n - 1) / 2)];
+	let [incw, incb] = [1 / (iw + 1), 1 / (ib + 1)];
+	for (let i = 1; i < iw; i++) {
+		let alpha = 1 - i * incw;
+		pal.push(colorTrans(c, alpha));
+	}
+	pal.push('transparent');
+	c = 'black';
+	for (let i = 1; i < ib; i++) {
+		let alpha = i * incb;
+		pal.push(colorTrans(c, alpha));
+	}
+	pal.push(c);
+	return pal;
 }
 function showStyles(elem) { let st = mGetStyles(elem, ['bg', 'fg']); console.log('styles', st); }
-function sidebarClose(d){	mStyle(d, { w: 0, wmin: 0 }); }
-function sidebarControl(dSym,dSidebar){
-	// dSym
-	// // dSymLeft.innerHTML =  getMenuSymbol();
-	// // dSymRight.innerHTML =  getMenuSymbol();
-	// sidebarStyle(dSideLeft);
-	// sidebarStyle(dSideRight);
-	// bHome.onclick = () => sidebarToggle(dSideLeft);
-
+function mSidebar(dSym, d) {
+	function sidebarClose() { mStyle(d, { w: 0, wmin: 0 }); }
+	function sidebarControl() {
+		dSym.innerHTML = getMenuSymbol();
+		mStyle(dSym, { cursor: 'pointer' })
+		dSym.onclick = sidebarToggle;
+	}
+	function sidebarOpen() { mStyle(d, { w: 150, wmin: 0 }); }
+	function sidebarToggle() { let w = mGetStyle(d, 'w'); if (w) sidebarClose(d); else sidebarOpen(d); }
+	mStyle(d, { overflow: 'hidden', transition: 'all 0.5s cubic-bezier(0.5, 0, 0.5, 1)' }); //; className: 'translow' })
+	sidebarControl();
+	sidebarClose();
+	return { dSym, d, sidebarOpen, sidebarClose };
 }
-function sidebarOpen(d){	mStyle(d, { w: 150, wmin: 0 }); }
-function sidebarToggle(d){ let w=mGetStyle(d,'w'); if (w) sidebarClose(d); else sidebarOpen(d);}
-function sidebarStyle(d){
-	mStyle(d,{overflow:'hidden',className:'translow'})
-}
-
 

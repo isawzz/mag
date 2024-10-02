@@ -1,20 +1,28 @@
 onload = start;
 
-async function start() { await test3(); }
+async function start() { await test4(); }
 
 async function test4() {
-	let d0 = document.body;
-	mClass(d0, 'reset100'); console.log(d0.offsetWidth, d0.offsetHeight);
+	let d1 = mBodyResetter('skyblue');
+	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
+	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
+	divs = [dSideLeft, dMain, dSideRight, dFooter, dTop];//dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight];
+	let palette = paletteTransWhiteBlack(divs.length+2); console.log(palette);
+	divs.forEach((div, i) => mStyle(div, { padding:8,bg: palette[i + 1], fg: 'contrast' }));
+	//divs.forEach((div, i) => div.innerHTML = `D${i}`);
+	mSidebar(dSymLeft,dSideLeft);
+	mSidebar(dSymRight,dSideRight);
 
-	let d1 = mDom(d0, { bg: 'lightblue', w: '100%', h: '100%' });
+	mStyle(dPageTitle,{family:'algerian',hpadding:10},{html:'My Recipes'});
+
 }
 async function test3() {
-	let d1=mBodyResetter('crimson');
+	let d1 = mBodyResetter('crimson');
 
 	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
-	dTop.innerHTML = '';
+	//dTop.innerHTML = '';
 	// let [dPageTitle, dTopMenu, dUser] = mLayoutLine3(dTop);
-	let [dSymLeft,dPageTitle, dTopMenu, dUser,dSymRight] = mLayoutLine5(dTop);
+	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
 
 	mDom(dPageTitle, { margin: 10, wbox: true }, { tag: 'h1', html: 'My Place' });
 	let bHome = mDom(dTopMenu, { margin: 10, wbox: true }, { tag: 'button', html: 'Home' });

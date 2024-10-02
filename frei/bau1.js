@@ -16,8 +16,12 @@ function mStyle(elem, styles = {},opts={}) {
 
 		//jetzt mach ich es ueber di mit spezialfaellen
 		const STYLE_PARAMS_3 = {
-			gridCols: 'grid-template-columns',
-			gridRows: 'grid-template-rows',
+			gridRows: (elem,v)=>elem.style.gridTemplateRows = isNumber(v) ? `repeat(${v},1fr)` : v,
+			gridCols: (elem,v)=>elem.style.gridTemplateColumns = isNumber(v) ? `repeat(${v},1fr)` : v,
+			hpadding: (elem,v)=>elem.style.padding=`0 ${v}px`,
+			vpadding: (elem,v)=>elem.style.padding=`${v}px 0`,
+			hmargin: (elem,v)=>elem.style.margin=`0 ${v}px`,
+			vmargin: (elem,v)=>elem.style.margin=`${v}px 0`,
 		};
 		if (v == 'contrast') { //nur bei fg verwenden!!!!
 			let bg = nundef(styles.bg)? mGetStyle(elem, 'bg'):colorFrom(styles.bg);
@@ -28,12 +32,11 @@ function mStyle(elem, styles = {},opts={}) {
 		} else if (k == 'fg') {
 			elem.style.setProperty('color', colorFrom(v));
 			continue;
-		} else if (k.startsWith('grid') && isdef(STYLE_PARAMS_3[k])) {
-			key = STYLE_PARAMS_3[k];
-			val = isNumber(v) ? `repeat(${v},1fr)` : v;
-			elem.style.setProperty(key, val);
+		} else if (isdef(STYLE_PARAMS_3[k])) {
+			STYLE_PARAMS_3[k](elem,v);
 		} else elem.style.setProperty(k, val);
 	}
+	applyOpts(elem,opts);
 }
 
 
