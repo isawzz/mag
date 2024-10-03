@@ -7,13 +7,13 @@ async function test4() {
 	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
 	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
 	divs = [dSideLeft, dMain, dSideRight, dFooter, dTop];//dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight];
-	let palette = paletteTransWhiteBlack(divs.length+2); console.log(palette);
-	divs.forEach((div, i) => mStyle(div, { padding:8,bg: palette[i + 1], fg: 'contrast' }));
+	let palette = paletteTransWhiteBlack(divs.length + 2); console.log(palette);
+	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }));
 	//divs.forEach((div, i) => div.innerHTML = `D${i}`);
-	mSidebar(dSymLeft,dSideLeft);
-	mSidebar(dSymRight,dSideRight);
+	mSidebar(dSymLeft, dSideLeft);
+	mSidebar(dSymRight, dSideRight);
 
-	mStyle(dPageTitle,{family:'algerian',hpadding:10},{html:'My Recipes'});
+	mStyle(dPageTitle, { family: 'algerian', hpadding: 10 }, { html: 'My Recipes' });
 
 }
 async function test3() {
