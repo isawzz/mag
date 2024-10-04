@@ -4651,6 +4651,7 @@ function getListAndDictsForDicolors() {
   return [dicolorlist, byhex, byname];
 }
 function getMenu() { return isdef(Menu) ? Menu.key : null; }
+function getMenuSymbol() { return '☰'; }
 function getMotto() {
   let list = [
     `Let's play!`, 'Enjoy this beautiful space!', 'First vacation day!', 'No place like home!',
@@ -6198,6 +6199,12 @@ function mArea(padding, dParent, styles = {}, opts = {}) {
   let cv = mDom(d, { position: 'absolute', top: 0, left: 0, w100: true, h100: true, 'pointer-events': 'none' }, { tag: 'canvas', id: 'canvas1', width: w, height: h })
   return [d, cv];
 }
+function mBodyResetter(bg){
+	let d0 = document.body;
+	mClass(d0, 'reset100'); console.log(d0.offsetWidth, d0.offsetHeight);
+	let d1 = mDom(d0, { bg, w: '100%', h: '100%' });
+	return d1;
+}
 function mButton(caption, handler, dParent, styles, classes, id) {
   let x = mCreate('button');
   x.innerHTML = caption;
@@ -6628,6 +6635,12 @@ function mDom(dParent, styles = {}, opts = {}) {
   return d;
 }
 function mDom100(dParent, styles = {}, opts = {}) { copyKeys({ w100: true, h100: true, box: true }, styles); return mDom(dParent, styles, opts); }
+function mDomTest(dParent, styles = {}, opts = {}) {
+	addKeys({ bg: rColor(), fg: 'contrast' }, styles);
+	let id = getUID('div');
+	addKeys({ id, html: id }, opts);
+	return mDom(dParent, styles, opts);
+}
 function mDropZone(dropZone, onDrop) {
   dropZone.setAttribute('allowDrop', true)
   dropZone.addEventListener('dragover', function (event) {
@@ -6987,6 +7000,41 @@ function mLacunaCirles(dParent, n = 49, neach = 7, sz = 10, rand = .7) {
   for (let i = 0; i < n; i++) { points[i].bg = colors[i]; points[i].sz = sz; points[i].id = getUID(); }
   return points;
 }
+function mLayout5(d0, testing = false) {
+	let dg0 = mDom(d0, { display: 'grid', gridRows: 'auto 1fr auto', h: '100%' });
+	let func = testing ? mDomTest : mDom;
+	let [dTop, dMiddle, dFooter] = [func(dg0), func(dg0), func(dg0)];
+	dMiddle.innerHTML = '';
+	let dg1 = mDom(dMiddle, { display: 'grid', gridCols: 'auto 1fr auto', w: '100%', h: '100%' });
+	let [dSideLeft, dMain, dSideRight] = [func(dg1), func(dg1), func(dg1)];
+	return [dTop, dSideLeft, dMain, dSideRight, dFooter];
+}
+function mLayoutCols3(d0, testing = false) {
+	let dg1 = mDom(d0, { display: 'grid', gridCols: 'auto 1fr auto', w: '100%', h: '100%', bg: 'dimgray' });
+	let func = testing ? mDomTest : mDom;
+	let [dSideLeft, dMain, dSideRight] = [func(dg1), func(dg1), func(dg1)];
+	return [dSideLeft, dMain, dSideRight];
+}
+function mLayoutLine3(dParent, testing = false) {
+	dParent.innerHTML = '';
+	mStyle(dParent, { display: 'flex', aitems: 'baseline', jcontent: 'space-between' });
+	let func = testing ? mDomTest : mDom;
+	let [dRest, dRight] = [func(dParent), func(dParent)];
+	mStyle(dRest, { display: 'flex', aitems: 'baseline' });
+	let [dLeft, dMiddle] = [func(dRest), func(dRest)];
+	return [dLeft, dMiddle, dRight];
+}
+function mLayoutLine5(dParent, testing = false) {
+	dParent.innerHTML = '';
+	mStyle(dParent, { display: 'flex', aitems: 'baseline', jcontent: 'space-between' });
+	let func = testing ? mDomTest : mDom;
+	let [dl, dr] = [func(dParent), func(dParent)];
+	mStyle(dl, { display: 'flex', aitems: 'baseline' });
+	let [dSymLeft, dLeft, dMiddle] = [func(dl), func(dl), func(dl)];
+	mStyle(dr, { display: 'flex', aitems: 'baseline' });
+	let [dRight, dSymRight] = [func(dr), func(dr)];
+	return [dSymLeft, dLeft, dMiddle, dRight, dSymRight];
+}
 function mLinebreak(dParent, gap) {
   dParent = toElem(dParent);
   let d;
@@ -7234,11 +7282,19 @@ function mShield(dParent, styles = {}, id = null, classnames = null, hideonclick
   mClass(d, 'topmost');
   return d;
 }
-function mSidebar(dParent = 'dLeft', wmin = 170, styles = {}, opts = {}) {
-  dParent = toElem(dParent);
-  mStyle(dParent, { wmin: wmin, patop: 25 });
-  let d = mDom(dParent, styles, opts);
-  return { wmin, d }
+function mSidebar(dSym, d) {
+	function sidebarClose() { mStyle(d, { w: 0, wmin: 0 }); }
+	function sidebarControl() {
+		dSym.innerHTML = getMenuSymbol();
+		mStyle(dSym, { cursor: 'pointer' })
+		dSym.onclick = sidebarToggle;
+	}
+	function sidebarOpen() { mStyle(d, { w: 150, wmin: 0 }); }
+	function sidebarToggle() { let w = mGetStyle(d, 'w'); if (w) sidebarClose(d); else sidebarOpen(d); }
+	mStyle(d, { overflow: 'hidden', transition: 'all 0.5s cubic-bezier(0.5, 0, 0.5, 1)' }); //; className: 'translow' })
+	sidebarControl();
+	sidebarClose();
+	return { dSym, d, sidebarOpen, sidebarClose };
 }
 function mSizeSuccession(styles = {}, szDefault = 100, fromWidth = true) {
   let [w, h] = [styles.w, styles.h];
@@ -7266,111 +7322,38 @@ function mSleep(ms = 1000) {
       }, ms + 1);
     });
 }
-function mStyle(elem, styles = {}, unit = 'px') {
-  elem = toElem(elem);
-  let style = styles = jsCopy(styles);
-  if (isdef(styles.w100)) style.w = '100%';
-  if (isdef(styles.h100)) style.h = '100%';
-  let bg, fg;
-  if (isdef(styles.bg) || isdef(styles.fg)) {
-    [bg, fg] = colorsFromBFA(styles.bg, styles.fg, styles.alpha);
-  }
-  if (isdef(styles.vpadding) || isdef(styles.hpadding)) {
-    styles.padding = valf(styles.vpadding, 0) + unit + ' ' + valf(styles.hpadding, 0) + unit;
-  }
-  if (isdef(styles.vmargin) || isdef(styles.hmargin)) {
-    styles.margin = valf(styles.vmargin, 0) + unit + ' ' + valf(styles.hmargin, 0) + unit;
-  }
-  if (isdef(styles.upperRounding) || isdef(styles.lowerRounding)) {
-    let rtop = '' + valf(styles.upperRounding, 0) + unit;
-    let rbot = '' + valf(styles.lowerRounding, 0) + unit;
-    styles['border-radius'] = rtop + ' ' + rtop + ' ' + rbot + ' ' + rbot;
-  }
-  if (isdef(styles.box)) styles['box-sizing'] = 'border-box';
-  if (isdef(styles.round)) { elem.style.setProperty('border-radius', '50%'); }
-  for (const k in styles) {
-    if (['round', 'box'].includes(k)) continue;
-    let val = styles[k];
-    let key = k;
-    if (isdef(STYLE_PARAMS[k])) key = STYLE_PARAMS[k];
-    else if (k == 'font' && !isString(val)) {
-      let fz = f.size; if (isNumber(fz)) fz = '' + fz + 'px';
-      let ff = f.family;
-      let fv = f.variant;
-      let fw = isdef(f.bold) ? 'bold' : isdef(f.light) ? 'light' : f.weight;
-      let fs = isdef(f.italic) ? 'italic' : f.style;
-      if (nundef(fz) || nundef(ff)) return null;
-      let s = fz + ' ' + ff;
-      if (isdef(fw)) s = fw + ' ' + s;
-      if (isdef(fv)) s = fv + ' ' + s;
-      if (isdef(fs)) s = fs + ' ' + s;
-      elem.style.setProperty(k, s);
-      continue;
-    } else if (k.includes('class')) {
-      mClass(elem, styles[k]);
-    } else if (k == 'border') {
-      if (isNumber(val)) val = `solid ${val}px ${isdef(styles.fg) ? styles.fg : '#ffffff80'}`;
-      if (val.indexOf(' ') < 0) val = 'solid 1px ' + val;
-    } else if (k == 'ajcenter') {
-      elem.style.setProperty('justify-content', 'center');
-      elem.style.setProperty('align-items', 'center');
-    } else if (k == 'layout') {
-      if (val[0] == 'f') {
-        val = val.slice(1);
-        elem.style.setProperty('display', 'flex');
-        elem.style.setProperty('flex-wrap', 'wrap');
-        let hor, vert;
-        if (val.length == 1) hor = vert = 'center';
-        else {
-          let di = { c: 'center', s: 'start', e: 'end' };
-          hor = di[val[1]];
-          vert = di[val[2]];
-        }
-        let justStyle = val[0] == 'v' ? vert : hor;
-        let alignStyle = val[0] == 'v' ? hor : vert;
-        elem.style.setProperty('justify-content', justStyle);
-        elem.style.setProperty('align-items', alignStyle);
-        switch (val[0]) {
-          case 'v': elem.style.setProperty('flex-direction', 'column'); break;
-          case 'h': elem.style.setProperty('flex-direction', 'row'); break;
-        }
-      } else if (val[0] == 'g') {
-        val = val.slice(1);
-        elem.style.setProperty('display', 'grid');
-        let n = allNumbers(val);
-        let cols = n[0];
-        let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
-        elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
-        elem.style.setProperty('place-content', 'center');
-      }
-    } else if (k == 'layflex') {
-      elem.style.setProperty('display', 'flex');
-      elem.style.setProperty('flex', '0 1 auto');
-      elem.style.setProperty('flex-wrap', 'wrap');
-      if (val == 'v') { elem.style.setProperty('writing-mode', 'vertical-lr'); }
-    } else if (k == 'laygrid') {
-      elem.style.setProperty('display', 'grid');
-      let n = allNumbers(val);
-      let cols = n[0];
-      let w = n.length > 1 ? '' + n[1] + 'px' : 'auto';
-      elem.style.setProperty('grid-template-columns', `repeat(${cols}, ${w})`);
-      elem.style.setProperty('place-content', 'center');
-    }
-    if (key == 'font-weight') { elem.style.setProperty(key, val); continue; }
-    else if (key == 'background-color') elem.style.background = bg;
-    else if (key == 'color') elem.style.color = fg;
-    else if (key == 'opacity') elem.style.opacity = val;
-    else if (key == 'wrap') { if (val == 'hard') elem.setAttribute('wrap', 'hard'); else elem.style.flexWrap = 'wrap'; }
-    else if (k.startsWith('dir')) {
-      isCol = val[0] == 'c';
-      elem.style.setProperty('flex-direction', 'column');
-    } else if (key == 'flex') {
-      if (isNumber(val)) val = '' + val + ' 1 0%';
-      elem.style.setProperty(key, makeUnitString(val, unit));
-    } else {
-      elem.style.setProperty(key, makeUnitString(val, unit));
-    }
-  }
+function mStyle(elem, styles = {},opts={}) {
+	elem = toElem(elem);
+	styles = jsCopy(styles);
+	for (const k in styles) {
+		let key = STYLE_PARAMS_2[k];
+		let v = styles[k];
+		let val = isNumber(v) ? '' + Number(v) + 'px' : v;
+		if (isdef(key)) { elem.style.setProperty(key, val); continue; }
+
+		//jetzt mach ich es ueber di mit spezialfaellen
+		const STYLE_PARAMS_3 = {
+			gridRows: (elem,v)=>elem.style.gridTemplateRows = isNumber(v) ? `repeat(${v},1fr)` : v,
+			gridCols: (elem,v)=>elem.style.gridTemplateColumns = isNumber(v) ? `repeat(${v},1fr)` : v,
+			hpadding: (elem,v)=>elem.style.padding=`0 ${v}px`,
+			vpadding: (elem,v)=>elem.style.padding=`${v}px 0`,
+			hmargin: (elem,v)=>elem.style.margin=`0 ${v}px`,
+			vmargin: (elem,v)=>elem.style.margin=`${v}px 0`,
+		};
+		if (v == 'contrast') { //nur bei fg verwenden!!!!
+			let bg = nundef(styles.bg)? mGetStyle(elem, 'bg'):colorFrom(styles.bg);
+			elem.style.setProperty('color', colorIdealText(bg));
+		} else if (k == 'bg') {
+			elem.style.setProperty('background-color', colorFrom(v, styles.alpha));
+			continue;
+		} else if (k == 'fg') {
+			elem.style.setProperty('color', colorFrom(v));
+			continue;
+		} else if (isdef(STYLE_PARAMS_3[k])) {
+			STYLE_PARAMS_3[k](elem,v);
+		} else elem.style.setProperty(k, val);
+	}
+	applyOpts(elem,opts);
 }
 function mSwitch(dParent, styles = {}, opts = {}) {
   addKeys({ id: 'dSwitch', val: '' }, opts);
@@ -8236,22 +8219,22 @@ function paletteTrans(color, from = 0.1, to = 1, step = 0.2) {
   return res;
 }
 function paletteTransWhiteBlack(n = 9) {
-  let c = 'white';
-  let pal = [c];
-  let [iw, ib] = [Math.floor(n / 2) - 1, Math.floor((n - 1) / 2) - 1];
-  let [incw, incb] = [1 / (iw + 1), 1 / (ib + 1)];
-  for (let i = 1; i < iw; i++) {
-    let alpha = i * incw;
-    pal.push(colorTrans(c, alpha));
-  }
-  pal.push('transparent');
-  c = 'black';
-  for (let i = 1; i < ib; i++) {
-    let alpha = i * incb;
-    pal.push(colorTrans(c, alpha));
-  }
-  pal.push(c);
-  return pal;
+	let c = 'white';
+	let pal = [c];
+	let [iw, ib] = [Math.floor(n / 2), Math.floor((n - 1) / 2)];
+	let [incw, incb] = [1 / (iw + 1), 1 / (ib + 1)];
+	for (let i = 1; i < iw; i++) {
+		let alpha = 1 - i * incw;
+		pal.push(colorTrans(c, alpha));
+	}
+	pal.push('transparent');
+	c = 'black';
+	for (let i = 1; i < ib; i++) {
+		let alpha = i * incb;
+		pal.push(colorTrans(c, alpha));
+	}
+	pal.push(c);
+	return pal;
 }
 function pathFromBgImage(bgImage) { return bgImage.substring(5, bgImage.length - 2); }
 function placeCircle(dParent, cx, cy, sz, bg = 'red') {

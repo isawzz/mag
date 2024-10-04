@@ -1,8 +1,55 @@
 onload = start;
 
-async function start() { await test4(); }
+async function start() { await test6_msGridVarianten(); }
 
-async function test4() {
+async function test6_msGridVarianten(){
+	let d1 = mBodyResetter('green');
+	let [dTop, dMainTop, dMainBottom, dFooter] = mGridRows(d1,'auto 1fr 1fr auto');
+	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
+	let [dSideLeft,dUpper] = mGridCols(dMainTop, 'auto 1fr');
+	let [dLower, dSideRight] = mGridCols(dMainBottom, '1fr auto');
+	let divs = [dSideLeft, dUpper, dLower, dSideRight, dFooter, dTop];
+	let palette = paletteTransWhiteBlack(divs.length + 2); console.log(palette);
+	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }));
+	mSidebar(dSymLeft, dSideLeft);
+	mSidebar(dSymRight, dSideRight);
+}
+async function test5_justLeftSidebar() {
+	let d1 = mBodyResetter('green');
+	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
+	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
+	mRemove(dFooter);mRemove(dSideRight);mRemove(dSymRight);
+	divs = [dSideLeft, dMain, dFooter, dTop];
+	let palette = paletteTransWhiteBlack(divs.length + 2); console.log(palette);
+	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }));
+	mSidebar(dSymLeft, dSideLeft);
+	mStyle(dPageTitle, { family: 'algerian', hpadding: 10 }, { html: 'My Recipes' });
+
+	mStyle(d1,{bg:'orange'}); //change pagee color
+}
+async function test4_justLeftSidebar() {
+	let d1 = mBodyResetter('green');
+	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
+	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
+	mRemove(dFooter);mRemove(dSideRight);mRemove(dSymRight);
+	divs = [dSideLeft, dMain, dFooter, dTop];
+	let palette = paletteTransWhiteBlack(divs.length + 2); console.log(palette);
+	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }));
+	mSidebar(dSymLeft, dSideLeft);
+	mStyle(dPageTitle, { family: 'algerian', hpadding: 10 }, { html: 'My Recipes' });
+}
+async function test4_justLeftSidebarFooter() {
+	let d1 = mBodyResetter('lime');
+	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
+	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
+	mRemove(dSideRight);mRemove(dSymRight);
+	divs = [dSideLeft, dMain, dFooter, dTop];
+	let palette = paletteTransWhiteBlack(divs.length + 2); console.log(palette);
+	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }));
+	mSidebar(dSymLeft, dSideLeft);
+	mStyle(dPageTitle, { family: 'algerian', hpadding: 10 }, { html: 'My Recipes' });
+}
+async function test4_2SidebarsFooter() {
 	let d1 = mBodyResetter('skyblue');
 	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
 	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
@@ -48,7 +95,6 @@ async function test3() {
 	bHome.onclick = () => sidebarToggle(dSideLeft);
 
 }
-
 async function test2() {
 	let d0 = document.body;
 	mClass(d0, 'reset100'); console.log(d0.offsetWidth, d0.offsetHeight);
@@ -59,7 +105,7 @@ async function test2() {
 	//let d1=mDom(document.body, {wbox:true, margin:10, bg:'lightblue', w:'100%', h:'100%'}); //geht
 	//let d=mDom(dPage, {bg:'green', w:'100%',h:50, margin:10, wbox:true});
 }
-async function test_0() {
+async function test_0_NO() {
 	let dPage = mPage({ bg: 'lightblue' }); console.log(getRect(dPage));
 	return;
 	let [w, h, margin, padding, border, sz] = [500, 500, 0, 0, 8, 50]; //25;

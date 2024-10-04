@@ -1,3 +1,9 @@
+
+_______ how to start a project
+
+1. use mBodyResetter and mLayout... to make basic page layout
+
+_______
 beveled_star
 flower_star
 glowing_star

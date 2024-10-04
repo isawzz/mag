@@ -1,4 +1,15 @@
 
+//#region extra unused in frei
+function mPage(styles = {}, opts = {}) {
+	addKeys({ w: '100vw', h: '100vh', wbox: true, hline: 0, margin: 0 }, styles);
+	addKeys({ html: '&nbsp;' }, opts);
+	let d1 = mDom(document.body, styles, opts);
+	return d1;// mDom(d1, styles, opts);
+}
+function showStyles(elem) { let st = mGetStyles(elem, ['bg', 'fg']); console.log('styles', st); }
+//#endregion
+
+//#region lacuna
 async function placeYourMeeple(ev) {
   //console.log('placeYourMeeple',B.counter++);//,ev.target);
   let d = mBy('dCanvas');
@@ -488,7 +499,7 @@ function drawInteractiveLine00(p1, p2, color='black') {
 	document.body.appendChild(line);
 	return line;
 }
-
+//#endregion
 
 //#region lacuna NOT in game
 function lacunaMakeSelectable() {
@@ -1003,7 +1014,7 @@ function stopAnimatingPoints() {
 		mClassRemove(p, ani)
 	}
 }
-//#_endregion
+//#endregion
 
 //#region ode anfang von lacuna
 
@@ -1373,6 +1384,7 @@ function trimQuotes(str) { return str.replace(/^['"`]+|['"`]+$/g, ''); }
 
 //#endregion
 
+//#region lacuna zeug vor august 24
 function mist(){
 	addIf(DA.selectedPairIds, id);
 	let poss = DA.pairInfo.filter(x => x.includes(id));
@@ -1680,3 +1692,5 @@ function nodejs() {
 	});
 
 }
+//#endregion
+
