@@ -5,25 +5,13 @@ async function start() { await test7_recipes(); }
 async function test8() { await prelims(); }
 async function test7_recipes() {
 	let d0=mBy('dBody');
-	mStyle(d0,{bg:'red'})
-	console.log(d0); 
-	let [dSideLeft, dUpper, dFooter, dTop] = recipesLayout(d0);
+	mStyle(d0,{bg:'red', h:'100vh', hmin:'100vh', hmax:'100vh', overy:'hidden'});	//console.log(d0); 
+	let [dSideLeft, dUpper, dFooter, dTop] = recipesLayout(d0); //return;
+	mStyle(dUpper,{overy:'scroll',hmax:dUpper.offsetHeight,gap:9})
+	let images = M.recipes = await mGetFiles('../assets/img/recipes'); //	console.log('images', images);
+	images.forEach(img => mDom(dUpper, { w:'32%',bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:'../assets/img/recipes/' + img }));
 
-	let images = await mGetFiles('../assets/img/recipes');
-	console.log('images', images);
-	images = images.map(img => '../assets/img/recipes/' + img);
-	images.forEach(img => mDom(dUpper, { w:300,h: 200, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
-  dUpper.onresize = ()=>{
-    let w=dUpper.offsetWidth;
-    let perRow=w/300;
-    let wImg=w/perRow - 10;
-    let hImg=wImg*2/3;
-    let ch=arrChildren(dUpper);
-    ch.forEach(x=>mStyle(x,{w:wImg,h:hImg}))
-
-  }
-
-	console.log(dUpper)
+	
 }
 async function test7_mist(){
 

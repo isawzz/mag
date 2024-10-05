@@ -1,4 +1,29 @@
 
+function presentImages(){
+	let dUpper = mBy('dUpper');	console.log('__________',dUpper);
+	
+	mClear(dUpper);
+	let w=dUpper.offsetWidth-27; console.log('w',w);
+	let wi=Math.floor(w/3) - 10;console.log('wi',wi);
+	let hi = Math.floor(wi*2/3);
+	//let perRow=Math.floor(w/300); console.log('perRow', perRow);
+	//let wImg=Math.floor(w/perRow); wImg-=(perRow-1)*10; console.log('wImg', wImg);
+	//let hImg=wImg*2/3;
+	let images = M.recipes.map(img => '../assets/img/recipes/' + img);
+	images.forEach(img => mDom(dUpper, { w:'30%',bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
+}
+function presentImages(){
+	let dUpper = mBy('dUpper');
+	console.log(dUpper);
+	mClear(dUpper);
+	let w=dUpper.offsetWidth-40; console.log('w',w);
+	let perRow=Math.floor(w/300); console.log('perRow', perRow);
+	let wImg=Math.floor(w/perRow); wImg-=(perRow-1)*10; console.log('wImg', wImg);
+	let hImg=wImg*2/3;
+	let images = M.recipes.map(img => '../assets/img/recipes/' + img);
+	images.forEach(img => mDom(dUpper, { w:wImg,h: hImg, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
+}
+
 //#region extra unused in frei
 function mPage(styles = {}, opts = {}) {
 	addKeys({ w: '100vw', h: '100vh', wbox: true, hline: 0, margin: 0 }, styles);
