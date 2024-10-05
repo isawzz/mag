@@ -1,8 +1,10 @@
 _____ fr 4.10.24 airport 1932
 6:40 AM 10/4/2024 780
-less less less
-- versuch die variante wo das menu zeichen oben in der sidebar ist
-
+_____ fr 4.10.24 airport 1375
+7:17 AM 10/5/2024 780
+ok - oberste zeile soll sticky sein! ja ist eh der effect!
+- wo sind die recipe bilder?
+- jetzt will ich das ganze zuper simpel!!!!!
 
 
 
