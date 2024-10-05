@@ -12,7 +12,16 @@ async function test7_recipes() {
 	let images = await mGetFiles('../assets/img/recipes');
 	console.log('images', images);
 	images = images.map(img => '../assets/img/recipes/' + img);
-	images.forEach(img => mDom(dUpper, { h: 200, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
+	images.forEach(img => mDom(dUpper, { w:300,h: 200, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
+  dUpper.onresize = ()=>{
+    let w=dUpper.offsetWidth;
+    let perRow=w/300;
+    let wImg=w/perRow - 10;
+    let hImg=wImg*2/3;
+    let ch=arrChildren(dUpper);
+    ch.forEach(x=>mStyle(x,{w:wImg,h:hImg}))
+
+  }
 
 	console.log(dUpper)
 }
