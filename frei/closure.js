@@ -329,7 +329,7 @@ function annotate(sp) {
     }
   }
 }
-function applyOpts(d,opts={}){
+function applyOpts(d, opts = {}) {
   const aliases = {
     classes: 'className',
     inner: 'innerHTML',
@@ -433,11 +433,11 @@ function arrRotate(arr, count) {
   return arr1;
 }
 function arrShuffle(arr) { if (isEmpty(arr)) return []; else return fisherYates(arr); }
-function arrSort(arr, caseSensitive=true) {
+function arrSort(arr, caseSensitive = true) {
   return arr.sort((a, b) => {
     const aStr = a.toString();
     const bStr = b.toString();
-    return aStr.localeCompare(bStr, undefined, { numeric: true,sensitivity: caseSensitive ? 'case' : 'base' });
+    return aStr.localeCompare(bStr, undefined, { numeric: true, sensitivity: caseSensitive ? 'case' : 'base' });
   });
 }
 function arrSum(arr, props) {
@@ -833,9 +833,9 @@ function cBlank(dParent, styles = {}, opts = {}) {
   let item = mItem(d ? { div: d } : {}, opts);
   return item;
 }
-function centerVerticalOneLine(elem,h){
+function centerVerticalOneLine(elem, h) {
   if (nundef(h)) h = elem.offsetHeight;
-  mStyle(elem.hline,h);
+  mStyle(elem.hline, h);
 }
 function checkToInput(ev, inp, grid) {
   let checklist = Array.from(grid.querySelectorAll('input[type="checkbox"]')); //chks=items.map(x=>iDiv(x).firstChild);
@@ -899,7 +899,7 @@ function clearFlex(styles = {}) {
   return d;
 }
 function clearMain() { UI.commands = {}; staticTitle(); clearEvents(); mClear('dMain'); mClear('dTitle'); clearMessage(); }
-function clearMessage(remove=false) { if (remove) mRemove('dMessage'); else mStyle('dMessage', { h: 0 }); }
+function clearMessage(remove = false) { if (remove) mRemove('dMessage'); else mStyle('dMessage', { h: 0 }); }
 function clearParent(ev) { mClear(ev.target.parentNode); }
 function clearTimeouts() {
   onclick = null;
@@ -2193,7 +2193,7 @@ function createInteractiveCanvas(src) {
 }
 function createOpenTable(gamename, players, options) {
   let me = getUname();
-  let playerNames = [me]; console.log('me',me)
+  let playerNames = [me]; console.log('me', me)
   assertion(me in players, "_createOpenTable without owner!!!!!")
   for (const name in players) { addIf(playerNames, name); }
   let table = {
@@ -2730,9 +2730,9 @@ function drawPoint(dParent, p, addLabel = true) {
   return p;
 }
 function drawPointStar(p1, d, sz) {
-  let starSizes = [1, .4, 1, 1, 1, .8, 1, .6, 1]; 
-  let itype = p1.type % starSizes.length; 
-  p1.sz = sz = 30 * starSizes[itype]; 
+  let starSizes = [1, .4, 1, 1, 1, .8, 1, .6, 1];
+  let itype = p1.type % starSizes.length;
+  p1.sz = sz = 30 * starSizes[itype];
   let img = p1.div = cloneImage(M.starImages[itype], d, p1.x, p1.y, sz, sz);
   img.id = p1.id = `p${p1.x}_${p1.y}`;
 }
@@ -3233,12 +3233,12 @@ function findClosePairs(points, x, y, threshold = 3) {
   }
   return closePairs;
 }
-function findClosestMeeple(p){
+function findClosestMeeple(p) {
   let fen = T.fen;
   let dist = 9999999;
   let closestMeeple = null;
   for (const meeple of fen.meeples) {
-    let d = getDistanceBetweenCenters(mBy(p.id),mBy(meeple.id)); 
+    let d = getDistanceBetweenCenters(mBy(p.id), mBy(meeple.id));
     if (d < dist) {
       dist = d;
       closestMeeple = meeple;
@@ -3735,7 +3735,7 @@ function generateHotspots(dParent, pointPairs, sz = 20, color = 'red') {
   let linesByPair = {};
   for (const pair of pointPairs) {
     unlockLengthyProcess();
-    let ids = pair.map(x => x.id); 
+    let ids = pair.map(x => x.id);
     let key = ids.join(',');
     let [pStart, pEnd] = [B.diPoints[ids[0]], B.diPoints[ids[1]]];
     let line = getEquidistantPoints(pStart, pEnd, sz / 2);
@@ -3825,7 +3825,7 @@ function generateRandomPointsRect(n, w, h, rand = 0) {
   const points = [];
   let { rows, cols } = divideRectangleIntoGrid(w, h * .8, n);
   const xSpacing = w / (cols + 1);
-  const ySpacing = h / (rows + 1); 
+  const ySpacing = h / (rows + 1);
   let dmin = 10;
   let x, y, xfix, yfix, xlast = -dmin, ylast = -dmin;
   for (let i = 0; i < rows; i++) {
@@ -4972,7 +4972,7 @@ function getPixRgb(ctx, x, y) {
   var red = pix[0]; var green = pix[1]; var blue = pix[2];
   return { r: red, g: green, b: blue };
 }
-function getPlayerProp(prop,name) { let pl = T.players[valf(name,getUname())]; return pl[prop]; }
+function getPlayerProp(prop, name) { let pl = T.players[valf(name, getUname())]; return pl[prop]; }
 function getPlayersWithMaxScore(table) {
   let list = dict2list(table.players, 'name');
   list = sortByDescending(list, 'score');
@@ -5281,7 +5281,7 @@ function highlightHotspots(ev) {
   let els = allElementsFromPoint(x, y);
   let endPoints = [], possiblePairs = [];
   for (const elem of els) {
-    let p = B.hotspotDict[elem.id]; 
+    let p = B.hotspotDict[elem.id];
     if (isdef(p)) {
       addIf(endPoints, p.start);
       addIf(endPoints, p.end);
@@ -5485,7 +5485,7 @@ function isAncestorOf(elem, elemAnc) {
 function isAtLeast(n, num = 1) { return n >= num; }
 function isBetween(n, a, b) { return n >= a && n <= b }
 function isCloseTo(n, m, acc = 10) { return Math.abs(n - m) <= acc + 1; }
-function isColor(s) { return isdef(M.colorByName[s]) || s.length == 7 && s[0]=='#'; }
+function isColor(s) { return isdef(M.colorByName[s]) || s.length == 7 && s[0] == '#'; }
 function isdef(x) { return x !== null && x !== undefined && x !== 'undefined'; }
 function isDict(d) { let res = (d !== null) && (typeof (d) == 'object') && !isList(d); return res; }
 function isDigit(s) { return /^[0-9]$/i.test(s); }
@@ -5620,8 +5620,8 @@ function lacuna() {
     opts = { numPoints: 10, numColors: 2, numMeeples: 1 };
     let n = opts.numPoints;
     let neach = opts.numPoints / opts.numColors;
-    let points = lacunaGenerateFenPoints(n, neach, 1000, 1000); 
-    let fen = { points }; console.log('points',points)
+    let points = lacunaGenerateFenPoints(n, neach, 1000, 1000);
+    let fen = { points }; console.log('points', points)
     for (const name in table.players) {
       let pl = table.players[name];
       pl.score = 0;
@@ -5645,24 +5645,24 @@ function lacuna() {
       let d = iDiv(item); mCenterFlex(d); mLinebreak(d); mIfNotRelative(d);
       for (const c in pl.flowers) {
         let n = pl.flowers[c];
-        playerStatCount(c, n, d); 
+        playerStatCount(c, n, d);
       }
       if (table.turn.includes(plname)) { mDom(d, { position: 'absolute', left: -3, top: 0 }, { html: getWaitingHtml() }); }
     }
   }
   function present(table) {
     let fen = table.fen; console.log(fen);
-    console.log(table.fen,table.players); 
+    console.log(table.fen, table.players);
     B = {};
-    let dTable = presentBgaRoundTable(); 
-    B.points = lacunaPresentPoints(fen.points,dTable);
+    let dTable = presentBgaRoundTable();
+    B.points = lacunaPresentPoints(fen.points, dTable);
   }
-  function muell(table){
+  function muell(table) {
     let [w, h, sz, n, neach, points, meeples] = [fen.w, fen.h, fen.sz, fen.n, fen.neach, jsCopy(fen.points), jsCopy(fen.meeples)];
     let padding = 20;
     mStyle(dTable, { bg: 'midnight_purple', position: 'relative', padding, wmin: w + 2 * padding, hmin: h + 2 * padding });
     let dParent = B.dParent = mDom(dTable, { w, h, position: 'absolute', left: 2 * padding, top: 2 * padding }, { id: 'dCanvas' });
-    B.points = points; 
+    B.points = points;
     B.sz = sz;
     B.diPoints = lacunaDrawPoints(dParent, points);
     B.meeples = meeples;
@@ -5676,7 +5676,7 @@ function lacuna() {
     return;
     setTimeout(() => lacunaStartMove(), 10);
   }
-  return { setup, present, stats, activate, hasInstruction:true };
+  return { setup, present, stats, activate, hasInstruction: true };
 }
 function lacunaColor(name) {
   let clist = { red: "#E63946", green: "#06D6A0", blue: "#118AB2", cyan: "#0F4C75", magenta: "#D81159", yellow: "#FFD166", orange: "#F4A261", purple: "#9D4EDD", pink: "#FF80AB", brown: "#8D6E63", lime: "#A7FF83", indigo: "#3A0CA3", violet: "#B5838D", gold: "#F5C518", teal: "#008080" };
@@ -5696,7 +5696,7 @@ function lacunaColors() {
 function lacunaDrawPoints(dParent, points, addLabel = true) {
   let items = [];
   for (const p of points) {
-    let html = isdef(p.owner) && addLabel ? p.owner[0].toUpperCase():''; //p.id.substring(1) : ''
+    let html = isdef(p.owner) && addLabel ? p.owner[0].toUpperCase() : ''; //p.id.substring(1) : ''
     let d1 = p.div = mDom(dParent, { round: true, left: p.x, top: p.y, w: p.sz, h: p.sz, position: 'absolute', bg: p.bg, align: 'center', fg: 'contrast' }, { html, id: p.id });
     d1.style.cursor = 'default';
     if (isdef(p.border)) mStyle(d1, { outline: `solid ${p.border} 4px` });
@@ -5711,18 +5711,18 @@ function lacunaDrawPoints(dParent, points, addLabel = true) {
 async function lacunaGameover() {
   showMessage('Game over');
   console.log('Game over');
-  let [fen,players] = [T.fen, T.players];
-  for(const p of fen.points) {
+  let [fen, players] = [T.fen, T.players];
+  for (const p of fen.points) {
     let closestMeeple = findClosestMeeple(p);
-    if(closestMeeple) {
+    if (closestMeeple) {
       let owner = closestMeeple.owner;
       players[owner].flowers[p.bg] += 1;
       p.owner = owner;
     }
   }
-  for(const plname of T.playerNames) {
+  for (const plname of T.playerNames) {
     let pl = T.players[plname];
-    for(const f in pl.flowers) pl.score += pl.flowers[f];
+    for (const f in pl.flowers) pl.score += pl.flowers[f];
   }
   let table = T;
   table.winners = getPlayersWithMaxScore(table);
@@ -5765,8 +5765,8 @@ async function lacunaMoveComplete(idlist) {
   assertion(idlist.length == 2 || idlist.length == 0, `WTF3!!! ${idlist.length}`);
   if (idlist.length == 2) {
     fen.points = fen.points.filter(x => x.id != idlist[0] && x.id != idlist[1]);
-    let color = B.diPoints[idlist[0]].bg; 
-    let flower = lacunaColorName(color); 
+    let color = B.diPoints[idlist[0]].bg;
+    let flower = lacunaColorName(color);
     let n = lookup(me, ['flowers', color]);
     lookupSetOverride(me, ['flowers', color], n ? n + 2 : 2);
   }
@@ -5784,8 +5784,8 @@ async function lacunaMoveCompletedME(idlist) {
   assertion(idlist.length == 2 || idlist.length == 0, `WTF3!!! ${idlist.length}`);
   if (idlist.length == 2) {
     fen.points = fen.points.filter(x => x.id != idlist[0] && x.id != idlist[1]);
-    let color = B.diPoints[idlist[0]].bg; 
-    let flower = lacunaColorName(color); 
+    let color = B.diPoints[idlist[0]].bg;
+    let flower = lacunaColorName(color);
     let n = lookup(me, ['flowers', color]);
     lookupSetOverride(me, ['flowers', color], n ? n + 2 : 2);
   }
@@ -5798,20 +5798,20 @@ async function lacunaMoveCompletedME(idlist) {
 }
 async function lacunaPresent() {
   await loadStarImages();
-  let [n, nTypes] = [49, 7]; 
+  let [n, nTypes] = [49, 7];
   let fenPoints = lacunaGenerateFenPoints(n, nTypes, 1000, 1000, 0); logMinMax(fenPoints);
   B = {};
-  let d1 = mDom(document.body,{hline:0,margin:0},{html:'&nbsp;'});
-  let [w, h, margin, padding, border] = [500, 500, 20, 30, 8]; 
-  let d=mDom(d1, {border:`${border}px solid #555`,wbox:true, position:'relative', w,h, bg: '#242430', margin, padding}, { id: 'dCanvas' });
+  let d1 = mDom(document.body, { hline: 0, margin: 0 }, { html: '&nbsp;' });
+  let [w, h, margin, padding, border] = [500, 500, 20, 30, 8];
+  let d = mDom(d1, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg: '#242430', margin, padding }, { id: 'dCanvas' });
   let sz = 30;
   let points = [];
   for (const p of fenPoints) {
-    let p1 = pointFromFenRaw(p); 
+    let p1 = pointFromFenRaw(p);
     p1.x = mapRange(p1.x, 0, 1000, 0, w);
     p1.y = mapRange(p1.y, 0, 1000, 0, h);
     p1 = pointAddMargin(p1, padding);
-    drawPointStar(p1,d,sz);
+    drawPointStar(p1, d, sz);
     points.push(p1);
   }
   B.diPoints = list2dict(points, 'id');
@@ -5824,14 +5824,14 @@ async function lacunaPresent() {
   d.onmousemove = onMouseMoveLine;
   B.counter = 0;
   B.meeples = [];
-  document.onclick = placeYourMeeple; 
+  document.onclick = placeYourMeeple;
 }
 function lacunaPresentPoints(points, d) {
   let [w, h, sz, margin, padding] = [400, 400, 10, 10, 20];
   B.sz = sz;
   let dParent = B.dParent = mDom(d, { w, h, margin, padding, position: 'relative', bg: '#eee' }, { id: 'dCanvas' });
   for (const p of points) {
-    let p1 = pointFromFenRaw(p); 
+    let p1 = pointFromFenRaw(p);
     p1.x = mapRange(p1.x, 0, 1000, 0, w - sz);
     p1.y = mapRange(p1.y, 0, 1000, 0, h - sz);
     p1 = pointAddMargin(p1, padding);
@@ -5855,7 +5855,7 @@ async function lacunaSelectPointME(ev) {
     }
     let unselect = B.endPoints.filter(x => !eps.includes(x));
     unselect.map(x => lacunaUnselectable(x));
-    B.endPoints = eps; 
+    B.endPoints = eps;
     if (B.endPoints.length < 2) {
       B.selectedPoints.push(B.endPoints[0]);
       await lacunaMoveCompletedME(B.selectedPoints);
@@ -5879,7 +5879,7 @@ async function lacunaSelectPointNeu(p, l) {
     }
     let unselect = B.endPoints.filter(x => !eps.includes(x));
     unselect.map(x => { let d = mBy(id); mClassRemove(div, 'pulseFastInfinite'); d.onclick = null; });
-    B.endPoints = eps; 
+    B.endPoints = eps;
     if (B.endPoints.length < 2) {
       B.selectedPoints.push(B.endPoints[0]);
       await lacunaMoveCompletedME(B.selectedPoints);
@@ -5894,12 +5894,12 @@ function lacunaStartMove() {
   let t = getNow();
   h = { meeples: B.meeples, dParent: B.dParent, points: B.points, sz: B.sz };
   let [points, dParent, sz] = [B.points, B.dParent, B.sz];
-  let result = findIsolatedPairs(points, sz*1.2); 
+  let result = findIsolatedPairs(points, sz * 1.2);
   let isolated = B.isolatedPairs = filterIsolatedPairs(result.isolatedPairs, B.meeples, 15);
   let [hotspots, linesByPair] = generateHotspots(dParent, isolated, sz, 'transparent');
-  B.hotspots=hotspots;
+  B.hotspots = hotspots;
   B.linesByPair = linesByPair;
-  B.pairs = linesByPair; 
+  B.pairs = linesByPair;
   B.hotspotList = hotspots;
   B.hotspotDict = list2dict(hotspots, 'id');
   dParent.onmousemove = highlightHotspots;
@@ -5907,7 +5907,7 @@ function lacunaStartMove() {
   unlock();
 }
 function lacunaUnselectable(id) {
-  let div = mBy(id); 
+  let div = mBy(id);
   mClassRemove(div, 'selectable');
   div.onclick = null;
 }
@@ -5923,7 +5923,7 @@ function lastOfLanguage(key, language) {
 function lastWord(s) { return arrLast(toWords(s)); }
 function leinwand(w = 500, h = 500, bg = '#242430') {
   let d1 = mDom(document.body, { hline: 0, margin: 0 }, { html: '&nbsp;' });
-  let [margin, padding, border] = [25, 0, 7]; 
+  let [margin, padding, border] = [25, 0, 7];
   let d = mDom(d1, { border: `${border}px solid #555`, wbox: true, position: 'relative', w, h, bg, margin, padding, className: 'lensBorder' }, { id: 'dCanvas' });
   return d;
 }
@@ -6019,17 +6019,17 @@ function loadImageAsync(src, img) {
 async function loadStarImages() {
   let list = [];
   let names = ['bl1', 'bl2', 'bl3', 'bl4', 'bl7', 'bl8', 'bl9', 'bl6', 'bl5'];
-  for (const name of names) {    list.push(`../assets/icons/stars/${name}.png`);  }
-  let starImages = await preloadImages(list); 
+  for (const name of names) { list.push(`../assets/icons/stars/${name}.png`); }
+  let starImages = await preloadImages(list);
   M.starImages = starImages;
   return starImages;
 }
-function lockForLengthyProcess(){
+function lockForLengthyProcess() {
   DA.LengthyProcessRunning = true;
   console.log('LOCK!!!!!!!!!!!!!!!!!!!!!!');
 }
 function logItems() { Object.keys(Items).sort().forEach(k => console.log('Items', Items[k])); }
-function logMinMax(fenPoints){
+function logMinMax(fenPoints) {
   let xValues = fenPoints.map(p => parseInt(p.split('_')[0]));
   let yValues = fenPoints.map(p => parseInt(p.split('_')[1]));
   let minX = Math.min(...xValues);
@@ -6198,12 +6198,6 @@ function mArea(padding, dParent, styles = {}, opts = {}) {
   let [w, h] = [mGetStyle(d, 'w'), mGetStyle(d, 'h')];
   let cv = mDom(d, { position: 'absolute', top: 0, left: 0, w100: true, h100: true, 'pointer-events': 'none' }, { tag: 'canvas', id: 'canvas1', width: w, height: h })
   return [d, cv];
-}
-function mBodyResetter(bg){
-	let d0 = document.body;
-	mClass(d0, 'reset100'); console.log(d0.offsetWidth, d0.offsetHeight);
-	let d1 = mDom(d0, { bg, w: '100%', h: '100%' });
-	return d1;
 }
 function mButton(caption, handler, dParent, styles, classes, id) {
   let x = mCreate('button');
@@ -6630,16 +6624,16 @@ function mDom(dParent, styles = {}, opts = {}) {
   let d = document.createElement(tag);
   if (isdef(dParent)) mAppend(dParent, d);
   if (tag == 'textarea') styles.wrap = 'hard';
-  applyOpts(d,opts);
+  applyOpts(d, opts);
   mStyle(d, styles);
   return d;
 }
 function mDom100(dParent, styles = {}, opts = {}) { copyKeys({ w100: true, h100: true, box: true }, styles); return mDom(dParent, styles, opts); }
 function mDomTest(dParent, styles = {}, opts = {}) {
-	addKeys({ bg: rColor(), fg: 'contrast' }, styles);
-	let id = getUID('div');
-	addKeys({ id, html: id }, opts);
-	return mDom(dParent, styles, opts);
+  addKeys({ bg: rColor(), fg: 'contrast' }, styles);
+  let id = getUID('div');
+  addKeys({ id, html: id }, opts);
+  return mDom(dParent, styles, opts);
 }
 function mDropZone(dropZone, onDrop) {
   dropZone.setAttribute('allowDrop', true)
@@ -6737,7 +6731,7 @@ function menuCloseGames() { clearMain(); }
 function menuCloseHome() { closeLeftSidebar(); clearMain(); }
 async function menuCloseSettings() { delete DA.settings; closeLeftSidebar(); clearMain(); }
 function menuCloseSimple() { closeLeftSidebar(); clearMain(); }
-function menuCloseTable() { if (T) Tid = T.id; T = null; delete DA.pendingChanges; clearMain(); mClass('dExtra','p10hide'); }
+function menuCloseTable() { if (T) Tid = T.id; T = null; delete DA.pendingChanges; clearMain(); mClass('dExtra', 'p10hide'); }
 function menuCommand(dParent, menuKey, key, html, open, close) {
   let cmd = mCommand(dParent, key, html, { open, close });
   let a = iDiv(cmd);
@@ -7001,39 +6995,39 @@ function mLacunaCirles(dParent, n = 49, neach = 7, sz = 10, rand = .7) {
   return points;
 }
 function mLayout5(d0, testing = false) {
-	let dg0 = mDom(d0, { display: 'grid', gridRows: 'auto 1fr auto', h: '100%' });
-	let func = testing ? mDomTest : mDom;
-	let [dTop, dMiddle, dFooter] = [func(dg0), func(dg0), func(dg0)];
-	dMiddle.innerHTML = '';
-	let dg1 = mDom(dMiddle, { display: 'grid', gridCols: 'auto 1fr auto', w: '100%', h: '100%' });
-	let [dSideLeft, dMain, dSideRight] = [func(dg1), func(dg1), func(dg1)];
-	return [dTop, dSideLeft, dMain, dSideRight, dFooter];
+  let dg0 = mDom(d0, { display: 'grid', gridRows: 'auto 1fr auto', h: '100%' });
+  let func = testing ? mDomTest : mDom;
+  let [dTop, dMiddle, dFooter] = [func(dg0), func(dg0), func(dg0)];
+  dMiddle.innerHTML = '';
+  let dg1 = mDom(dMiddle, { display: 'grid', gridCols: 'auto 1fr auto', w: '100%', h: '100%' });
+  let [dSideLeft, dMain, dSideRight] = [func(dg1), func(dg1), func(dg1)];
+  return [dTop, dSideLeft, dMain, dSideRight, dFooter];
 }
 function mLayoutCols3(d0, testing = false) {
-	let dg1 = mDom(d0, { display: 'grid', gridCols: 'auto 1fr auto', w: '100%', h: '100%', bg: 'dimgray' });
-	let func = testing ? mDomTest : mDom;
-	let [dSideLeft, dMain, dSideRight] = [func(dg1), func(dg1), func(dg1)];
-	return [dSideLeft, dMain, dSideRight];
+  let dg1 = mDom(d0, { display: 'grid', gridCols: 'auto 1fr auto', w: '100%', h: '100%', bg: 'dimgray' });
+  let func = testing ? mDomTest : mDom;
+  let [dSideLeft, dMain, dSideRight] = [func(dg1), func(dg1), func(dg1)];
+  return [dSideLeft, dMain, dSideRight];
 }
 function mLayoutLine3(dParent, testing = false) {
-	dParent.innerHTML = '';
-	mStyle(dParent, { display: 'flex', aitems: 'baseline', jcontent: 'space-between' });
-	let func = testing ? mDomTest : mDom;
-	let [dRest, dRight] = [func(dParent), func(dParent)];
-	mStyle(dRest, { display: 'flex', aitems: 'baseline' });
-	let [dLeft, dMiddle] = [func(dRest), func(dRest)];
-	return [dLeft, dMiddle, dRight];
+  dParent.innerHTML = '';
+  mStyle(dParent, { display: 'flex', aitems: 'baseline', jcontent: 'space-between' });
+  let func = testing ? mDomTest : mDom;
+  let [dRest, dRight] = [func(dParent), func(dParent)];
+  mStyle(dRest, { display: 'flex', aitems: 'baseline' });
+  let [dLeft, dMiddle] = [func(dRest), func(dRest)];
+  return [dLeft, dMiddle, dRight];
 }
 function mLayoutLine5(dParent, testing = false) {
-	dParent.innerHTML = '';
-	mStyle(dParent, { display: 'flex', aitems: 'baseline', jcontent: 'space-between' });
-	let func = testing ? mDomTest : mDom;
-	let [dl, dr] = [func(dParent), func(dParent)];
-	mStyle(dl, { display: 'flex', aitems: 'baseline' });
-	let [dSymLeft, dLeft, dMiddle] = [func(dl), func(dl), func(dl)];
-	mStyle(dr, { display: 'flex', aitems: 'baseline' });
-	let [dRight, dSymRight] = [func(dr), func(dr)];
-	return [dSymLeft, dLeft, dMiddle, dRight, dSymRight];
+  dParent.innerHTML = '';
+  mStyle(dParent, { display: 'flex', aitems: 'baseline', jcontent: 'space-between' });
+  let func = testing ? mDomTest : mDom;
+  let [dl, dr] = [func(dParent), func(dParent)];
+  mStyle(dl, { display: 'flex', aitems: 'baseline' });
+  let [dSymLeft, dLeft, dMiddle] = [func(dl), func(dl), func(dl)];
+  mStyle(dr, { display: 'flex', aitems: 'baseline' });
+  let [dRight, dSymRight] = [func(dr), func(dr)];
+  return [dSymLeft, dLeft, dMiddle, dRight, dSymRight];
 }
 function mLinebreak(dParent, gap) {
   dParent = toElem(dParent);
@@ -7283,18 +7277,18 @@ function mShield(dParent, styles = {}, id = null, classnames = null, hideonclick
   return d;
 }
 function mSidebar(dSym, d) {
-	function sidebarClose() { mStyle(d, { w: 0, wmin: 0 }); }
-	function sidebarControl() {
-		dSym.innerHTML = getMenuSymbol();
-		mStyle(dSym, { cursor: 'pointer' })
-		dSym.onclick = sidebarToggle;
-	}
-	function sidebarOpen() { mStyle(d, { w: 150, wmin: 0 }); }
-	function sidebarToggle() { let w = mGetStyle(d, 'w'); if (w) sidebarClose(d); else sidebarOpen(d); }
-	mStyle(d, { overflow: 'hidden', transition: 'all 0.5s cubic-bezier(0.5, 0, 0.5, 1)' }); //; className: 'translow' })
-	sidebarControl();
-	sidebarClose();
-	return { dSym, d, sidebarOpen, sidebarClose };
+  function sidebarClose() { mStyle(d, { w: 0, wmin: 0 }); }
+  function sidebarControl() {
+    dSym.innerHTML = getMenuSymbol();
+    mStyle(dSym, { cursor: 'pointer' })
+    dSym.onclick = sidebarToggle;
+  }
+  function sidebarOpen() { mStyle(d, { w: 150, wmin: 0 }); }
+  function sidebarToggle() { let w = mGetStyle(d, 'w'); if (w) sidebarClose(d); else sidebarOpen(d); }
+  mStyle(d, { overflow: 'hidden', transition: 'all 0.5s cubic-bezier(0.5, 0, 0.5, 1)' }); //; className: 'translow' })
+  sidebarControl();
+  sidebarClose();
+  return { dSym, d, sidebarOpen, sidebarClose };
 }
 function mSizeSuccession(styles = {}, szDefault = 100, fromWidth = true) {
   let [w, h] = [styles.w, styles.h];
@@ -7322,38 +7316,38 @@ function mSleep(ms = 1000) {
       }, ms + 1);
     });
 }
-function mStyle(elem, styles = {},opts={}) {
-	elem = toElem(elem);
-	styles = jsCopy(styles);
-	for (const k in styles) {
-		let key = STYLE_PARAMS_2[k];
-		let v = styles[k];
-		let val = isNumber(v) ? '' + Number(v) + 'px' : v;
-		if (isdef(key)) { elem.style.setProperty(key, val); continue; }
+function mStyle(elem, styles = {}, opts = {}) {
+  elem = toElem(elem);
+  styles = jsCopy(styles);
+  for (const k in styles) {
+    let key = STYLE_PARAMS_2[k];
+    let v = styles[k];
+    let val = isNumber(v) ? '' + Number(v) + 'px' : v;
+    if (isdef(key)) { elem.style.setProperty(key, val); continue; }
 
-		//jetzt mach ich es ueber di mit spezialfaellen
-		const STYLE_PARAMS_3 = {
-			gridRows: (elem,v)=>elem.style.gridTemplateRows = isNumber(v) ? `repeat(${v},1fr)` : v,
-			gridCols: (elem,v)=>elem.style.gridTemplateColumns = isNumber(v) ? `repeat(${v},1fr)` : v,
-			hpadding: (elem,v)=>elem.style.padding=`0 ${v}px`,
-			vpadding: (elem,v)=>elem.style.padding=`${v}px 0`,
-			hmargin: (elem,v)=>elem.style.margin=`0 ${v}px`,
-			vmargin: (elem,v)=>elem.style.margin=`${v}px 0`,
-		};
-		if (v == 'contrast') { //nur bei fg verwenden!!!!
-			let bg = nundef(styles.bg)? mGetStyle(elem, 'bg'):colorFrom(styles.bg);
-			elem.style.setProperty('color', colorIdealText(bg));
-		} else if (k == 'bg') {
-			elem.style.setProperty('background-color', colorFrom(v, styles.alpha));
-			continue;
-		} else if (k == 'fg') {
-			elem.style.setProperty('color', colorFrom(v));
-			continue;
-		} else if (isdef(STYLE_PARAMS_3[k])) {
-			STYLE_PARAMS_3[k](elem,v);
-		} else elem.style.setProperty(k, val);
-	}
-	applyOpts(elem,opts);
+    //jetzt mach ich es ueber di mit spezialfaellen
+    const STYLE_PARAMS_3 = {
+      gridRows: (elem, v) => elem.style.gridTemplateRows = isNumber(v) ? `repeat(${v},1fr)` : v,
+      gridCols: (elem, v) => elem.style.gridTemplateColumns = isNumber(v) ? `repeat(${v},1fr)` : v,
+      hpadding: (elem, v) => elem.style.padding = `0 ${v}px`,
+      vpadding: (elem, v) => elem.style.padding = `${v}px 0`,
+      hmargin: (elem, v) => elem.style.margin = `0 ${v}px`,
+      vmargin: (elem, v) => elem.style.margin = `${v}px 0`,
+    };
+    if (v == 'contrast') { //nur bei fg verwenden!!!!
+      let bg = nundef(styles.bg) ? mGetStyle(elem, 'bg') : colorFrom(styles.bg);
+      elem.style.setProperty('color', colorIdealText(bg));
+    } else if (k == 'bg') {
+      elem.style.setProperty('background-color', colorFrom(v, styles.alpha));
+      continue;
+    } else if (k == 'fg') {
+      elem.style.setProperty('color', colorFrom(v));
+      continue;
+    } else if (isdef(STYLE_PARAMS_3[k])) {
+      STYLE_PARAMS_3[k](elem, v);
+    } else elem.style.setProperty(k, val);
+  }
+  applyOpts(elem, opts);
 }
 function mSwitch(dParent, styles = {}, opts = {}) {
   addKeys({ id: 'dSwitch', val: '' }, opts);
@@ -7493,8 +7487,8 @@ function normalizeString(s, sep = '_', keep = []) {
   return res;
 }
 function nundef(x) { return x === null || x === undefined || x === 'undefined'; }
-async function onchangeAutoSwitch(){
-  if (DA.autoSwitch === true){
+async function onchangeAutoSwitch() {
+  if (DA.autoSwitch === true) {
     DA.autoSwitch = false
   } else {
     DA.autoSwitch = true
@@ -7826,7 +7820,7 @@ async function onclickSettTheme() {
   await showThemes();
 }
 async function onclickSimple() {
-  let name = valf(localStorage.getItem('sisi'), 'tierspiel'); //console.log(name);
+  let name = valf(localStorage.getItem('sisi'), 'tierspiel'); console.log(name);
   simpleSidebar(150);
   mAdjustPage(150);
   let div = mDom100('dMain');
@@ -8020,7 +8014,7 @@ function onMouseMoveLine(ev) {
     const y1 = parseFloat(iDiv(line).dataset.y1);
     const x2 = parseFloat(iDiv(line).dataset.x2);
     const y2 = parseFloat(iDiv(line).dataset.y2);
-    const thickness = B.triggerThreshold; 
+    const thickness = B.triggerThreshold;
     const distance = pointToLineDistance(mouseX, mouseY, x1, y1, x2, y2);
     if (distance <= thickness / 2) {
       mStyle(iDiv(line), { opacity: 1, bg: 'red' });
@@ -8051,13 +8045,13 @@ async function onsockSuperdi(x) {
   console.log('SOCK::superdi', x)
 }
 async function onsockTable(x) {
-  console.log('SOCK::table', x); 
+  console.log('SOCK::table', x);
   let [msg, id, turn, isNew] = [x.msg, x.id, x.turn, x.isNew];
   let menu = getMenu();
   let me = getUname();
-  console.log('menu',menu,'me',me,'turn',turn,'isNew',isNew)
+  console.log('menu', menu, 'me', me, 'turn', turn, 'isNew', isNew)
   if (turn.includes(me) && menu == 'play') { Tid = id; await switchToMainMenu('table'); }
-  else if (isNew  && menu == 'play') { Tid = id; await switchToMainMenu('table'); }
+  else if (isNew && menu == 'play') { Tid = id; await switchToMainMenu('table'); }
   else if (menu == 'table') await showTable(id);
   else if (menu == 'play') await showTables();
 }
@@ -8219,22 +8213,22 @@ function paletteTrans(color, from = 0.1, to = 1, step = 0.2) {
   return res;
 }
 function paletteTransWhiteBlack(n = 9) {
-	let c = 'white';
-	let pal = [c];
-	let [iw, ib] = [Math.floor(n / 2), Math.floor((n - 1) / 2)];
-	let [incw, incb] = [1 / (iw + 1), 1 / (ib + 1)];
-	for (let i = 1; i < iw; i++) {
-		let alpha = 1 - i * incw;
-		pal.push(colorTrans(c, alpha));
-	}
-	pal.push('transparent');
-	c = 'black';
-	for (let i = 1; i < ib; i++) {
-		let alpha = i * incb;
-		pal.push(colorTrans(c, alpha));
-	}
-	pal.push(c);
-	return pal;
+  let c = 'white';
+  let pal = [c];
+  let [iw, ib] = [Math.floor(n / 2), Math.floor((n - 1) / 2)];
+  let [incw, incb] = [1 / (iw + 1), 1 / (ib + 1)];
+  for (let i = 1; i < iw; i++) {
+    let alpha = 1 - i * incw;
+    pal.push(colorTrans(c, alpha));
+  }
+  pal.push('transparent');
+  c = 'black';
+  for (let i = 1; i < ib; i++) {
+    let alpha = i * incb;
+    pal.push(colorTrans(c, alpha));
+  }
+  pal.push(c);
+  return pal;
 }
 function pathFromBgImage(bgImage) { return bgImage.substring(5, bgImage.length - 2); }
 function placeCircle(dParent, cx, cy, sz, bg = 'red') {
@@ -8277,7 +8271,7 @@ async function placeYourMeeple(ev) {
   let d = mBy('dCanvas');
   document.onclick = null;
   d.onmousemove = null;
-  let sz = rChoose(range(10, 40)); 
+  let sz = rChoose(range(10, 40));
   let b = mGetStyle(d, 'border-width'); //console.log(b);
   let p = mGetStyle(d, 'padding'); console.log(p);
   x = ev.clientX - d.offsetLeft - b - sz;
@@ -8312,7 +8306,7 @@ async function placeYourMeepleGame(ev) {
   let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border: getPlayerProp('color'), id: getUID(), owner: getUname() };
   fen.meeples.push(jsCopy(pMeeple));
   showMeeple(d, pMeeple);
-  B.meeples.push(pMeeple); 
+  B.meeples.push(pMeeple);
   if (B.endPoints.length == 0) {
     await lacunaMoveCompletedME([]);
   } else if (B.endPoints.length == 2) {
@@ -8322,7 +8316,7 @@ async function placeYourMeepleGame(ev) {
   } else lacunaMakeSelectableME();
 }
 async function placeYourMeepleME(ev) {
-  let [fen,players,pl]=[T.fen,T.players,T.players[getUname()]]
+  let [fen, players, pl] = [T.fen, T.players, T.players[getUname()]]
   stopPulsing();
   d = mBy('dCanvas');
   d.onmousemove = null;
@@ -8332,10 +8326,10 @@ async function placeYourMeepleME(ev) {
   let sz = 20;
   x = ev.clientX - d.offsetLeft - d.parentNode.offsetLeft;
   y = ev.clientY - d.offsetTop - d.parentNode.offsetTop;
-  let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border:getPlayerProp('color'), id: getUID(), owner: getUname() };
+  let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border: getPlayerProp('color'), id: getUID(), owner: getUname() };
   fen.meeples.push(jsCopy(pMeeple));
-  showMeeple(d,pMeeple);
-  B.meeples.push(pMeeple); 
+  showMeeple(d, pMeeple);
+  B.meeples.push(pMeeple);
   if (B.endPoints.length == 0) {
     await lacunaMoveCompletedME([]);
   } else if (B.endPoints.length == 2) {
@@ -8351,7 +8345,7 @@ function playerStatCount(key, n, dParent, styles = {}, opts = {}) {
   let o = M.superdi[key];
   if (typeof key == 'function') key(d, { h: sz, hline: sz, w: '100%', fg: 'grey' });
   else if (isFilename(key)) showim2(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
-  else if (isColor(key)) mDom(d, { bg:key, h: sz, fz: sz, w: '100%', fg: key },{html:' ' });
+  else if (isColor(key)) mDom(d, { bg: key, h: sz, fz: sz, w: '100%', fg: key }, { html: ' ' });
   else if (isdef(o)) showim2(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
   else mText(key, d, { h: sz, fz: sz, w: '100%' });
   d.innerHTML += `<span ${isdef(opts.id) ? `id='${opts.id}'` : ''} style="font-weight:bold;color:inherit">${n}</span>`;
@@ -9227,7 +9221,7 @@ function setgame() {
     if (isSet) o.stepIfValid = step + 1;
     let res = await mPostRoute('table', o); //console.log(res);
   }
-  return { setup, present, stats, activate, hasInstruction:false };
+  return { setup, present, stats, activate, hasInstruction: false };
 }
 function setGoal(index) {
   if (nundef(index)) {
@@ -9823,9 +9817,9 @@ function showImagePartial(dParent, image, x, y, w, h, left, top, wShow, hShow, w
   canvas.height = hCanvas;
   ctx.drawImage(image, x, y, w, h, left, top, wShow, hShow);
 }
-function showMeeple(d,pMeeple){
+function showMeeple(d, pMeeple) {
   lacunaDrawPoints(d, [pMeeple], false);
-  let color = getPlayerProp('color',pMeeple.owner); //console.log('color', color)
+  let color = getPlayerProp('color', pMeeple.owner); //console.log('color', color)
   let letter = pMeeple.owner[0].toUpperCase();
   mStyle(iDiv(pMeeple), { border: `${color} 5px solid` });
   iDiv(pMeeple).innerHTML = letter;
@@ -9961,15 +9955,15 @@ function showRibbon(dParent, msg) {
   return d;
 }
 async function showTable(id) {
-  let me = getUname(); 
+  let me = getUname();
   let table = await mGetRoute('table', { id });  //console.log('table',table)
   if (!table) { showMessage('table deleted!'); return await showTables('showTable'); }
-  DA.Interrupt = true; 
+  DA.Interrupt = true;
   while (DA.LengthyProcessRunning === true) { await mSleep(100); }
   DA.Interrupt = false;
   let func = DA.funcs[table.game];
   T = table;
-  clearMain(); mClassRemove('dExtra', 'p10hide');  
+  clearMain(); mClassRemove('dExtra', 'p10hide');
   showTitleGame(table);
   if (func.hasInstruction) prepInstruction(table);
   let items = func.present(table);
@@ -10083,7 +10077,7 @@ async function showThemes() {
 function showTimeSince(t, msg = 'now') {
   let tNew = getNow();
   let ms = tNew - t;
-  console.log('::time:',msg + ':', ms);
+  console.log('::time:', msg + ':', ms);
   return tNew;
 }
 function showTitle(title, dParent = 'dTitle') {
@@ -10460,7 +10454,7 @@ function sortBy(arr, key) {
     if (isEmpty(bv)) return 1;
     return av < bv ? -1 : 1;
   }
-  arr.sort(fsort); 
+  arr.sort(fsort);
   return arr;
 }
 function sortByDescending(arr, key) {
@@ -10471,7 +10465,7 @@ function sortByDescending(arr, key) {
     if (isEmpty(bv)) return -1;
     return av > bv ? -1 : 1;
   }
-  arr.sort(fsort); 
+  arr.sort(fsort);
   return arr;
 }
 function sortByEmptyLast(arr, key) {
@@ -10482,7 +10476,7 @@ function sortByEmptyLast(arr, key) {
     if (isEmpty(bv)) return -1;
     return av < bv ? -1 : 1;
   }
-  arr.sort(fsort); 
+  arr.sort(fsort);
   return arr;
 }
 function sortByFunc(arr, func) { arr.sort((a, b) => (func(a) < func(b) ? -1 : 1)); return arr; }
@@ -10728,15 +10722,15 @@ function strRemoveTrailing(s, sub) {
   return s.endsWith(sub) ? stringBeforeLast(s, sub) : s;
 }
 function strSameCaseInsensitive(s1, s2) { return s1.toLowerCase() == s2.toLowerCase(); }
-function styleBgFg(elem,bg,fg){
-  let st=mGetStyles(elem,['bg','fg']);
-  console.log('styles',st);
+function styleBgFg(elem, bg, fg) {
+  let st = mGetStyles(elem, ['bg', 'fg']);
+  console.log('styles', st);
 }
 function styler(elem, k, v) {
   let key = STYLE_PARAMS_2[k];
   let val = isNumber(v) ? '' + Number(v) + 'px' : v;
   if (isdef(key)) { elem.style.setProperty(key, val); return true; }
-  let STYLER={
+  let STYLER = {
     bg: 'background-color',
     fg: 'color',
     gridCols: 'grid-template-columns',
@@ -11355,19 +11349,19 @@ function unionOfArrays() {
   const flattenedArray = arrs.flat();
   return [...new Set(flattenedArray)];
 }
-function unlock(){
+function unlock() {
   DA.LengthyProcessRunning = false;
   console.log('UNLOCK!!!!!!!!!!!!!!!!!!!!!!');
 }
-function unlockLengthyProcess(){
-  try{
+function unlockLengthyProcess() {
+  try {
     if (DA.Interrupt === true && DA.LengthyProcessRunning === true) {
-      DA.LengthyProcessRunning = false;  
+      DA.LengthyProcessRunning = false;
       console.log('INTERRUPT!!!!!!!!!!!!!!!!!!!!!!');
       throw 1;
     }
   }
-  catch(err){}
+  catch (err) { }
 }
 function unselectPlayerItem(item) { mStyle(iDiv(item), { bg: 'transparent', fg: 'black', border: `transparent` }); }
 async function updateClientData() {
@@ -11380,7 +11374,7 @@ async function updateExtra() {
   mClear('dExtra');
   let d = mDom('dExtra');
   mStyle(d, { display: 'flex', justify: 'space-between' });
-  let [left, right] = [mDom(d, { }, { id: 'dExtraLeft' }), mDom(d, {}, { id: 'dExtraRight' })];
+  let [left, right] = [mDom(d, {}, { id: 'dExtraLeft' }), mDom(d, {}, { id: 'dExtraRight' })];
   if (TESTING) await updateTestButtonsLogin();
 }
 function updateKeySettings(nMin) {
@@ -11791,7 +11785,7 @@ function wsOffspringSymbol(dParent, styles = {}) {
   mCenterFlex(dPaw)
   mPlace(dPaw, 'tc')
 }
-async function wsOnclickCard(table, item, items) { console.log('click',item) }
+async function wsOnclickCard(table, item, items) { console.log('click', item) }
 function wsPowerText(item, d, styles = {}) {
   mClear(d)
   let key = item.power; if (key.startsWith('_')) key = 'sienna' + key;

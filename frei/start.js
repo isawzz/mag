@@ -1,37 +1,71 @@
 onload = start;
 
-async function start() { await test6_msGridVarianten(); }
+async function start() { await test7_recipes(); }
 
-async function test6_msGridVarianten(){
+async function test8() { await prelims(); }
+async function test7_recipes() {
+	let d0=mBy('dBody');
+	mStyle(d0,{bg:'red'})
+	console.log(d0); 
+	let [dSideLeft, dUpper, dFooter, dTop] = recipesLayout(d0);
+
+	let images = await mGetFiles('../assets/img/recipes');
+	console.log('images', images);
+	images = images.map(img => '../assets/img/recipes/' + img);
+	images.forEach(img => mDom(dUpper, { h: 200, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
+
+	console.log(dUpper)
+}
+async function test7_mist(){
+
+	
+	return;
+	let d1 = mBodyResetter('powderblue'); return;
+	let [dSideLeft, dUpper, dFooter, dTop] = recipesLayout(d1);
+
+	//load recipe images from '../assets/img/recipes'
+	let images = await mGetFiles('../assets/img/recipes');
+	console.log('images', images);
+	images = images.map(img => '../assets/img/recipes/' + img);
+	images.forEach(img => mDom(dUpper, { h: 200, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
+
+	//mDom(dUpper,{h:2000,bg:'skyblue'},{html:'hallo'})
+}
+async function test6_msGridVarianten() {
 	let d1 = mBodyResetter('green');
-	let [dTop, dMainTop, dMainBottom, dFooter] = mGridRows(d1,'auto 1fr 1fr auto');
+	let [dTop, dMainTop, dMainBottom, dFooter] = mGridRows(d1, 'auto 1fr 1fr auto');
 	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
-	let [dSideLeft,dUpper] = mGridCols(dMainTop, 'auto 1fr');
+	let [dSideLeft, dUpper] = mGridCols(dMainTop, 'auto 1fr');
 	let [dLower, dSideRight] = mGridCols(dMainBottom, '1fr auto');
 	let divs = [dSideLeft, dUpper, dLower, dSideRight, dFooter, dTop];
 	let palette = paletteTransWhiteBlack(divs.length + 2); console.log(palette);
 	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }));
 	mSidebar(dSymLeft, dSideLeft);
 	mSidebar(dSymRight, dSideRight);
+
+	//wenn ich jetzt in das top window zeug reinschreibe, dann ist es ja scrollable
+	//also ist top row sowieso immer da!
+	mStyle(dUpper, { overy: 'scroll', hmax: dUpper.offsetHeight, padding: 0 })
+	mDom(dUpper, { h: 2000, bg: 'skyblue' }, { html: 'hallo' })
 }
 async function test5_justLeftSidebar() {
 	let d1 = mBodyResetter('green');
 	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
 	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
-	mRemove(dFooter);mRemove(dSideRight);mRemove(dSymRight);
+	mRemove(dFooter); mRemove(dSideRight); mRemove(dSymRight);
 	divs = [dSideLeft, dMain, dFooter, dTop];
 	let palette = paletteTransWhiteBlack(divs.length + 2); console.log(palette);
 	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }));
 	mSidebar(dSymLeft, dSideLeft);
 	mStyle(dPageTitle, { family: 'algerian', hpadding: 10 }, { html: 'My Recipes' });
 
-	mStyle(d1,{bg:'orange'}); //change pagee color
+	mStyle(d1, { bg: 'orange' }); //change pagee color
 }
 async function test4_justLeftSidebar() {
 	let d1 = mBodyResetter('green');
 	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
 	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
-	mRemove(dFooter);mRemove(dSideRight);mRemove(dSymRight);
+	mRemove(dFooter); mRemove(dSideRight); mRemove(dSymRight);
 	divs = [dSideLeft, dMain, dFooter, dTop];
 	let palette = paletteTransWhiteBlack(divs.length + 2); console.log(palette);
 	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }));
@@ -42,7 +76,7 @@ async function test4_justLeftSidebarFooter() {
 	let d1 = mBodyResetter('lime');
 	let [dTop, dSideLeft, dMain, dSideRight, dFooter] = mLayout5(d1);
 	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
-	mRemove(dSideRight);mRemove(dSymRight);
+	mRemove(dSideRight); mRemove(dSymRight);
 	divs = [dSideLeft, dMain, dFooter, dTop];
 	let palette = paletteTransWhiteBlack(divs.length + 2); console.log(palette);
 	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }));

@@ -1,4 +1,12 @@
 
+function mBodyResetter(bg) {
+  let d0 = document.body;
+  mClass(d0, 'reset100'); //console.log(d0.offsetWidth, d0.offsetHeight);
+  mStyle(d0, { bg })
+  let d1 = mDom(d0); //, { w: '100%', h: '100%' });
+  return d1;
+}
+
 function mGridRows(d0, desc, testing=false) {
 	return mGridDesc(d0, desc, 'gridTemplateRows', testing);
 }
