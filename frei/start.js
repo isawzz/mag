@@ -1,21 +1,66 @@
 onload = start;
 
-async function start() { await test7_recipes(); }
+async function start() { await test9_recipes(); }
 
+async function test9_recipes() {
+	let d0 = mBy('dBody');
+	mStyle(d0, { bg: 'red', h: '100vh', hmin: '100vh', hmax: '100vh' });	//console.log(d0); 
+	let palette = paletteTransWhiteBlack(5); //console.log(palette);
+	let grid=mDom(d0, {display:'grid'});
+	dTop=mDom(grid, {bg:palette[1], fg:'contrast'}, {id:'dTop',html:'relief station'});
+	dMain=mDom(grid, {bg:palette[2], fg:'contrast'}, {id:'dMain'});
+	let h=dMain.offsetHeight; console.log(h)
+}
+async function testvorlage(){
+
+	// let h=25;
+	// let dTop=mDom(d0, {w:'100%', h});
+	// let dMiddle=mDom(d0, {w:'100%', h:`calc( 100% - ${h}px )`});
+	// let [dSideLeft, dUpper] = mGridCols(dMiddle, 'auto 1fr');
+	// //let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
+	// let divs = [dSideLeft, dUpper, dTop];
+	// let names = ['dSideLeft', 'dUpper', 'dTop'];
+	// let palette = paletteTransWhiteBlack(divs.length + 2); //console.log(palette);
+	divs.forEach((div, i) => mStyle(div, { bg: palette[i + 1], fg: 'contrast' }, { id: names[i] }));
+
+	let [dTop, dMainTop, dFooter] = mGridRows(d0, 'auto 1fr auto');
+	let [dSymLeft, dPageTitle, dTopMenu, dUser, dSymRight] = mLayoutLine5(dTop);
+	let [dSideLeft, dUpper] = mGridCols(dMainTop, 'auto 1fr');
+
+	let divs = [dSideLeft, dUpper, dFooter, dTop];
+	let names = ['dSideLeft', 'dUpper', 'dFooter', 'dTop'];
+	let palette = paletteTransWhiteBlack(divs.length + 2); //console.log(palette);
+	divs.forEach((div, i) => mStyle(div, { padding: 8, bg: palette[i + 1], fg: 'contrast' }, { id: names[i] }));
+
+	//mDom(dPageTitle,{family:'cambria',maleft:10},{tag:'h1',html:'relief station'});
+	mStyle(dFooter,{padding:0,margin:0},{html:'copyright Chillax.inc 2024'})
+	let sidebar = mSidebar(dSymLeft, dSideLeft); console.log(sidebar);
+
+	let hmax = dUpper.offsetHeight; console.log(hmax)
+	let stupper = { hmax, overy: 'auto', h:hmax };
+	let stimage = {}; //{ w:'32%',bg: rColor(), fg: 'contrast', hline: 'normal' }
+	mStyle(dUpper, stupper); //{ margin: 0, padding:'auto' })
+	//mCenterFlex(dUpper);
+	//mStyle(dUpper,{display:'flex','flex-wrap':true,hpadding:0,vpadding:'1%', overy:'scroll',hmax:dUpper.offsetHeight,gap:'1%'})
+	let images = M.recipes = await mGetFiles('../assets/img/recipes'); //	console.log('images', images);
+	//images.forEach(img => mDom(dUpper, stimage, { tag: 'img', src: '../assets/img/recipes/' + img }));
+
+
+}
 async function test8() { await prelims(); }
 async function test7_recipes() {
-	let d0=mBy('dBody');
-	mStyle(d0,{bg:'red', h:'100vh', hmin:'100vh', hmax:'100vh', overy:'hidden'});	//console.log(d0); 
+	let d0 = mBy('dBody');
+	mStyle(d0, { bg: 'red', h: '100vh', hmin: '100vh', hmax: '100vh', overy: 'hidden' });	//console.log(d0); 
 	let [dSideLeft, dUpper, dFooter, dTop] = recipesLayout(d0); //return;
-	mStyle(dUpper,{overy:'scroll',hmax:dUpper.offsetHeight,gap:9})
+	mStyle(dUpper, { overy: 'scroll', hmax: dUpper.offsetHeight, gap: 9 })
 	let images = M.recipes = await mGetFiles('../assets/img/recipes'); //	console.log('images', images);
-	images.forEach(img => mDom(dUpper, { w:'32%',bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:'../assets/img/recipes/' + img }));
+	images.forEach(img => mDom(dUpper, { w: '32%', bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src: '../assets/img/recipes/' + img }));
 
-	
+
 }
-async function test7_mist(){
+async function test7_mist() {
 
-	
+
 	return;
 	let d1 = mBodyResetter('powderblue'); return;
 	let [dSideLeft, dUpper, dFooter, dTop] = recipesLayout(d1);
@@ -24,7 +69,7 @@ async function test7_mist(){
 	let images = await mGetFiles('../assets/img/recipes');
 	console.log('images', images);
 	images = images.map(img => '../assets/img/recipes/' + img);
-	images.forEach(img => mDom(dUpper, { h: 200, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
+	images.forEach(img => mDom(dUpper, { h: 200, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src: img }));
 
 	//mDom(dUpper,{h:2000,bg:'skyblue'},{html:'hallo'})
 }
