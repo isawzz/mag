@@ -31,6 +31,8 @@
     "drawline2",
     "drawline",
     "SAFE",
-    "ode"
+    "ode",
+    "frei",
+    "*/ersetzt.js"
   ]
 }

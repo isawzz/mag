@@ -7343,6 +7343,9 @@ function mStyle(elem, styles = {}, opts = {}) {
     } else if (k == 'fg') {
       elem.style.setProperty('color', colorFrom(v));
       continue;
+    } else if (k.startsWith('class')) {
+      elem.style.setProperty('color', colorFrom(v));
+      continue;
     } else if (isdef(STYLE_PARAMS_3[k])) {
       STYLE_PARAMS_3[k](elem, v);
     } else elem.style.setProperty(k, val);
