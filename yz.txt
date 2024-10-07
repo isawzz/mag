@@ -13,7 +13,13 @@ Left Middle Right
 Top Middle Bottom
 Table ist immer das hauptwindow
 reorg globals!!!
-
+choices:
+1. mach ein colors.js das ich reinlade
+2. mach alle colors nur als yaml
+vorteil 1: ich kann auch code damit combinieren
+kann es am ende von w3colors machen
+damit hab alles auf einmal
+dafuer muss ich yaml in js verwandeln und abspeichern
 
 
 

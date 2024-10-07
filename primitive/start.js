@@ -2,6 +2,10 @@ onload = start;
 
 async function start() { await test1(); }
 
+async function machDieColorsAlsJs(){
+	M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);	
+	downloadAsJson(M.dicolor,'dicolor')
+}
 async function test1() {
 	M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);	
 	[M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
