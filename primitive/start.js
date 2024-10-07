@@ -3,29 +3,27 @@ onload = start;
 async function start() { await test1(); }
 
 async function test1() {
-	let d0 = mBy('dPage');
-	mStyle(d0,{bg:'skyblue'});
-	mClear(d0);
-	mDom(d0,{},{id:'dTop'});
-	let dMain = mDom(d0,{classes:'colsAutoFrAuto'},{id:'dMain'});
-	mDom(dMain,{},{id:'dSidebar'});
-	mDom(dMain,{},{id:'dTable'});
-	//mClass(dMain,'colsAutoFrAuto');
-	let divNames = 'dTop dSidebar dTable'.split(' '); console.log('divNames',divNames);
-	let palette = paletteTransWhiteBlack(divNames.length+2).slice(1); //console.log(palette);
-	for(const id of divNames){
-		let d=mBy(id);
-		mStyle(d, {bg:palette.pop(),fg:'contrast',family:'opensans',wbox:true,padding:10},{html:id});
+	M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);	
+	[M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
+	oceanLayout('dPage','skyblue');
+	oceanLayout('dTable0','kobi',1);
+	oceanLayout('dTable1','deeppink',2);//await prelims();
+}
+function mPaletteTrans(){
+	let palette = paletteTransWhiteBlack(arguments.length); console.log(palette);
+	for (const did of arguments) {
+		let d = toElem(did);
+		mStyle(d, { bg: palette.pop(), fg: 'contrast', family: 'opensans', wbox: true, padding: 10 });
 	}
 }
 async function test0() {
 	let d0 = mBy('dPage');
-	mStyle(d0,{bg:'skyblue'})
-	let divNames = 'dTop dSidebar dTable'.split(' '); console.log('divNames',divNames);
-	let palette = paletteTransWhiteBlack(divNames.length+2).slice(1); //console.log(palette);
-	for(const id of divNames){
-		let d=mBy(id);
-		mStyle(d, {bg:palette.pop(),fg:'contrast',family:'opensans',wbox:true,padding:10},{html:id});
+	mStyle(d0, { bg: 'skyblue' })
+	let divNames = 'dTop dSidebar dTable'.split(' '); console.log('divNames', divNames);
+	let palette = paletteTransWhiteBlack(divNames.length + 2).slice(1); //console.log(palette);
+	for (const id of divNames) {
+		let d = mBy(id);
+		mStyle(d, { bg: palette.pop(), fg: 'contrast', family: 'opensans', wbox: true, padding: 10 }, { html: id });
 	}
 }
 async function preprelims() {

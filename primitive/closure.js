@@ -6002,8 +6002,10 @@ async function loadAssets() {
   M.categories = Object.keys(byCat); M.categories.sort();
   M.collections = Object.keys(byColl); M.collections.sort();
   M.names = Object.keys(byFriendly); M.names.sort();
-  M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
+  if (nundef(M.dicolor)) {
+    M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
   [M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
+  }
 }
 function loadImageAsync(src, img) {
   return new Promise((resolve, reject) => {
@@ -6629,6 +6631,7 @@ function mDom(dParent, styles = {}, opts = {}) {
   return d;
 }
 function mDom100(dParent, styles = {}, opts = {}) { copyKeys({ w100: true, h100: true, box: true }, styles); return mDom(dParent, styles, opts); }
+function mDomid(dParent, id) { return mDom(dParent, {}, { id }); }
 function mDomTest(dParent, styles = {}, opts = {}) {
   addKeys({ bg: rColor(), fg: 'contrast' }, styles);
   let id = getUID('div');
@@ -7344,7 +7347,7 @@ function mStyle(elem, styles = {}, opts = {}) {
       elem.style.setProperty('color', colorFrom(v));
       continue;
     } else if (k.startsWith('class')) {
-      elem.style.setProperty('color', colorFrom(v));
+      mClass(elem, v)
       continue;
     } else if (isdef(STYLE_PARAMS_3[k])) {
       STYLE_PARAMS_3[k](elem, v);
@@ -8215,10 +8218,11 @@ function paletteTrans(color, from = 0.1, to = 1, step = 0.2) {
   }
   return res;
 }
-function paletteTransWhiteBlack(n = 9) {
+function paletteTransWhiteBlack(n = 9,includeWhiteBlack=false) {
   let c = 'white';
-  let pal = [c];
+  let pal = includeWhiteBlack?[c]:[];
   let [iw, ib] = [Math.floor(n / 2), Math.floor((n - 1) / 2)];
+  if (!includeWhiteBlack) {iw++;ib++;}
   let [incw, incb] = [1 / (iw + 1), 1 / (ib + 1)];
   for (let i = 1; i < iw; i++) {
     let alpha = 1 - i * incw;
@@ -8230,7 +8234,7 @@ function paletteTransWhiteBlack(n = 9) {
     let alpha = i * incb;
     pal.push(colorTrans(c, alpha));
   }
-  pal.push(c);
+  if (includeWhiteBlack) pal.push(c);
   return pal;
 }
 function pathFromBgImage(bgImage) { return bgImage.substring(5, bgImage.length - 2); }
