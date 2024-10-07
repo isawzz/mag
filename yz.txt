@@ -8,6 +8,11 @@ ok - oberste zeile soll sticky sein! ja ist eh der effect!
 _____ so 6.10.24 airport 1304
 _____ mo 7.10.24 airport 9665
 6:25 AM 10/7/2024 780
+- soll ich dicolor als ein cons machen? koennte extendedconst	
+Left Middle Right
+Top Middle Bottom
+Table ist immer das hauptwindow
+reorg globals!!!
 
 
 
