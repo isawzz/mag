@@ -143,23 +143,6 @@ function addEditable(dParent, styles = {}, opts = {}) {
 }
 function addIf(arr, el) { if (!arr.includes(el)) arr.push(el); }
 function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; return oto; }
-function addPeepToCrowd() {
-  const peep = removeRandomFromArray(availablePeeps)
-  const walk = getRandomFromArray(walks)({
-    peep,
-    props: resetPeep({
-      peep,
-      stage,
-    })
-  }).eventCallback('onComplete', () => {
-    removePeepFromCrowd(peep)
-    addPeepToCrowd()
-  })
-  peep.walk = walk
-  crowd.push(peep)
-  crowd.sort((a, b) => a.anchorY - b.anchorY)
-  return peep
-}
 function addToolX(cropper, d) {
   let img = cropper.img;
   function createCropTool() {
@@ -5435,11 +5418,6 @@ function initCodingUI() {
   mDiv(dtitle, { padding: 10, fg: 'white', fz: 24 }, null, 'OUTPUT:');
   AU.ta = mTextArea100(dta, { fz: 20, padding: 10, family: 'opensans' });
 }
-function initCrowd() {
-  while (availablePeeps.length) {
-    addPeepToCrowd().walk.progress(Math.random())
-  }
-}
 function inpToChecklist(ev, grid) {
   let key = ev.key;
   let inp = ev.target;
@@ -6002,10 +5980,6 @@ async function loadAssets() {
   M.categories = Object.keys(byCat); M.categories.sort();
   M.collections = Object.keys(byColl); M.collections.sort();
   M.names = Object.keys(byFriendly); M.names.sort();
-  if (nundef(M.dicolor)) {
-    M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
-  [M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
-  }
 }
 function loadImageAsync(src, img) {
   return new Promise((resolve, reject) => {
@@ -8218,11 +8192,11 @@ function paletteTrans(color, from = 0.1, to = 1, step = 0.2) {
   }
   return res;
 }
-function paletteTransWhiteBlack(n = 9,includeWhiteBlack=false) {
+function paletteTransWhiteBlack(n = 9, includeWhiteBlack = false) {
   let c = 'white';
-  let pal = includeWhiteBlack?[c]:[];
+  let pal = includeWhiteBlack ? [c] : [];
   let [iw, ib] = [Math.floor(n / 2), Math.floor((n - 1) / 2)];
-  if (!includeWhiteBlack) {iw++;ib++;}
+  if (!includeWhiteBlack) { iw++; ib++; }
   let [incw, incb] = [1 / (iw + 1), 1 / (ib + 1)];
   for (let i = 1; i < iw; i++) {
     let alpha = 1 - i * incw;
@@ -8691,12 +8665,6 @@ function removeFromArray(array, i) { return array.splice(i, 1)[0] }
 function removeInPlace(arr, el) {
   arrRemovip(arr, el);
 }
-function removeItemFromArray(array, item) { return removeFromArray(array, array.indexOf(item)) }
-function removePeepFromCrowd(peep) {
-  removeItemFromArray(crowd, peep)
-  availablePeeps.push(peep)
-}
-function removeRandomFromArray(array) { return removeFromArray(array, randomIndex(array)) }
 function removeTrailingComments(line) {
   let icomm = line.indexOf('//');
   let ch = line[icomm - 1];
@@ -8726,30 +8694,6 @@ function replaceAllSpecialCharsFromList(str, list, sBy, removeConsecutive = true
   }
   return str;
 }
-function resetPeep({ stage, peep }) {
-  const direction = Math.random() > 0.5 ? 1 : -1
-  const offsetY = 100 - 250 * gsap.parseEase('power2.in')(Math.random())
-  const startY = stage.height - peep.height + offsetY
-  let startX
-  let endX
-  if (direction === 1) {
-    startX = -peep.width
-    endX = stage.width
-    peep.scaleX = 1
-  } else {
-    startX = stage.width + peep.width
-    endX = 0
-    peep.scaleX = -1
-  }
-  peep.x = startX
-  peep.y = startY
-  peep.anchorY = startY
-  return {
-    startX,
-    startY,
-    endX
-  }
-}
 function resetRound() {
   clearTimeouts();
   clearFleetingMessage();
@@ -8764,19 +8708,6 @@ async function resetUsers() {
     await postUserChange(unew, true);
   }
   console.log(Serverdata.users);
-}
-function resize() {
-  stage.width = Canvas.clientWidth
-  stage.height = Canvas.clientHeight
-  Canvas.width = stage.width * devicePixelRatio
-  Canvas.height = stage.height * devicePixelRatio
-  crowd.forEach((peep) => {
-    peep.walk.kill()
-  })
-  crowd.length = 0
-  availablePeeps.length = 0
-  availablePeeps.push(...allPeeps)
-  initCrowd()
 }
 function resizeTo(tool, wnew, hnew) {
   let [img, dParent, cropBox, setRect] = [tool.img, tool.dParent, tool.cropBox, tool.setRect];

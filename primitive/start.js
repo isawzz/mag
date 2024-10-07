@@ -1,19 +1,37 @@
 onload = start;
 
-async function start() { await test1(); }
+async function start() { await test2(); }
 
-async function machDieColorsAlsJs(){
-	M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);	
-	downloadAsJson(M.dicolor,'dicolor')
+async function test2() {
+	//jetzt ist alles in globals eigentlich moecht ich es in w3color.js
+	if (nundef(M.dicolor)) {
+		M.dicolor = dicolor; //await mGetYaml(`../assets/dicolor.yaml`);
+		[M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
+	}
+
+	let di1 = { childrenRoomColors: childrenRoomColors, deepRichColors: deepRichColors, modernColors: modernColors, playerColors: playerColors, vibrantColors: vibrantColors };
+	for (const diname in di1) { //},deepRichColors,childrenRoomColors,playerColors,vibrantColors}.entries){
+		let di = di1[diname];
+		for (const c in di) {
+			//console.log(c)
+			if (isdef(M.colorByName[c])) {
+				console.log('DUPL!', diname, c, M.colorByName[c].hex, di[c]);
+				let c = `${diname[0]}_${c}`;
+				M.colorByName[c]=
+			}
+			//return;
+		}
+		return;
+	}
 }
 async function test1() {
-	M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);	
+	M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
 	[M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
-	oceanLayout('dPage','skyblue');
-	oceanLayout('dTable0','kobi',1);
-	oceanLayout('dTable1','deeppink',2);//await prelims();
+	oceanLayout('dPage', 'skyblue');
+	oceanLayout('dTable0', 'kobi', 1);
+	oceanLayout('dTable1', 'deeppink', 2);//await prelims();
 }
-function mPaletteTrans(){
+function mPaletteTrans() {
 	let palette = paletteTransWhiteBlack(arguments.length); console.log(palette);
 	for (const did of arguments) {
 		let d = toElem(did);
@@ -30,6 +48,76 @@ async function test0() {
 		mStyle(d, { bg: palette.pop(), fg: 'contrast', family: 'opensans', wbox: true, padding: 10 }, { html: id });
 	}
 }
+
+//#region TEMP
+async function machConstsZuJsDicts_TEMP() {
+	function convertColorsToObjAndSave(colors, fname) {
+		const colorObject = {};
+
+		// Iterate over the array to process each color and comment
+		colors.forEach(color => {
+			if (!isEmptyOrWhiteSpace(color)) {
+				const hexCode = color.split(',')[0].trim(); // Extract the hex code
+				console.log(color, typeof color)
+				const comment = color.split('//')[1].trim(); // Extract the color name from the comment
+
+				// Convert comment (color name) to lowercase and replace spaces with underscores
+				const formattedKey = comment.toLowerCase().replace(/\s+/g, '_');
+
+				// Add to the object
+				colorObject[formattedKey] = hexCode;
+			}
+		});
+
+		// Generate JS code string without quoted keys
+		const objectAsCode = `const ${fname} = ${convertObjectToCode(colorObject)};`;
+
+		// Create a blob with the JS code as text
+		const blob = new Blob([objectAsCode], { type: 'text/javascript' });
+
+		// Create a download link for the file
+		const link = document.createElement('a');
+		link.href = URL.createObjectURL(blob);
+		link.download = fname + '.js'; // File name
+
+		// Trigger the download
+		document.body.appendChild(link);
+		link.click();
+
+		// Clean up by removing the link
+		document.body.removeChild(link);
+	}
+	// Helper function to convert an object to a string with unquoted keys
+	function convertObjectToCode(obj) {
+		const entries = Object.entries(obj)
+			.map(([key, value]) => `${key}: ${value}`)
+			.join(',\n');
+		return `{\n${entries}\n}`;
+	}
+	let list = modernColors.split('\n'); console.log('list', list);
+
+	convertColorsToObjAndSave(list, 'modernColors');
+	convertColorsToObjAndSave(childrenRoomColors.split('\n'), 'childrenRoomColors');
+	convertColorsToObjAndSave(vibrantColors.split('\n'), 'vibrantColors');
+	convertColorsToObjAndSave(deepRichColors.split('\n'), 'deepRichColors');
+
+}
+async function machDieColorsAlsJs_TEMP() {
+	M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
+
+	// // Example usage:
+	// const exampleObject = {
+	// 	name: "John",
+	// 	age: 30,
+	// 	hobbies: ["coding", "reading"]
+	// };
+
+	// Call the function to save the object as code
+	saveObjectAsCode(M.dicolor);
+	// downloadAsJson(M.dicolor,'dicolor')
+}
+//#endregion
+
 async function preprelims() {
 	ColorThiefObject = new ColorThief();//console.log(ColorThiefObject);
 	let t1 = performance.now();
