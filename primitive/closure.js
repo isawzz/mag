@@ -4617,12 +4617,16 @@ function getListAndDicts(list) {
 }
 function getListAndDictsForDicolors() {
   let bucketlist = Object.keys(M.dicolor);
-  bucketlist = arrCycle(bucketlist, 8);
+  //bucketlist = arrCycle(bucketlist, 8);
   let dicolorlist = [];
+  let names = {};
   for (const bucket of bucketlist) {
     let list = dict2list(M.dicolor[bucket]);
     for (const c of list) {
       let o = w3color(c.value);
+      let id = c.id;
+      if (isdef(names[id])) console.log('dupl', bucket, id, names[id]);
+      names[id] = bucket;
       o.name = c.id;
       o.hex = c.value;
       o.bucket = bucket;
@@ -5980,6 +5984,14 @@ async function loadAssets() {
   M.categories = Object.keys(byCat); M.categories.sort();
   M.collections = Object.keys(byColl); M.collections.sort();
   M.names = Object.keys(byFriendly); M.names.sort();
+  loadColors();
+}
+function loadColors() {
+  if (nundef(M.dicolor)) {
+    M.dicolor = dicolor;
+    [M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
+    M.colorNames = Object.keys(M.colorByName); M.colorNames.sort();
+  }
 }
 function loadImageAsync(src, img) {
   return new Promise((resolve, reject) => {
@@ -7310,6 +7322,8 @@ function mStyle(elem, styles = {}, opts = {}) {
       vpadding: (elem, v) => elem.style.padding = `${v}px 0`,
       hmargin: (elem, v) => elem.style.margin = `0 ${v}px`,
       vmargin: (elem, v) => elem.style.margin = `${v}px 0`,
+      wrap: (elem, v) => { if (v == 'hard') elem.setAttribute('wrap', 'hard'); else elem.style.flexWrap = 'wrap'; }
+
     };
     if (v == 'contrast') { //nur bei fg verwenden!!!!
       let bg = nundef(styles.bg) ? mGetStyle(elem, 'bg') : colorFrom(styles.bg);

@@ -1,4 +1,11 @@
 
+function mPaletteTrans() {
+	let palette = paletteTransWhiteBlack(arguments.length); console.log(palette);
+	for (const did of arguments) {
+		let d = toElem(did);
+		mStyle(d, { bg: palette.pop(), fg: 'contrast', family: 'opensans', wbox: true, padding: 10 });
+	}
+}
 function oceanLayout(d, bg, level = 0) {
 	let d0 = toElem(d)
 	mStyle(d0, { bg, padding: 0, margin: 0 });

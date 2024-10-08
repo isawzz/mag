@@ -1,28 +1,25 @@
 onload = start;
 
-async function start() { await test2(); }
+async function start() { await test3(); }
 
-async function test2() {
-	//jetzt ist alles in globals eigentlich moecht ich es in w3color.js
-	if (nundef(M.dicolor)) {
-		M.dicolor = dicolor; //await mGetYaml(`../assets/dicolor.yaml`);
-		[M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
-	}
+async function test3() {
+	loadColors(); //	console.log(M.colorNames);
+	oceanLayout('dPage', 'skyblue');
 
-	let di1 = { childrenRoomColors: childrenRoomColors, deepRichColors: deepRichColors, modernColors: modernColors, playerColors: playerColors, vibrantColors: vibrantColors };
-	for (const diname in di1) { //},deepRichColors,childrenRoomColors,playerColors,vibrantColors}.entries){
-		let di = di1[diname];
-		for (const c in di) {
-			//console.log(c)
-			if (isdef(M.colorByName[c])) {
-				console.log('DUPL!', diname, c, M.colorByName[c].hex, di[c]);
-				let c = `${diname[0]}_${c}`;
-				M.colorByName[c]=
-			}
-			//return;
+	let dTable = mBy('dTable0');
+	let [w,h]=[25,25];
+	for(const b in M.dicolor){
+		mDom(dTable,{},{tag:'h1',html:b});
+		let cont=mDom(dTable, {display:'flex',wrap:true}, {});
+		for(const c in M.dicolor[b]){
+			let color = M.dicolor[b][c];
+			mDom(cont, {bg:color,fg:'contrast',padding:10,margin:3}, {tag:'div', html:c});
 		}
-		return;
 	}
+}
+async function test2() {
+	loadColors();
+	console.log(M.colorNames);
 }
 async function test1() {
 	M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
@@ -30,13 +27,6 @@ async function test1() {
 	oceanLayout('dPage', 'skyblue');
 	oceanLayout('dTable0', 'kobi', 1);
 	oceanLayout('dTable1', 'deeppink', 2);//await prelims();
-}
-function mPaletteTrans() {
-	let palette = paletteTransWhiteBlack(arguments.length); console.log(palette);
-	for (const did of arguments) {
-		let d = toElem(did);
-		mStyle(d, { bg: palette.pop(), fg: 'contrast', family: 'opensans', wbox: true, padding: 10 });
-	}
 }
 async function test0() {
 	let d0 = mBy('dPage');
