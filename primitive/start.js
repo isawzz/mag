@@ -3,17 +3,30 @@ onload = start;
 async function start() { await test3(); }
 
 async function test3() {
-	loadColors(); //	console.log(M.colorNames);
+	loadColors(); console.log(M.colorNames);
 	oceanLayout('dPage', 'skyblue');
 
 	let dTable = mBy('dTable0');
 	let [w,h]=[25,25];
+	list = sortByMultipleProperties(M.colorList,'hue','sat','lightness');
+
+	let cont=mDom(dTable, {display:'flex',wrap:true}, {});
+	for(const o of list){
+		mDom(cont, {bg:o.hex,fg:'contrast',padding:10,margin:3}, {tag:'div', html:o.name});
+	}
+}
+async function testMist(){
 	for(const b in M.dicolor){
 		mDom(dTable,{},{tag:'h1',html:b});
 		let cont=mDom(dTable, {display:'flex',wrap:true}, {});
-		for(const c in M.dicolor[b]){
-			let color = M.dicolor[b][c];
-			mDom(cont, {bg:color,fg:'contrast',padding:10,margin:3}, {tag:'div', html:c});
+		let keys = Object.keys(M.dicolor[b]); console.log(keys);
+		let list = keys.map(x=>M.colorByName[x]); console.log(list[0])
+
+		list = sortByMultipleProperties(list,'lightness','hue');
+		for(const o of list){
+			//console.log(o); return;
+			//let color = M.dicolor[b][c];
+			mDom(cont, {bg:o.hex,fg:'contrast',padding:10,margin:3}, {tag:'div', html:o.name});
 		}
 	}
 }

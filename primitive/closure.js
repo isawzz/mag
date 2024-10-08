@@ -10452,7 +10452,7 @@ function sortByHues(list) {
   return buckets;
 }
 function sortByMultipleProperties(list) {
-  let props = Array.from(arguments).slice(1);
+  let props = Array.from(arguments).slice(1); console.log(props)
   return list.sort((a, b) => {
     for (const p of props) {
       if (a[p] < b[p]) return -1;
