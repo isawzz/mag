@@ -6,14 +6,28 @@ async function test4() {
 	mStyle('dPage', { h: '100%' });
 
 	// Example usage:
-	const container = document.getElementById('dPage'); // Assuming you have a container div
-	let [dTop,dTable]=insertDivs(container);
+	const container = mBy('dPage'); // Assuming you have a container div
+	let [dTop, dTable] = insertDivs(container);
 
-	mDom(dTop,{},{html:'andere zeile'});
+	for (const i of range(120)) { mDom(dTable, { padding: 10 }, { html: 'new line' }) }
 
-	for(const i of range(20)){mDom(dTable,{},{html:'new line'})}
+	mDom(dTop, { padding: 10 }, { html: 'andere zeile' });
 
-	mDom(dTop,{},{html:'andere zeile'});
+	loadColors(); //console.log(M.colorNames);
+	let list = M.colorList;
+	let bb = 10;
+	list = list.map(x => x.sorting = Math.round(x.hue / bb) * bb); //+Math.trunc(x.sat*10));
+	// list = sortByMultipleProperties(M.colorList,'hue','sat','lightness');
+	list = sortByMultipleProperties(M.colorList, 'sorting', 'lightness', 'sat');
+	let cont = mDom(dTable, { display: 'flex', wrap: true }, {});
+	let sorting = 0;
+	for (const o of list) {
+		if (o.sorting > sorting) { sorting = o.sorting; mLinebreak(cont) }
+		mDom(cont, { bg: o.hex, fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${o.name} (${o.sorting})` });
+	}
+
+	let tcont = mDom(dTop, { display: 'flex', wrap: true, overy: 'scroll', hmax: 250 }, {});
+	list.map(x => mDom(tcont, { margin: 10, bg: x.name }, { html: x.name }));
 
 	// let dTop = mDom('dPage', { h: 'auto', bg: 'red', overy: 'auto' }, { id: 'dTop0' })
 	// let dTable = mDom('dPage', { h: 'calc ( 100% - ', bg: 'blue', overy: 'scroll' }, { id: 'dTable0' })
