@@ -7322,6 +7322,7 @@ function mStyle(elem, styles = {}, opts = {}) {
       vpadding: (elem, v) => elem.style.padding = `${v}px 0`,
       hmargin: (elem, v) => elem.style.margin = `0 ${v}px`,
       vmargin: (elem, v) => elem.style.margin = `${v}px 0`,
+      wbox: (elem, v) => elem.style.boxSizing = v ? 'border-box' : 'content-box',
       wrap: (elem, v) => { if (v == 'hard') elem.setAttribute('wrap', 'hard'); else elem.style.flexWrap = 'wrap'; }
 
     };
@@ -10452,7 +10453,7 @@ function sortByHues(list) {
   return buckets;
 }
 function sortByMultipleProperties(list) {
-  let props = Array.from(arguments).slice(1); console.log(props)
+  let props = Array.from(arguments).slice(1); //console.log(props)
   return list.sort((a, b) => {
     for (const p of props) {
       if (a[p] < b[p]) return -1;

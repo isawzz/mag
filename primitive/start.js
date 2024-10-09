@@ -1,32 +1,68 @@
 onload = start;
 
-async function start() { await test3(); }
+async function start() { await test4(); }
 
+async function test4() {
+	mStyle('dPage', { h: '100%' });
+
+	// Example usage:
+	const container = document.getElementById('dPage'); // Assuming you have a container div
+	let [dTop,dTable]=insertDivs(container);
+
+	mDom(dTop,{},{html:'andere zeile'});
+
+	for(const i of range(20)){mDom(dTable,{},{html:'new line'})}
+
+	mDom(dTop,{},{html:'andere zeile'});
+
+	// let dTop = mDom('dPage', { h: 'auto', bg: 'red', overy: 'auto' }, { id: 'dTop0' })
+	// let dTable = mDom('dPage', { h: 'calc ( 100% - ', bg: 'blue', overy: 'scroll' }, { id: 'dTable0' })
+}
+async function test4a() {
+	mStyle('dPage', { h: '100%' })
+	let dTop = mDom('dPage', { h: '50%', bg: 'red', overy: 'auto' }, { id: 'dTop0' })
+	let dTable = mDom('dPage', { h: '50%', bg: 'blue', overy: 'scroll' }, { id: 'dTable0' })
+}
 async function test3() {
-	loadColors(); console.log(M.colorNames);
-	oceanLayout('dPage', 'skyblue');
+	loadColors(); //console.log(M.colorNames);
+	oceanLayout('dPage', 'microsoft_yellow');
 
 	let dTable = mBy('dTable0');
-	let [w,h]=[25,25];
-	list = sortByMultipleProperties(M.colorList,'hue','sat','lightness');
+	let dTop = mBy('dTop0');
 
-	let cont=mDom(dTable, {display:'flex',wrap:true}, {});
-	for(const o of list){
-		mDom(cont, {bg:o.hex,fg:'contrast',padding:10,margin:3}, {tag:'div', html:o.name});
+	mStyle('dPage', { h: '100%' })
+	mStyle(dTable, { h: '50%' })
+	mStyle(dTop, { h: '50%', display: 'flex', wrap: true })
+
+	let list = M.colorList;
+	let bb = 10;
+	list = list.map(x => x.sorting = Math.round(x.hue / bb) * bb); //+Math.trunc(x.sat*10));
+	// list = sortByMultipleProperties(M.colorList,'hue','sat','lightness');
+	list = sortByMultipleProperties(M.colorList, 'sorting', 'lightness', 'sat');
+
+	let cont = mDom(dTable, { display: 'flex', wrap: true }, {});
+	let sorting = 0;
+	for (const o of list) {
+		if (o.sorting > sorting) { sorting = o.sorting; mLinebreak(cont) }
+		mDom(cont, { bg: o.hex, fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${o.name} (${o.sorting})` });
 	}
-}
-async function testMist(){
-	for(const b in M.dicolor){
-		mDom(dTable,{},{tag:'h1',html:b});
-		let cont=mDom(dTable, {display:'flex',wrap:true}, {});
-		let keys = Object.keys(M.dicolor[b]); console.log(keys);
-		let list = keys.map(x=>M.colorByName[x]); console.log(list[0])
 
-		list = sortByMultipleProperties(list,'lightness','hue');
-		for(const o of list){
+	//mStyle(dTop,{wmax:'100%'})
+	mCenterFlex(dTop)
+	list.map(x => mDom(dTop, { margin: 10, bg: x.name }, { html: x.name }));
+}
+async function testMist() {
+	for (const b in M.dicolor) {
+		mDom(dTable, {}, { tag: 'h1', html: b });
+		let cont = mDom(dTable, { display: 'flex', wrap: true }, {});
+		let keys = Object.keys(M.dicolor[b]); console.log(keys);
+		let list = keys.map(x => M.colorByName[x]); console.log(list[0])
+
+		list = sortByMultipleProperties(list, 'lightness', 'hue');
+		for (const o of list) {
 			//console.log(o); return;
 			//let color = M.dicolor[b][c];
-			mDom(cont, {bg:o.hex,fg:'contrast',padding:10,margin:3}, {tag:'div', html:o.name});
+			mDom(cont, { bg: o.hex, fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: o.name });
 		}
 	}
 }
