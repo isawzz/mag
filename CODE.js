@@ -1,4 +1,85 @@
 
+function addColorSorting(bh=18,bs=20,bl=20) {
+	let list = M.colorList;
+	let [bh, bs, bl] = [18, 20, 20];
+	for (const x of list) {
+		let fg = colorIdealText(x.hex);
+		x.fg = fg;
+		x.sorth = Math.round(x.hue / bh) * bh;
+		x.sortl = Math.round(x.lightness * 100 / bl) * bl;
+		x.sorts = Math.round(x.sat * 100 / bs) * bs;
+	}
+	return list;
+}
+function sortColors1() {
+	let list = M.colorList;
+	let bb = 10;
+	list = list.map(x => x.sorting = Math.round(x.hue / bb) * bb); //+Math.trunc(x.sat*10));
+	list = sortByMultipleProperties(M.colorList, 'sorting', 'lightness', 'sat');
+	return list;
+}
+function sortColors2() {
+	let list = M.colorList;
+	let bb = 10;
+	list = list.map(x => x.sorting = Math.round(x.hue / bb) * bb); //+Math.trunc(x.sat*10));
+	list = sortByMultipleProperties(M.colorList, 'hue', 'sat', 'lightness');
+	return list;
+}
+function sortColors3() {
+	let list = M.colorList;
+	let bb = 10;
+	list = list.map(x => x.sorting = Math.round(x.sat * 100 / bb) * bb); //+Math.trunc(x.sat*10));
+	// list = sortByMultipleProperties(M.colorList,'hue','sat','lightness');
+	list = sortByMultipleProperties(M.colorList, 'sorting', 'hue', 'lightness');
+	return list;
+}
+function sortColors4() {
+	let list = M.colorList;
+	let bb = 10;
+	list = list.map(x => x.sorth = Math.round(x.hue / bb) * bb);
+	list = list.map(x => x.sortl = Math.round(x.lightness * 100 / bb) * bb);
+	list = list.map(x => x.sorts = Math.round(x.sat * 100 / bb) * bb);
+	list = sortByMultipleProperties(M.colorList, 'sorth', 'sortl', 'sorts');
+	return list;
+}
+function sortColors5() {
+	let list = M.colorList;
+	let [bh, bl, bs] = [18, 10, 10];
+	for (const x of list) {
+		x.sorth = Math.round(x.hue / bh) * bh;
+		x.sortl = Math.round(x.lightness * 100 / bl) * bl;
+		x.sorts = Math.round(x.sat * 100 / bs) * bs;
+	}
+	console.log(list[0])
+	list = sortByMultipleProperties(M.colorList, 'sorth', 'sortl', 'sorts', 'hue');
+	return list;
+}
+function sortColors6() {
+	let list = M.colorList;
+	let [bh, bl, bs] = [18, 25, 25];
+	for (const x of list) {
+		x.sorth = Math.round(x.hue / bh) * bh;
+		x.sortl = Math.round(x.lightness * 100 / bl) * bl;
+		x.sorts = Math.round(x.sat * 100 / bs) * bs;
+	}
+	console.log(list[0])
+	list = sortByMultipleProperties(M.colorList, 'sortl', 'sorth', 'sorts', 'lightness', 'hue');
+	return list;
+}
+function sortColors7() {
+	let list = M.colorList;
+	let [bh, bs, bl] = [18, 20, 20];
+	for (const x of list) {
+		let fg = colorIdealText(x.hex);
+		x.fg = fg;
+		x.sorth = Math.round(x.hue / bh) * bh;
+		x.sortl = Math.round(x.lightness * 100 / bl) * bl;
+		x.sorts = Math.round(x.sat * 100 / bs) * bs;
+	}
+	console.log(list[0])
+	list = sortByMultipleProperties(M.colorList, 'fg', 'sorth', 'sorts', 'sortl', 'hue');
+	return list;
+}
 function insertDivs_orig(container) {
 	// Create the top div
 	const topDiv = document.createElement('div');

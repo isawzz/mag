@@ -1,4 +1,16 @@
 
+js function that receives a container of specific size and inserts 2 divs: the top one should have 
+height auto. the bottom one should cover all the rest of the container height. when the top one grows, 
+the bottom one should automatically shrink in height. the bottom one should have overflow-y = 'scroll'
+
+js function that receives a container of specific size and inserts 3 divs: the top one should have 
+height auto. the bottom one should cover all the rest of the container height. when the top one grows, 
+the bottom one should automatically shrink in height. 
+the bottom one should have 2 divs inside: the left one is a sidebar that has the 'menu' symbol (3 lines) in it.
+when that sign is clicked, the sidebar should open/close (toggle) with a transition of .5s and ease.
+the right one covers the rest of the page width and should have a scroll bar (overlow-y scroll);
+automatically when the side bar opens, the left divs should shrink in width and vice versa.
+
 _______ how to start a project
 
 1. use mBodyResetter and mLayout... to make basic page layout

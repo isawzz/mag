@@ -1,7 +1,32 @@
 onload = start;
 
-async function start() { await test4(); }
+async function start() { await test6(); }
 
+async function test6() {
+
+	// Example usage:
+	const container = document.getElementById('dPage'); // Your container element
+	createLayout(container);
+
+}
+async function test5() {
+	let list = loadColors(); //console.log(M.colorNames);
+	mStyle('dPage', { h: '100%' });
+	const container = mBy('dPage');
+	let [dTop, dSide, dTable] = mLayoutTopLeftTable(container);
+
+	// let tcont = mDom(dTop, { display: 'flex', wrap: true, overy: 'scroll', hmax: 250 }, {}); //muss hmax haben!!!
+	mStyle(dTop, { bg: 'banana', display: 'flex', jcontent: 'space-between', hpadding: 10 });
+	mDom(dTop, { fz: 30 }, { html: 'my game' });
+
+	//let [dSide,dTable] = mLayoutLeftMain(dMain,true);
+
+	let cont = mDom(dTable, { bg: 'lemonchiffon', display: 'flex', wrap: true }, {});
+	for (const o of list) {
+		mDom(cont, { bg: o.hex, fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
+	}
+
+}
 async function test4() {
 	mStyle('dPage', { h: '100%' });
 
@@ -13,21 +38,16 @@ async function test4() {
 
 	//mDom(dTop, { padding: 10 }, { html: 'andere zeile' });
 
-	loadColors(); //console.log(M.colorNames);
-	let list = M.colorList;
-	let bb = 10;
-	list = list.map(x => x.sorting = Math.round(x.hue / bb) * bb); //+Math.trunc(x.sat*10));
-	// list = sortByMultipleProperties(M.colorList,'hue','sat','lightness');
-	list = sortByMultipleProperties(M.colorList, 'sorting', 'lightness', 'sat');
+	let list = loadColors(); //console.log(M.colorNames);
 	let cont = mDom(dTable, { display: 'flex', wrap: true }, {});
-	let sorting = 0;
+	//let sorting = 0;
 	for (const o of list) {
-		if (o.sorting > sorting) { sorting = o.sorting; mLinebreak(cont) }
-		mDom(cont, { bg: o.hex, fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${o.name} (${o.sorting})` });
+		//if (o.sorting > sorting) { sorting = o.sorting; mLinebreak(cont) }
+		mDom(cont, { bg: o.hex, fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
 	}
 
-	let tcont = mDom(dTop, { display: 'flex', wrap: true, overy: 'scroll', hmax: 250 }, {});
-	list.map(x => mDom(tcont, { margin: 10, bg: x.name }, { html: x.name }));
+	// let tcont = mDom(dTop, { display: 'flex', wrap: true, overy: 'scroll', hmax: 250 }, {});
+	// list.map(x => mDom(tcont, { margin: 10, bg: x.name }, { html: x.name }));
 
 	// let dTop = mDom('dPage', { h: 'auto', bg: 'red', overy: 'auto' }, { id: 'dTop0' })
 	// let dTable = mDom('dPage', { h: 'calc ( 100% - ', bg: 'blue', overy: 'scroll' }, { id: 'dTable0' })

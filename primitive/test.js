@@ -1,72 +1,3 @@
-const BLUE = '#4363d8';
-const BROWN = '#96613d';
-const FIREBRICK = '#800000';
-const GREEN = '#3cb44b';
-const BLUEGREEN = '#004054';
-const LIGHTBLUE = '#42d4f4';
-const LIGHTGREEN = '#afff45';
-const names = ['felix', 'amanda', 'sabine', 'tom', 'taka', 'microbe', 'dwight', 'jim', 'michael', 'pam', 'kevin', 'darryl', 'lauren', 'anuj', 'david', 'holly'];
-const OLIVE = '#808000';
-const ORANGE = '#f58231';
-const NEONORANGE = '#ff6700';
-const PURPLE = '#911eb4';
-const RED = '#e6194B';
-const TEAL = '#469990';
-const YELLOW = '#ffe119';
-const NEONYELLOW = '#efff04';
-var ColorDi;
-var dParent;
-var dTable;
-var dTop;
-var M = {};
-const STYLE_PARAMS_2 = {
-  acontent: 'align-content',
-  aitems: 'align-items',
-  align: 'text-align',
-  aspectRatio: 'aspect-ratio',
-  bgBlend: 'background-blend-mode', //'mix-blend-mode', //
-  bgImage: 'background-image',
-  bgRepeat: 'background-repeat',
-  bgSize: 'background-size',
-  deco: 'text-decoration',
-  dir: 'flex-direction',
-  family: 'font-family',
-  fontSize: 'font-size',
-  fStyle: 'font-style',
-  fz: 'font-size',
-  h: 'height',
-  hgap: 'column-gap',
-  hmin: 'min-height',
-  hmax: 'max-height',
-  hline: 'line-height',
-  jcontent: 'justify-content',
-  jitems: 'justify-items',
-  justify: 'justify-content',
-  matop: 'margin-top',
-  maleft: 'margin-left',
-  mabottom: 'margin-bottom',
-  maright: 'margin-right',
-  origin: 'transform-origin',
-  overx: 'overflow-x',
-  overy: 'overflow-y',
-  patop: 'padding-top',
-  paleft: 'padding-left',
-  pabottom: 'padding-bottom',
-  paright: 'padding-right',
-  place: 'place-items',
-  rounding: 'border-radius',
-  valign: 'align-items',
-  vgap: 'row-gap',
-  w: 'width',
-  wmin: 'min-width',
-  wmax: 'max-width',
-  weight: 'font-weight',
-  x: 'left',
-  xover: 'overflow-x',
-  y: 'top',
-  yover: 'overflow-y',
-  z: 'z-index'
-};
 function addKeys(ofrom, oto) { for (const k in ofrom) if (nundef(oto[k])) oto[k] = ofrom[k]; return oto; }
 function alphaToHex(a01) {
   a01 = Math.round(a01 * 100) / 100;
@@ -725,12 +656,22 @@ function list2dict(arr, keyprop = 'id', uniqueKeys = true) {
   }
   return di;
 }
-function loadColors() {
+function loadColors(bh=18,bs=20,bl=20) {
   if (nundef(M.dicolor)) {
     M.dicolor = dicolor;
     [M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
     M.colorNames = Object.keys(M.colorByName); M.colorNames.sort();
   }
+	let list = M.colorList;
+	for (const x of list) {
+		let fg = colorIdealText(x.hex);
+		x.fg = fg;
+		x.sorth = Math.round(x.hue / bh) * bh;
+		x.sortl = Math.round(x.lightness * 100 / bl) * bl;
+		x.sorts = Math.round(x.sat * 100 / bs) * bs;
+	}
+	list = sortByMultipleProperties(list, 'fg', 'sorth', 'sorts', 'sortl', 'hue');
+	return list;
 }
 function lookup(dict, keys) {
   if (nundef(dict)) return null;
@@ -836,12 +777,6 @@ function mGetStyle(elem, prop) {
   }
   if (nundef(val)) val = getStyleProp(elem, prop);
   if (val.endsWith('px')) return firstNumber(val); else return val;
-}
-function mLayoutTopTable(container) {
-  mStyle(container,{display:'grid',gridRows:'auto 1fr',h:'100%'});
-  let topDiv = mDom(container); 
-  let bottomDiv = mDom(container,{overy:'scroll'}); //,padding:10,bg:'lightgreen'},{html:'hallo'});
-  return [topDiv,bottomDiv];
 }
 function mLinebreak(dParent, gap) {
   dParent = toElem(dParent);
@@ -973,7 +908,7 @@ function simulateClick(elem) {
   var canceled = !elem.dispatchEvent(evt);
 }
 function sortByMultipleProperties(list) {
-  let props = Array.from(arguments).slice(1); 
+  let props = Array.from(arguments).slice(1);
   return list.sort((a, b) => {
     for (const p of props) {
       if (a[p] < b[p]) return -1;
@@ -996,10 +931,10 @@ async function test4() {
   mStyle('dPage', { h: '100%' });
   const container = mBy('dPage'); // Assuming you have a container div
   let [dTop, dTable] = mLayoutTopTable(container);
-  loadColors(); 
+  loadColors();
   let list = M.colorList;
   let bb = 10;
-  list = list.map(x => x.sorting = Math.round(x.hue / bb) * bb); 
+  list = list.map(x => x.sorting = Math.round(x.hue / bb) * bb);
   list = sortByMultipleProperties(M.colorList, 'sorting', 'lightness', 'sat');
   let cont = mDom(dTable, { display: 'flex', wrap: true }, {});
   let sorting = 0;
