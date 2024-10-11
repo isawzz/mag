@@ -6,7 +6,8 @@ async function test6() {
 
 	// Example usage:
 	const container = document.getElementById('dPage'); // Your container element
-	createLayout(container);
+	let [dTop, dSide, dTable] = createLayout(container);
+
 
 }
 async function test5() {

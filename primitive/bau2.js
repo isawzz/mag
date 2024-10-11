@@ -62,4 +62,7 @@ function createLayout(container) {
 		}
 		sidebarOpen = !sidebarOpen;
 	});
+
+	return [topDiv,leftDiv,rightDiv];
 }
+
