@@ -1,6 +1,18 @@
 
-async function start() { test12(); }
+async function start() { test13_closureMin(); }
 
+async function test13_closureMin(){
+	S.type = detectSessionType();
+	initCodingUI();
+	let text, css, project;
+	let glitches = ['startsWith', 'endsWith'];
+	text = '<please call closureFromProject>', css = '';
+	[text, css, project] = await closureFromProject('primitive', glitches, ['downloadAsText']); //,'onclickColors','onclickPlan','onclickCollection','onclickPlay','onclickNATIONS','onclickHome']); 
+	AU.ta.value = text;
+	//AU.ta.value = project; //if want only functions not in allfhuge.js!
+	AU.css.value = css;
+
+}
 async function test12(){
 	let names = ["../ode/closure.js","../ode/games.js","../ode/corrext.js","../ode/bauclosure.js","../ode/baugames.js","../ode/bau_old.js","../ode/bau_new.js","../ode/bau1.js","../ode/bau2.js","../ode/bau3.js","../ode/bau4.js"];
 	let di={};

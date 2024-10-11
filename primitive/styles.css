@@ -4,14 +4,3 @@ body {
   height: 100vh;
 }
 
-.rowsAutoFrAuto {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  height: 100%;
-}
-.colsAutoFrAuto {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  height: 100%;
-}
-

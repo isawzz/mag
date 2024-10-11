@@ -1,28 +1,5 @@
 
-function mPaletteTrans() {
-	let palette = paletteTransWhiteBlack(arguments.length); //console.log(palette);
-	for (const did of arguments) {
-		let d = toElem(did);
-		mStyle(d, { bg: palette.pop(), fg: 'contrast', family: 'opensans', wbox: true, padding: 10 });
-	}
-}
-function oceanLayout(d, bg, level = 0) {
-	let d0 = toElem(d)
-	mStyle(d0, { bg, padding: 0, margin: 0, wbox:true });
-	mClear(d0);
-	dTop = mDomid(d0, 'dTop' + level);
-	dMiddle = mDom(d0, { classes: 'colsAutoFrAuto' }, { id: 'dMiddle' + level });
-	dSidebar = mDomid(dMiddle, 'dSidebar' + level);
-	dTable = mDomid(dMiddle, 'dTable' + level); 
-	let divs = [dTop, dSidebar, dTable];
-	mPaletteTrans(...divs);
-	divs.map(x => mStyle(x, {wbox:true}, { html: x.id }))
-
-	//let dTable = mBy('dTable0'); 	
-	mStyle(dTable, { overy: 'scroll', hmax: dTable.offsetHeight, wbox: true });
-
-}
-function saveObjectAsCode(obj) {
+function downloadAsCode(obj,fname) {
 	function convertObjectToCode(obj) {
 		if (typeof obj === 'object' && !Array.isArray(obj)) {
 			const entries = Object.entries(obj)
@@ -46,7 +23,7 @@ function saveObjectAsCode(obj) {
 	// Create a download link for the file
 	const link = document.createElement('a');
 	link.href = URL.createObjectURL(blob);
-	link.download = 'object.js'; // Name of the file to be downloaded
+	link.download = fname+'.js'; // Name of the file to be downloaded
 
 	// Trigger the download
 	document.body.appendChild(link);
@@ -54,6 +31,29 @@ function saveObjectAsCode(obj) {
 
 	// Clean up by removing the link
 	document.body.removeChild(link);
+}
+function mPaletteTrans() {
+	let palette = paletteTransWhiteBlack(arguments.length); //console.log(palette);
+	for (const did of arguments) {
+		let d = toElem(did);
+		mStyle(d, { bg: palette.pop(), fg: 'contrast', family: 'opensans', wbox: true, padding: 10 });
+	}
+}
+function oceanLayout(d, bg, level = 0) {
+	let d0 = toElem(d)
+	mStyle(d0, { bg, padding: 0, margin: 0, wbox:true });
+	mClear(d0);
+	dTop = mDomid(d0, 'dTop' + level);
+	dMiddle = mDom(d0, { classes: 'colsAutoFrAuto' }, { id: 'dMiddle' + level });
+	dSidebar = mDomid(dMiddle, 'dSidebar' + level);
+	dTable = mDomid(dMiddle, 'dTable' + level); 
+	let divs = [dTop, dSidebar, dTable];
+	mPaletteTrans(...divs);
+	divs.map(x => mStyle(x, {wbox:true}, { html: x.id }))
+
+	//let dTable = mBy('dTable0'); 	
+	mStyle(dTable, { overy: 'scroll', hmax: dTable.offsetHeight, wbox: true });
+
 }
 
 

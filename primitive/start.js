@@ -7,11 +7,11 @@ async function test4() {
 
 	// Example usage:
 	const container = mBy('dPage'); // Assuming you have a container div
-	let [dTop, dTable] = insertDivs(container);
+	let [dTop, dTable] = mLayoutTopTable(container);
 
-	for (const i of range(120)) { mDom(dTable, { padding: 10 }, { html: 'new line' }) }
+	//for (const i of range(120)) { mDom(dTable, { padding: 10 }, { html: 'new line' }) }
 
-	mDom(dTop, { padding: 10 }, { html: 'andere zeile' });
+	//mDom(dTop, { padding: 10 }, { html: 'andere zeile' });
 
 	loadColors(); //console.log(M.colorNames);
 	let list = M.colorList;
@@ -166,7 +166,7 @@ async function machDieColorsAlsJs_TEMP() {
 	// };
 
 	// Call the function to save the object as code
-	saveObjectAsCode(M.dicolor);
+	downloadAsCode(M.dicolor);
 	// downloadAsJson(M.dicolor,'dicolor')
 }
 //#endregion
