@@ -1,4 +1,347 @@
 
+//#region layout versuche top side left with AI
+function ___createLayout(container) {
+	// Create the top div (auto height)
+	const topDiv = document.createElement('div');
+	topDiv.style.backgroundColor = 'lightblue';
+	topDiv.style.padding = '10px';
+	topDiv.textContent = "Top div - grows with content.";
+
+	// Create a wrapper div for the middle section (sidebar + content)
+	const middleDiv = document.createElement('div');
+	middleDiv.style.display = 'flex';
+	middleDiv.style.flexGrow = '1'; // Take up remaining space
+	middleDiv.style.height = '100%'; // Full height for this section
+	middleDiv.position = 'relative';
+
+
+	// // Create the left (sidebar) div with initial small width
+	// const leftDiv = document.createElement('div');
+	// leftDiv.style.width = '60px'; // Initial width of the sidebar (collapsed)
+	// leftDiv.style.backgroundColor = 'lightgray';
+	// leftDiv.style.transition = 'width 0.5s ease'; // Smooth transition for open/close
+	// leftDiv.style.overflowY = 'auto'; // In case content overflows
+
+	const leftDiv = document.createElement('div');
+	// Create the right div (main content area)
+	const rightDiv = document.createElement('div');
+	rightDiv.style.flexGrow = '1'; // Fill the remaining space
+	rightDiv.style.overflowY = 'scroll'; // Scrollbar for overflow content
+	rightDiv.style.backgroundColor = 'lightgreen';
+	rightDiv.style.padding = '10px';
+
+	// Example content for rightDiv
+	const content = document.createElement('div');
+	content.textContent = "This is the main content area. It will shrink as the sidebar opens.";
+	rightDiv.appendChild(content);
+
+	// Append left (sidebar) and right (content area) to the middleDiv
+	middleDiv.appendChild(leftDiv);
+	middleDiv.appendChild(rightDiv);
+
+	// Append the top and middle divs to the container
+	container.style.display = 'flex';
+	container.style.flexDirection = 'column';
+	container.style.height = '100vh'; // Full viewport height
+	container.appendChild(topDiv);
+	container.appendChild(middleDiv);
+
+	// Toggle sidebar open/close on menu symbol click
+	leftDiv.style.width = '60px'; // Initial width of the sidebar (collapsed)
+	leftDiv.style.backgroundColor = 'lightgray';
+	leftDiv.style.position = 'absolute'; // Positioned absolutely
+	leftDiv.style.top = '0';
+	leftDiv.style.left = '0';
+	leftDiv.style.bottom = '0';
+	leftDiv.style.transition = 'width 0.5s ease'; // Smooth transition for open/close
+
+	// Add the 'menu' symbol to the sidebar
+	const menuSymbol = document.createElement('div');
+	menuSymbol.textContent = "☰"; // Menu symbol (three lines)
+	menuSymbol.style.cursor = 'pointer';
+	menuSymbol.style.padding = '10px';
+	menuSymbol.style.fontSize = '24px';
+	leftDiv.appendChild(menuSymbol);
+
+	let sidebarOpen = false;
+	menuSymbol.addEventListener('click', () => {
+		if (sidebarOpen) {
+			leftDiv.style.width = '60px'; // Collapse the sidebar
+		} else {
+			leftDiv.style.width = '200px'; // Expand the sidebar
+		}
+		sidebarOpen = !sidebarOpen;
+	});
+
+
+	return [topDiv, leftDiv, rightDiv, menuSymbol];
+
+}
+
+function __createLayout(container) {
+	// Create the top div (auto height)
+	const topDiv = document.createElement('div');
+	topDiv.style.backgroundColor = 'lightblue';
+	topDiv.style.padding = '10px';
+	topDiv.textContent = "Top div - grows with content.";
+
+	// // Create the left (sidebar) div
+	// const leftDiv = document.createElement('div');
+	// leftDiv.style.width = '60px'; // Initial width of the sidebar (collapsed)
+	// leftDiv.style.backgroundColor = 'lightgray';
+	// leftDiv.style.float = 'left'; // Sidebar floats to the left
+	// leftDiv.style.transition = 'width 0.25s ease'; // Smooth transition for open/close
+	// leftDiv.style.height = '100%'; // Make sidebar take full height
+
+	// Create the left (sidebar) div with absolute positioning
+	const leftDiv = document.createElement('div');
+	leftDiv.style.width = '60px'; // Initial width of the sidebar (collapsed)
+	leftDiv.style.backgroundColor = 'lightgray';
+	leftDiv.style.position = 'absolute'; // Positioned absolutely
+	leftDiv.style.top = '0';
+	leftDiv.style.left = '0';
+	leftDiv.style.bottom = '0';
+	leftDiv.style.transition = 'width 0.5s ease'; // Smooth transition for open/close
+
+
+	// Add the 'menu' symbol to the sidebar
+	const menuSymbol = document.createElement('div');
+	menuSymbol.textContent = "☰"; // Menu symbol (three lines)
+	menuSymbol.style.cursor = 'pointer';
+	menuSymbol.style.padding = '10px';
+	menuSymbol.style.fontSize = '24px';
+	leftDiv.appendChild(menuSymbol);
+
+	// Create the right div (main content area)
+	const rightDiv = document.createElement('div');
+	rightDiv.style.marginLeft = '60px'; // Leave space for the sidebar initially
+	rightDiv.style.overflowY = 'scroll'; // Scrollbar for overflow content
+	rightDiv.style.backgroundColor = document.body.style.backgroundColor = 'lightgreen';
+	rightDiv.style.padding = '10px';
+	rightDiv.style.height = '100%'; // Take full height of the container
+
+	// Example content for rightDiv
+	const content = document.createElement('div');
+	content.textContent = "This is the main content area. It will shrink as the sidebar opens.";
+	rightDiv.appendChild(content);
+
+	// Clearfix to handle float (to make sure bottom div clears the float)
+	const clearDiv = document.createElement('div');
+	clearDiv.style.clear = 'both';
+
+	// Append left (sidebar) and right (content area) to the container
+	container.style.height = '100%'; // Ensure the container takes the full height
+	container.appendChild(topDiv);
+	container.appendChild(leftDiv);
+	container.appendChild(rightDiv);
+	container.appendChild(clearDiv); // Clear the float with clearfix
+
+	// Toggle sidebar open/close on menu symbol click
+	let sidebarOpen = false;
+	menuSymbol.addEventListener('click', () => {
+		if (sidebarOpen) {
+			leftDiv.style.width = '60px'; // Collapse the sidebar
+			rightDiv.style.marginLeft = '60px'; // Adjust margin when sidebar collapses
+		} else {
+			leftDiv.style.width = '200px'; // Expand the sidebar
+			rightDiv.style.marginLeft = '200px'; // Adjust margin when sidebar expands
+		}
+		sidebarOpen = !sidebarOpen;
+	});
+
+	return [topDiv, leftDiv, rightDiv, menuSymbol];
+}
+
+function _createLayout(container) {
+	// Create the top div
+	const topDiv = document.createElement('div');
+	topDiv.style.backgroundColor = 'lightblue';
+	topDiv.style.padding = '10px';
+	topDiv.textContent = "Top div - grows with content.";
+
+	// Create the bottom div
+	const bottomDiv = document.createElement('div');
+	bottomDiv.style.display = 'flex'; // Flexbox for sidebar and main content
+	bottomDiv.style.flexGrow = '1'; // Take the remaining height
+	bottomDiv.style.overflow = 'hidden'; // Prevent overflow issues
+
+	// Create the left (sidebar) div
+	const leftDiv = document.createElement('div');
+	leftDiv.style.width = '60px'; // Initial width of the sidebar (collapsed)
+	leftDiv.style.backgroundColor = 'lightgray';
+	leftDiv.style.transition = 'width 0.5s ease'; // Smooth transition for open/close
+
+	// Add the 'menu' symbol to the sidebar
+	const menuSymbol = document.createElement('div');
+	menuSymbol.textContent = "☰"; // Menu symbol (three lines)
+	menuSymbol.style.cursor = 'pointer';
+	menuSymbol.style.padding = '10px';
+	menuSymbol.style.fontSize = '24px';
+	leftDiv.appendChild(menuSymbol);
+
+	// Create the right div (main content area)
+	const rightDiv = document.createElement('div');
+	rightDiv.style.flexGrow = '1'; // Take up the rest of the width
+	rightDiv.style.overflowY = 'scroll'; // Scrollbar if content overflows
+	rightDiv.style.backgroundColor = 'lightgreen';
+	rightDiv.style.padding = '10px';
+	rightDiv.textContent = "Right content area with scrollable content.";
+
+	// Add some extra content to make the right div scrollable
+	for (let i = 0; i < 20; i++) {
+		const p = document.createElement('p');
+		p.textContent = `Content line ${i + 1}`;
+		rightDiv.appendChild(p);
+	}
+
+	// Append left (sidebar) and right (content area) to bottom div
+	bottomDiv.appendChild(leftDiv);
+	bottomDiv.appendChild(rightDiv);
+
+	// Append top and bottom divs to the container
+	container.style.display = 'flex';
+	container.style.flexDirection = 'column';
+	container.style.height = '100%'; // Make sure container has height constraint
+	container.appendChild(topDiv);
+	container.appendChild(bottomDiv);
+
+	// Toggle sidebar open/close on menu symbol click
+	let sidebarOpen = false;
+	menuSymbol.addEventListener('click', () => {
+		if (sidebarOpen) {
+			leftDiv.style.width = '60px'; // Collapse the sidebar
+		} else {
+			leftDiv.style.width = '200px'; // Expand the sidebar
+		}
+		sidebarOpen = !sidebarOpen;
+	});
+
+	return [topDiv, leftDiv, rightDiv];
+}
+//#endregion
+
+//#region mLayout neu
+function mLayoutLeftMain(container, scroll = true) {
+	mStyle(container, { display: 'grid', gridCols: 'auto 1fr', h: '100%' });
+	let d1 = mDom(container, { transition: 'all .5s ease', wmin: 0, w: 0 }, { html: getMenuSymbol() });
+	let d2 = mDom(container);
+	if (scroll) mStyle(d2, { overflow: 'scroll' });
+	return [d1, d2];
+}
+function mLayoutTopTable(container, scroll = true) {
+	mStyle(container, { display: 'grid', gridRows: 'auto 1fr', h: '100%' });
+	let d1 = mDom(container);
+	let d2 = mDom(container);
+	if (scroll) mStyle(d2, { overflow: 'scroll' });
+	return [d1, d2];
+}
+function mLayoutTopLeftTable(container) {
+	// console.log('JAAAAAA')
+	mStyle(container, { display: 'flex', dir: 'column', h: '100%' });
+	let topDiv = mDom(container, { bg: 'lightblue', padding: 10 }, { html: "Top div - grows with content." });
+	let bottomDiv = mDom(container, { grow: 1, display: 'flex', overflow: 'hidden' });
+	let leftDiv = mDom(bottomDiv, { w: 60, transition: 'width 0.5s ease', bg: 'lightgray' });
+	let menuSymbol = mDom(leftDiv, { cursor: 'pointer', fz: 24, padding: 10 }, { html: getMenuSymbol() });
+	let rightDiv = mDom(bottomDiv, { grow: 1, overy: 'scroll', bg: 'lightgreen', padding: 10 }, { html: "Right content area with scrollable content." });
+
+	// // This is where you can use display:flex for internal content inside rightDiv
+	// const flexChild = document.createElement('div');
+	// flexChild.style.display = 'flex';
+	// flexChild.style.backgroundColor = 'lightyellow';
+	// flexChild.style.height = '200px'; // Some height for demo purposes
+	// // Add a flex item for demo inside rightDiv
+	// const flexItem = document.createElement('div');
+	// flexItem.textContent = "I'm inside rightDiv with flex";
+	// flexItem.style.backgroundColor = 'lightcoral';
+	// flexItem.style.flexGrow = '1';
+	// flexChild.appendChild(flexItem);
+	// rightDiv.appendChild(flexChild);
+
+	// Toggle sidebar open/close on menu symbol click
+	let sidebarOpen = false;
+	menuSymbol.addEventListener('click', () => {
+		if (sidebarOpen) {
+			leftDiv.style.width = '60px'; // Collapse the sidebar
+		} else {
+			leftDiv.style.width = '200px'; // Expand the sidebar
+		}
+		sidebarOpen = !sidebarOpen;
+	});
+
+	// for (let i = 0; i < 120; i++) {
+	// 	mDom(rightDiv, {}, { tag: 'p', html: `Content line ${i + 1}` });
+	// }
+
+	// let sidebarOpen = false;
+	return [topDiv, leftDiv, rightDiv, menuSymbol];
+}
+
+//#endregion
+
+//#region zeug
+function mLayoutTopLeftTable_YES(container) {
+	// console.log('JAAAAAA')
+	mStyle(container, { display: 'flex', dir: 'column', h: '100%' });
+	let topDiv = mDom(container, { bg: 'lightblue', padding: 10 }, { html: "Top div - grows with content." });
+	let bottomDiv = mDom(container, { grow: 1, display: 'flex', overflow: 'hidden' });
+	let leftDiv = mDom(bottomDiv, { w: 60, bg: 'lightgray', transition: 'width 0.5s ease' });
+	let menuSymbol = mDom(leftDiv, { cursor: 'pointer', fz: 24, padding: 10 }, { html: getMenuSymbol() });
+	let rightDiv = mDom(bottomDiv, { grow: 1, overy: 'scroll', bg: 'lightgreen', padding: 10 }, { html: "Right content area with scrollable content." });
+
+	// for (let i = 0; i < 120; i++) {
+	// 	mDom(rightDiv, {}, { tag: 'p', html: `Content line ${i + 1}` });
+	// }
+
+	let sidebarOpen = false;
+	menuSymbol.addEventListener('click', () => {
+		if (sidebarOpen) {
+			leftDiv.style.width = '60px'; // Collapse the sidebar
+		} else {
+			leftDiv.style.width = '200px'; // Expand the sidebar
+		}
+		sidebarOpen = !sidebarOpen;
+	});
+	return [topDiv, leftDiv, rightDiv];;
+}
+function mLayoutTopLeftTable(container) {
+
+  mStyle(container, { display: 'flex', dir: 'column', h: '100%', w:'100%' });
+  let d1=mDom(container,{bg:'lightblue',padding:10},{html:'top'})
+  let drest=mDom(container,{display:'flex',flexGrow:1,overflow:'hidden',w:'100%'});
+  let d2=mDom(drest,{w:60,bg:'lightgray',transition:'width 0.5s ease'});
+  let dsym=mDom(d2,{cursor:'pointer',fz:24,padding:10},{html:getMenuSymbol()})
+  let d3=mDom(drest,{flexGrow:1,overy:'scroll',bg:'lightgreen',padding:10},{html:'content'});
+
+	// Add some extra content to make the right div scrollable
+	for (let i = 0; i < 120; i++) {
+		const p = document.createElement('p');
+		p.textContent = `Content line ${i + 1}`;
+		d3.appendChild(p);
+	}
+
+	// Toggle sidebar open/close on menu symbol click
+	let sidebarOpen = false;
+	menuSymbol.addEventListener('click', () => {
+		if (sidebarOpen) {
+			leftDiv.style.width = '60px'; // Collapse the sidebar
+		} else {
+			leftDiv.style.width = '200px'; // Expand the sidebar
+		}
+		sidebarOpen = !sidebarOpen;
+	});
+
+  return [d1,d2,d3]; //{dTop:d1,dSidebar:d2,dTable:d3,isOpen:sidebarOpen}
+}
+
+function _mLayoutTopLeftTable(container,scroll=true) {
+  mStyle(container, { display: 'grid', gridRows: 'auto 1fr', h: '100%' });
+  let d1 = mDom(container);
+  let drest = mDom(container,{ display: 'grid', gridCols: 'auto 1fr', h: '100%', w:'100%' }); 
+	let d2 = mDom(drest);
+	let d3 = mDom(drest);
+  if (scroll) mStyle(d3, { overflow: 'scroll' });
+  return [d1, d2, d3];
+}
 function addColorSorting(bh=18,bs=20,bl=20) {
 	let list = M.colorList;
 	let [bh, bs, bl] = [18, 20, 20];
@@ -169,6 +512,7 @@ function presentImages(){
 	let images = M.recipes.map(img => '../assets/img/recipes/' + img);
 	images.forEach(img => mDom(dUpper, { w:wImg,h: hImg, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
 }
+//#endregion
 
 //#region extra unused in frei
 function mPage(styles = {}, opts = {}) {

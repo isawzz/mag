@@ -1,42 +1,54 @@
 
-function mLayoutLeftMain(container,scroll=true) {
-  mStyle(container, { display: 'grid', gridCols: 'auto 1fr', h: '100%' });
-  let d1 = mDom(container,{transition:'all .5s ease',wmin:0,w:0},{html:getMenuSymbol()});
-  let d2 = mDom(container); 
-	if (scroll) mStyle(d2, { overflow: 'scroll' });
-  return [d1, d2];
-}
-function mLayoutTopTable(container,scroll=true) {
-  mStyle(container, { display: 'grid', gridRows: 'auto 1fr', h: '100%' });
-  let d1 = mDom(container);
-  let d2 = mDom(container); 
-  if (scroll) mStyle(d2, { overflow: 'scroll' });
-  return [d1, d2];
-}
-function mLayoutTopLeftTable(container,scroll=true) {
-  mStyle(container, { display: 'grid', gridRows: 'auto 1fr', h: '100%' });
-  let d1 = mDom(container);
-  let drest = mDom(container,{ display: 'grid', gridCols: 'auto 1fr', h: '100%', w:'100%' }); 
-	let d2 = mDom(drest);
-	let d3 = mDom(drest);
-  if (scroll) mStyle(d3, { overflow: 'scroll' });
-  return [d1, d2, d3];
-}
-function mLayoutTopLeftTable(container) {
+function createLayout(container) {
+	// Create the top div (auto height)
+	const topDiv = document.createElement('div');
+	topDiv.style.gridArea = 'top';
+	topDiv.style.backgroundColor = 'lightblue';
+	topDiv.style.padding = '10px';
+	topDiv.textContent = "Top div - stays on top.";
 
-  mStyle(container, { display: 'flex', dir: 'column', h: '100%', w:'100%' });
-  let d1=mDom(container,{bg:'lightblue',padding:10},{html:'top'})
-  let drest=mDom(container,{display:'flex',flexGrow:1,overflow:'hidden',w:'100%'});
-  let d2=mDom(drest,{w:60,bg:'lightgray',transition:'width 0.5s ease'});
-  let dsym=mDom(d2,{cursor:'pointer',fz:24,padding:10},{html:getMenuSymbol()})
-  let d3=mDom(drest,{flexGrow:1,overy:'scroll',bg:'lightgreen',padding:10},{html:'content'});
+	// Create the left (sidebar) div
+	const leftDiv = document.createElement('div');
+	leftDiv.style.gridArea = 'left';
+	leftDiv.style.backgroundColor = 'lightgray';
+	leftDiv.style.transition = 'width 0.5s ease'; // Smooth transition for open/close
+	leftDiv.style.overflowY = 'auto';
+	leftDiv.style.width = '60px'; // Initial width of the sidebar (collapsed)
+	leftDiv.style.padding = '10px';
 
-	// Add some extra content to make the right div scrollable
-	for (let i = 0; i < 120; i++) {
-		const p = document.createElement('p');
-		p.textContent = `Content line ${i + 1}`;
-		d3.appendChild(p);
-	}
+	// Add the 'menu' symbol to the sidebar
+	const menuSymbol = document.createElement('div');
+	menuSymbol.textContent = "☰"; // Menu symbol (three lines)
+	menuSymbol.style.cursor = 'pointer';
+	menuSymbol.style.fontSize = '24px';
+	leftDiv.appendChild(menuSymbol);
+
+	// Create the right div (main content area)
+	const rightDiv = document.createElement('div');
+	rightDiv.style.gridArea = 'right';
+	rightDiv.style.backgroundColor = 'lightgreen';
+	rightDiv.style.overflowY = 'scroll'; // Scrollbar for overflow content
+	rightDiv.style.padding = '10px';
+
+	// Example content for rightDiv
+	const content = document.createElement('div');
+	content.textContent = "This is the main content area. It will shrink when the sidebar opens.";
+	rightDiv.appendChild(content);
+
+	// Apply grid layout to the container
+	container.style.display = 'grid';
+	container.style.gridTemplateColumns = 'auto 1fr'; // Sidebar auto width, content takes the rest
+	container.style.gridTemplateRows = 'auto 1fr'; // Top auto height, content takes the rest
+	container.style.gridTemplateAreas = `
+			'top top'
+			'left right'
+	`;
+	container.style.height = '100vh'; // Full viewport height
+
+	// Append top, left, and right divs to the container
+	container.appendChild(topDiv);
+	container.appendChild(leftDiv);
+	container.appendChild(rightDiv);
 
 	// Toggle sidebar open/close on menu symbol click
 	let sidebarOpen = false;
@@ -49,7 +61,8 @@ function mLayoutTopLeftTable(container) {
 		sidebarOpen = !sidebarOpen;
 	});
 
-  return [d1,d2,d3]; //{dTop:d1,dSidebar:d2,dTable:d3,isOpen:sidebarOpen}
+	return [topDiv, leftDiv, rightDiv, menuSymbol];
 }
+
 
 

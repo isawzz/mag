@@ -2,13 +2,79 @@ onload = start;
 
 async function start() { await test6(); }
 
-async function test6() {
-
-	// Example usage:
+async function test6(){
+	let list = loadColors(); //console.log(M.colorNames);
 	const container = document.getElementById('dPage'); // Your container element
-	let [dTop, dSide, dTable] = createLayout(container);
+	let [dTop, dSide, dTable, dMenuSymbol] = myLayout(container);
+	// Example content for rightDiv
+	const content = document.createElement('div');
+	content.textContent = "This is the main content area. It will shrink when the sidebar opens.";
+	dTable.appendChild(content);
+
+	let cont = mDom(dTable, { bg: 'lemonchiffon', display: 'flex', wrap: true }, {});
+	for (const o of list) {
+		mDom(cont, { bg: o.hex, fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
+	}
+
+}
+async function test6_NOPE(){
+	let list = loadColors(); //console.log(M.colorNames);
+	const container = document.getElementById('dPage'); // Your container element
+	let [dTop, dSide, dTable, dMenuSymbol] = createLayout(container);
+
+	let cont = mDom(dTable, { bg: 'lemonchiffon', display: 'flex', wrap: true }, {});
+	for (const o of list) {
+		mDom(cont, { bg: o.hex, fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
+	}
 
 
+	// for (const o of list) {
+	// 	mDom(dTable, { w:200, h:25, display:'inline-block', bg: o.hex, fg: 'contrast', margin: 3, padding:3 }, { html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
+	// }
+
+}
+async function test6_NOPE(){
+	let list = loadColors(); //console.log(M.colorNames);
+	const container = document.getElementById('dPage'); // Your container element
+	createLayout(container);
+	return; 
+	let [dTop, dSide, dTable, dMenuSymbol] = mLayoutTopLeftTable(container);
+
+	mClear(dTable);
+	for (const o of list) {
+		mDom(dTable, { w:200, h:25, display:'inline-block', bg: o.hex, fg: 'contrast', margin: 3, padding:3 }, { html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
+	}
+	
+
+	return;
+	//let cont = mDom(dTable, { bg: 'lemonchiffon', display: 'flex', wrap: true }, {});
+	let cont = dTable;
+	// mStyle(cont, { display: 'grid', w100: true, gridCols: 4, wrap: true, bg: 'lemonchiffon',  })
+	mStyle(cont, { grow:1, shrink:1, display: 'flex', w100: true, wrap: true, bg: 'lemonchiffon',  })
+	for (const o of list) {
+		mDom(cont, { bg: o.hex, fg: 'contrast', margin: 3, padding:3 }, { html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
+	}
+
+	dSide.id='dSide';
+	dSide.style.width = '200px';
+	dSide.style.flexGrow = '1'
+	dMenuSymbol.addEventListener('click', ev => {
+		console.log('click!');
+		let dSide = ev.target.closest('#dSide'); console.log(dSide)
+		let w=dSide.offsetWidth; console.log('w',w);//mGetStyle(leftDiv,'w');
+		if (w > 60) {
+			console.log('HALLO!!!!')
+			dSide.style.width = '60px'; // Collapse the sidebar
+		} else {
+			dSide.style.width = '200px'; // Expand the sidebar
+		}
+		//sidebarOpen = !sidebarOpen;
+	});
+
+}
+async function test6_layoutTopLeftTable() {
+	const container = document.getElementById('dPage'); // Your container element
+	let [dTop, dSide, dTable] = mLayoutTopLeftTable(container);
 }
 async function test5() {
 	let list = loadColors(); //console.log(M.colorNames);

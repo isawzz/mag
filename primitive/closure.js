@@ -6005,6 +6005,23 @@ async function loadAssets() {
   M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
   [M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
 }
+function loadColors(bh = 18, bs = 20, bl = 20) {
+  if (nundef(M.dicolor)) {
+    M.dicolor = dicolor;
+    [M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
+    M.colorNames = Object.keys(M.colorByName); M.colorNames.sort();
+  }
+  let list = M.colorList;
+  for (const x of list) {
+    let fg = colorIdealText(x.hex);
+    x.fg = fg;
+    x.sorth = Math.round(x.hue / bh) * bh;
+    x.sortl = Math.round(x.lightness * 100 / bl) * bl;
+    x.sorts = Math.round(x.sat * 100 / bs) * bs;
+  }
+  list = sortByMultipleProperties(list, 'fg', 'sorth', 'sorts', 'sortl', 'hue');
+  return list;
+}
 function loadImageAsync(src, img) {
   return new Promise((resolve, reject) => {
     img.onload = async () => {
@@ -7319,13 +7336,13 @@ function mSleep(ms = 1000) {
 function mStyle(elem, styles = {}, opts = {}) {
   elem = toElem(elem);
   styles = jsCopy(styles);
+  let noUnit=['opacity','flex','grow','shrink','grid','z','iteration','count','orphans','widows','weight','order','index'];
   for (const k in styles) {
-    let key = STYLE_PARAMS_2[k];
     let v = styles[k];
-    let val = isNumber(v) ? '' + Number(v) + 'px' : v;
+    let key = STYLE_PARAMS_2[k]; 
+    let val = isNumber(v) && !noUnit.some(x=>k.includes(x)) ? '' + Number(v) + 'px' : v;
+    if (k.includes('flex')) console.log(key,val);
     if (isdef(key)) { elem.style.setProperty(key, val); continue; }
-
-    //jetzt mach ich es ueber di mit spezialfaellen
     const STYLE_PARAMS_3 = {
       gridRows: (elem, v) => elem.style.gridTemplateRows = isNumber(v) ? `repeat(${v},1fr)` : v,
       gridCols: (elem, v) => elem.style.gridTemplateColumns = isNumber(v) ? `repeat(${v},1fr)` : v,
@@ -7333,6 +7350,8 @@ function mStyle(elem, styles = {}, opts = {}) {
       vpadding: (elem, v) => elem.style.padding = `${v}px 0`,
       hmargin: (elem, v) => elem.style.margin = `0 ${v}px`,
       vmargin: (elem, v) => elem.style.margin = `${v}px 0`,
+      wbox: (elem, v) => elem.style.boxSizing = v ? 'border-box' : 'content-box',
+      wrap: (elem, v) => { if (v == 'hard') elem.setAttribute('wrap', 'hard'); else elem.style.flexWrap = 'wrap'; }
     };
     if (v == 'contrast') { //nur bei fg verwenden!!!!
       let bg = nundef(styles.bg) ? mGetStyle(elem, 'bg') : colorFrom(styles.bg);
@@ -7342,6 +7361,9 @@ function mStyle(elem, styles = {}, opts = {}) {
       continue;
     } else if (k == 'fg') {
       elem.style.setProperty('color', colorFrom(v));
+      continue;
+    } else if (k.startsWith('class')) {
+      mClass(elem, v)
       continue;
     } else if (isdef(STYLE_PARAMS_3[k])) {
       STYLE_PARAMS_3[k](elem, v);

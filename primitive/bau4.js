@@ -32,6 +32,22 @@ function downloadAsCode(obj,fname) {
 	// Clean up by removing the link
 	document.body.removeChild(link);
 }
+function filterColorsByFunc(colors, func) {
+	let filteredColors = [];
+	for (let color of colors) {
+		if (func(color)) {
+			filteredColors.push(color);
+		}
+	}
+	return filteredColors;
+}
+function mapColorsByFunc(colors, func) {
+	let mappedColors = [];
+	for (let color of colors) {
+		mappedColors.push(func(color));
+	}
+	return mappedColors;
+}
 function mPaletteTrans() {
 	let palette = paletteTransWhiteBlack(arguments.length); //console.log(palette);
 	for (const did of arguments) {
@@ -54,6 +70,9 @@ function oceanLayout(d, bg, level = 0) {
 	//let dTable = mBy('dTable0'); 	
 	mStyle(dTable, { overy: 'scroll', hmax: dTable.offsetHeight, wbox: true });
 
+}
+function sortColorsByFunc(colors, func) {
+	return colors.sort(func);
 }
 
 
