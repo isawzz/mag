@@ -1,7 +1,10 @@
 onload = start;
 
-async function start() { await test6(); }
+async function start() { await test7(); }
 
+async function test7(){
+	show_coding_ui();
+}
 async function test6(){
 	let list = loadColors(); //console.log(M.colorNames);
 	const container = document.getElementById('dPage'); // Your container element
