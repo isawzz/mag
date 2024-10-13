@@ -1,4 +1,5 @@
 
+function divInt(a, b) { return Math.trunc(a / b); }
 function downloadAsCode(obj,fname) {
 	function convertObjectToCode(obj) {
 		if (typeof obj === 'object' && !Array.isArray(obj)) {
@@ -70,6 +71,20 @@ function oceanLayout(d, bg, level = 0) {
 	//let dTable = mBy('dTable0'); 	
 	mStyle(dTable, { overy: 'scroll', hmax: dTable.offsetHeight, wbox: true });
 
+}
+function rColorTrans(opaPer = 100, lumPer = 70, satPer = 100, hue) {
+	if (isList(hue) && hue.length > 2) {
+		//interpret as choose one of these hues
+		hue = rChoose(hue);
+	} else if (isList(hue)) {
+		//interpret as range min,max
+		hue = Math.random() * (hue[1] - hue[0]) + hue[0];
+	} else if (isdef(hue)) {
+		//interpret as modulo
+		hue = divInt(rHue(), hue) * hue;
+	} else hue = Math.round(Math.random() * 360);
+	//console.log('hue', hue)
+	return colorFrom({h:hue, s:satPer, l:lumPer}, opaPer / 100);
 }
 function sortColorsByFunc(colors, func) {
 	return colors.sort(func);

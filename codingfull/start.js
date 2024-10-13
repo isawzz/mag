@@ -1,10 +1,19 @@
 onload = start;
 
-async function start(){ await test1(); }
+async function start(){ loadColors(); await test2(); }
+
+async function test2(){
+	let d = document.body; d.innerHTML = '';
+	mStyle(d,{w100:true,h100:true,bg:'fuchsia'})
+	mClass(d, 'fullpage airport');
+}
+
+async function test2NO(){
+	show_coding_ui();
+}
 async function test1() {
 	test_ui_extended();
 }	
-
 async function test0() {
 	test_ui_extended();
 	await load_Codebase('../coding/cb/cb1');

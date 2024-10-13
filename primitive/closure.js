@@ -7336,23 +7336,24 @@ function mSleep(ms = 1000) {
 function mStyle(elem, styles = {}, opts = {}) {
   elem = toElem(elem);
   styles = jsCopy(styles);
-  let noUnit=['opacity','flex','grow','shrink','grid','z','iteration','count','orphans','widows','weight','order','index'];
+  let noUnit = ['opacity', 'flex', 'grow', 'shrink', 'grid', 'z', 'iteration', 'count', 'orphans', 'widows', 'weight', 'order', 'index'];
+  const STYLE_PARAMS_3 = {
+    bgSrc: (elem, v) => elem.style.backgroundImage = `url(${v})`,
+    gridRows: (elem, v) => elem.style.gridTemplateRows = isNumber(v) ? `repeat(${v},1fr)` : v,
+    gridCols: (elem, v) => elem.style.gridTemplateColumns = isNumber(v) ? `repeat(${v},1fr)` : v,
+    hpadding: (elem, v) => elem.style.padding = `0 ${v}px`,
+    vpadding: (elem, v) => elem.style.padding = `${v}px 0`,
+    hmargin: (elem, v) => elem.style.margin = `0 ${v}px`,
+    vmargin: (elem, v) => elem.style.margin = `${v}px 0`,
+    wbox: (elem, v) => elem.style.boxSizing = v ? 'border-box' : 'content-box',
+    wrap: (elem, v) => { if (v == 'hard') elem.setAttribute('wrap', 'hard'); else elem.style.flexWrap = 'wrap'; }
+  };
   for (const k in styles) {
     let v = styles[k];
-    let key = STYLE_PARAMS_2[k]; 
-    let val = isNumber(v) && !noUnit.some(x=>k.includes(x)) ? '' + Number(v) + 'px' : v;
-    if (k.includes('flex')) console.log(key,val);
+    let key = STYLE_PARAMS_2[k];
+    let val = isNumber(v) && !noUnit.some(x => k.includes(x)) ? '' + Number(v) + 'px' : v;
+    if (k.includes('flex')) console.log(key, val);
     if (isdef(key)) { elem.style.setProperty(key, val); continue; }
-    const STYLE_PARAMS_3 = {
-      gridRows: (elem, v) => elem.style.gridTemplateRows = isNumber(v) ? `repeat(${v},1fr)` : v,
-      gridCols: (elem, v) => elem.style.gridTemplateColumns = isNumber(v) ? `repeat(${v},1fr)` : v,
-      hpadding: (elem, v) => elem.style.padding = `0 ${v}px`,
-      vpadding: (elem, v) => elem.style.padding = `${v}px 0`,
-      hmargin: (elem, v) => elem.style.margin = `0 ${v}px`,
-      vmargin: (elem, v) => elem.style.margin = `${v}px 0`,
-      wbox: (elem, v) => elem.style.boxSizing = v ? 'border-box' : 'content-box',
-      wrap: (elem, v) => { if (v == 'hard') elem.setAttribute('wrap', 'hard'); else elem.style.flexWrap = 'wrap'; }
-    };
     if (v == 'contrast') { //nur bei fg verwenden!!!!
       let bg = nundef(styles.bg) ? mGetStyle(elem, 'bg') : colorFrom(styles.bg);
       elem.style.setProperty('color', colorIdealText(bg));

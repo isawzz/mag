@@ -1,11 +1,21 @@
 onload = start;
 
-async function start() { await test7(); }
+async function start() { loadColors(); await test7(); }
 
-async function test7(){
+async function test7() {
+	let d = document.body; d.innerHTML = ''; mStyle(d, { w: '100vw', h: '100vh', padding: 0, margin: 0, wbox: true, overy: 'hidden' })
+	mDom(d, { h: '100%', w: '100%', bgSrc: '../assets/img/airport/airport2.jpg' }); return; //OK
+
+	mDom(d, { h: '100%', w: '100%', bgImage: 'url(../assets/img/airport/airport2.jpg)' }); return; //OK
+	mDom(d, { h: '100%', w: '100%' }, { tag: 'img', src: '../assets/img/airport/airport2.jpg' }); return; //OK
+	d = mDom(d, { w100: true, h100: true, bgImage: '../assets/img/airport/airport2.jpg' });
+	//mClass(d, 'fullpage airport');
+}
+
+async function test7NO() {
 	show_coding_ui();
 }
-async function test6(){
+async function test6() {
 	let list = loadColors(); //console.log(M.colorNames);
 	const container = document.getElementById('dPage'); // Your container element
 	let [dTop, dSide, dTable, dMenuSymbol] = myLayout(container);
@@ -20,7 +30,7 @@ async function test6(){
 	}
 
 }
-async function test6_NOPE(){
+async function test6_NOPE() {
 	let list = loadColors(); //console.log(M.colorNames);
 	const container = document.getElementById('dPage'); // Your container element
 	let [dTop, dSide, dTable, dMenuSymbol] = createLayout(container);
@@ -36,35 +46,35 @@ async function test6_NOPE(){
 	// }
 
 }
-async function test6_NOPE(){
+async function test6_NOPE() {
 	let list = loadColors(); //console.log(M.colorNames);
 	const container = document.getElementById('dPage'); // Your container element
 	createLayout(container);
-	return; 
+	return;
 	let [dTop, dSide, dTable, dMenuSymbol] = mLayoutTopLeftTable(container);
 
 	mClear(dTable);
 	for (const o of list) {
-		mDom(dTable, { w:200, h:25, display:'inline-block', bg: o.hex, fg: 'contrast', margin: 3, padding:3 }, { html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
+		mDom(dTable, { w: 200, h: 25, display: 'inline-block', bg: o.hex, fg: 'contrast', margin: 3, padding: 3 }, { html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
 	}
-	
+
 
 	return;
 	//let cont = mDom(dTable, { bg: 'lemonchiffon', display: 'flex', wrap: true }, {});
 	let cont = dTable;
 	// mStyle(cont, { display: 'grid', w100: true, gridCols: 4, wrap: true, bg: 'lemonchiffon',  })
-	mStyle(cont, { grow:1, shrink:1, display: 'flex', w100: true, wrap: true, bg: 'lemonchiffon',  })
+	mStyle(cont, { grow: 1, shrink: 1, display: 'flex', w100: true, wrap: true, bg: 'lemonchiffon', })
 	for (const o of list) {
-		mDom(cont, { bg: o.hex, fg: 'contrast', margin: 3, padding:3 }, { html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
+		mDom(cont, { bg: o.hex, fg: 'contrast', margin: 3, padding: 3 }, { html: `${o.name} (h:${o.hue},l:${o.sortl},s:${o.sorts})` });
 	}
 
-	dSide.id='dSide';
+	dSide.id = 'dSide';
 	dSide.style.width = '200px';
 	dSide.style.flexGrow = '1'
 	dMenuSymbol.addEventListener('click', ev => {
 		console.log('click!');
 		let dSide = ev.target.closest('#dSide'); console.log(dSide)
-		let w=dSide.offsetWidth; console.log('w',w);//mGetStyle(leftDiv,'w');
+		let w = dSide.offsetWidth; console.log('w', w);//mGetStyle(leftDiv,'w');
 		if (w > 60) {
 			console.log('HALLO!!!!')
 			dSide.style.width = '60px'; // Collapse the sidebar

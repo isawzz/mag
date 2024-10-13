@@ -1,6 +1,9 @@
 
-async function start() { test13_closureMin(); }
+async function start() { test14(); }
 
+async function test14() {
+	show_coding_ui();
+}
 async function test13_closureMin(){
 	S.type = detectSessionType();
 	initCodingUI();

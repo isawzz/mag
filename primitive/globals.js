@@ -24,6 +24,7 @@ const STYLE_PARAMS_2 = {
   aitems: 'align-items',
   align: 'text-align',
   aspectRatio: 'aspect-ratio',
+  bgAttach: 'background-attachment',
   bgBlend: 'background-blend-mode', //'mix-blend-mode', //
   bgImage: 'background-image',
   bgRepeat: 'background-repeat',
