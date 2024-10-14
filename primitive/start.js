@@ -90,7 +90,7 @@ async function test7NO() {
 }
 async function test7_airport() {
 	let d = document.body; d.innerHTML = ''; mStyle(d, { w: '100vw', h: '100vh', padding: 0, margin: 0, wbox: true, overy: 'hidden' })
-	mDom(d, { h: '100%', w: '100%', bgSrc: '../assets/img/airport/airport2.jpg' }); return; //OK
+	mDom(d, { h: '100%', w: '100%', bgSize: 'cover', bgSrc: '../assets/img/airport/airport2.jpg' }); return; //OK
 
 	mDom(d, { h: '100%', w: '100%', bgImage: 'url(../assets/img/airport/airport2.jpg)' }); return; //OK
 	mDom(d, { h: '100%', w: '100%' }, { tag: 'img', src: '../assets/img/airport/airport2.jpg' }); return; //OK
