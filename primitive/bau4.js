@@ -1,4 +1,5 @@
 
+function arrNoDuplicates(arr) {	return [...new Set(arr)];}
 function divInt(a, b) { return Math.trunc(a / b); }
 function downloadAsCode(obj,fname) {
 	function convertObjectToCode(obj) {

@@ -1,5 +1,180 @@
 
 //#region layout versuche top side left with AI
+function mAreas(dParent, gridAreas, gridCols, gridRows) {
+	if (isList(gridAreas)) gridAreas = gridAreas.map(x => `'${x}'`).join(' ');
+
+	//mStyle(container, { display: 'grid', gridCols: 'auto 1fr', gridRows: 'auto 1fr', dir: 'column', h: '100vh' });
+	// container.style.gridTemplateAreas = `
+	// 		'top top'
+	// 		'left right'
+	// `;
+
+	console.log(gridAreas);
+	let dg = mDom(dParent, { display: 'grid', gridCols, gridRows, gridAreas, w: '100%', h: '100%' });
+	dg.style.gridTemplateAreas = gridAreas;
+	let names = arrNoDuplicates(toWords(gridAreas)); console.log(names);
+
+	let palette = paletteTransWhiteBlack(names.length + 2).slice(1); //console.log(palette);
+
+	for (const name of names) {
+		mDom(dg, { gridArea: name, bg: palette.pop(), family: 'algerian', padding: 10, wbox: true }, { id: name, html: name });
+		//mDom(dg,{gridArea:name,bg:rColor(),padding:10},{id:name,html:name});
+	}
+
+}
+function mGridFrom(d, m, cols, rows, cellstyles = {}) {
+	let gta = '';
+	let words = [];
+	for (const line of m) {
+		gta = gta + `'${line}' `;
+		let warr = toWords(line);
+		//console.log('warr',warr)
+		for (const w of warr) if (!words.includes(w)) words.push(w);
+		//w.map(x => addIf(words, w));
+
+	}
+	//console.log('gta',gta);
+	//console.log('words', words);
+	let dParent = mDom100(d, { display: 'grid', 'grid-template-areas': gta });
+	dParent.style.gridTemplateColumns = cols;
+	dParent.style.gridTemplateRows = rows;
+	for (const w of words) {
+		let st = copyKeys({ 'grid-area': w }, cellstyles);
+		let cell = window[w] = mDom(dParent, st, { id: w });//	,html:w.substring(1)})
+
+
+	}
+	//console.log('dParent',dParent); return;
+	return dParent;
+}
+function show_coding_ui() {
+	let d = document.body; mClass(d, 'fullpage airport'); //addDummy(d);
+	//mStyle(d,{hmax:'100%'})
+	let areas = [
+		'dTestButtons dTestButtons',
+		'dSearch dSidebar',
+		'dFiddle dSidebar',
+		'dTable dSidebar',
+		'dFooter dSidebar',
+	];
+	let cols = '1fr 240px';
+	let rows = 'auto auto 1fr auto auto';
+
+	let [bg, fg] = [rColorTrans(50, 10, 100, [150, 230]), 'contrast']; //console.log('colors:', bg, fg);	//bg='hsla(120,100%,25%,0.3)';
+	dPage = mGridFrom(d, areas, cols, rows, { hmax: '96%', padding: 4, box: true, bg: bg, fg: fg });
+
+	let elem = mSearch('keywords:', mySearch, dSearch, {}, { selectOnClick: true });
+	let bs = mDiv(elem, { 'grid-column': '1 / span 3', display: 'flex', gap: 4 });
+	mButton('name', onclickFulltext, bs, { align: 'center', w: 110 });
+	mButton('insensitive', onclickCase, bs, { align: 'center', w: 210 });
+	mButton('anywhere', onclickWhere, bs, { align: 'center', w: 210 });
+
+	mStyle(dFiddle, { h: 800, bg: GREEN });
+	mDom(dFiddle, {}, { html: 'Edit Code:' });
+	AU.ta = mDom(dFiddle, { fz: 18, family: 'consolas', w100: true, box: true, h: 'rest', bg: colorTrans(bg, 1), fg: 'black' }, { tag: 'textarea', id: 'ta', className: 'plain' });
+
+	mFlex(dTestButtons);
+	mButton('TEST', onclickTest, dTestButtons); //mDom(dTestButtons, { bg: bg, hpadding: 10, vpadding: 4, rounding: 8, cursor: 'pointer' }, { onclick: onclickTest, className: 'hop1', html: 'TEST' });
+
+	addEventListener('keydown', execute_on_control_enter)
+	//mDom(dTable, {margin:10,bg:'#222'}, { html: 'HAAAAAAAAAALLLLLLLLLOOOOOO', editable: true, selectOnClick: true });
+	//dUnten = mDiv(dTable, {box:true,w:'100%',h:400,bg:'#222'});
+}
+function myLayout(container) {
+	let topDiv = mDom(container, { bg: 'lightblue', padding: 10 }, { html: "Top div - grows with content." });
+	topDiv.style.gridArea = 'top';
+
+	let leftDiv = mDom(container, { overy: 'auto', w: 60, transition: 'width 0.5s ease', bg: 'lightgray', padding: 10 });
+	leftDiv.style.gridArea = 'left';
+
+	let menuSymbol = mDom(leftDiv, { cursor: 'pointer', fz: 24 }, { html: getMenuSymbol() });
+
+	let rightDiv = mDom(container, { overy: 'scroll', bg: 'lightgreen', padding: 10 }, { html: "Right content area with scrollable content." });
+	rightDiv.style.gridArea = 'right';
+
+	mStyle(container, { display: 'grid', gridCols: 'auto 1fr', gridRows: 'auto 1fr', dir: 'column', h: '100vh' });
+	container.style.gridTemplateAreas = `
+			'top top'
+			'left right'
+	`;
+
+	// Toggle sidebar open/close on menu symbol click
+	let sidebarOpen = false;
+	menuSymbol.addEventListener('click', () => {
+		if (sidebarOpen) {
+			leftDiv.style.width = '60px'; // Collapse the sidebar
+		} else {
+			leftDiv.style.width = '200px'; // Expand the sidebar
+		}
+		sidebarOpen = !sidebarOpen;
+	});
+
+	return [topDiv, leftDiv, rightDiv, menuSymbol];
+}
+function createLayout(container) {
+	// Create the top div (auto height)
+	const topDiv = document.createElement('div');
+	topDiv.style.gridArea = 'top';
+	topDiv.style.backgroundColor = 'lightblue';
+	topDiv.style.padding = '10px';
+	topDiv.textContent = "Top div - stays on top.";
+
+	// Create the left (sidebar) div
+	const leftDiv = document.createElement('div');
+	leftDiv.style.gridArea = 'left';
+	leftDiv.style.backgroundColor = 'lightgray';
+	leftDiv.style.transition = 'width 0.5s ease'; // Smooth transition for open/close
+	leftDiv.style.overflowY = 'auto';
+	leftDiv.style.width = '60px'; // Initial width of the sidebar (collapsed)
+	leftDiv.style.padding = '10px';
+
+	// Add the 'menu' symbol to the sidebar
+	const menuSymbol = document.createElement('div');
+	menuSymbol.textContent = "☰"; // Menu symbol (three lines)
+	menuSymbol.style.cursor = 'pointer';
+	menuSymbol.style.fontSize = '24px';
+	leftDiv.appendChild(menuSymbol);
+
+	// Create the right div (main content area)
+	const rightDiv = document.createElement('div');
+	rightDiv.style.gridArea = 'right';
+	rightDiv.style.backgroundColor = 'lightgreen';
+	rightDiv.style.overflowY = 'scroll'; // Scrollbar for overflow content
+	rightDiv.style.padding = '10px';
+
+	// Example content for rightDiv
+	const content = document.createElement('div');
+	content.textContent = "This is the main content area. It will shrink when the sidebar opens.";
+	rightDiv.appendChild(content);
+
+	// Apply grid layout to the container
+	container.style.display = 'grid';
+	container.style.gridTemplateColumns = 'auto 1fr'; // Sidebar auto width, content takes the rest
+	container.style.gridTemplateRows = 'auto 1fr'; // Top auto height, content takes the rest
+	container.style.gridTemplateAreas = `
+			'top top'
+			'left right'
+	`;
+	container.style.height = '100vh'; // Full viewport height
+
+	// Append top, left, and right divs to the container
+	container.appendChild(topDiv);
+	container.appendChild(leftDiv);
+	container.appendChild(rightDiv);
+
+	// Toggle sidebar open/close on menu symbol click
+	let sidebarOpen = false;
+	menuSymbol.addEventListener('click', () => {
+		if (sidebarOpen) {
+			leftDiv.style.width = '60px'; // Collapse the sidebar
+		} else {
+			leftDiv.style.width = '200px'; // Expand the sidebar
+		}
+		sidebarOpen = !sidebarOpen;
+	});
+
+	return [topDiv, leftDiv, rightDiv, menuSymbol];
+}
 function ___createLayout(container) {
 	// Create the top div (auto height)
 	const topDiv = document.createElement('div');
@@ -221,6 +396,7 @@ function _createLayout(container) {
 //#endregion
 
 //#region mLayout neu
+
 function mLayoutLeftMain(container, scroll = true) {
 	mStyle(container, { display: 'grid', gridCols: 'auto 1fr', h: '100%' });
 	let d1 = mDom(container, { transition: 'all .5s ease', wmin: 0, w: 0 }, { html: getMenuSymbol() });

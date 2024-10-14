@@ -3,6 +3,92 @@ onload = start;
 async function start() { loadColors(); await test7(); }
 
 async function test7() {
+	let dPage = document.getElementById('dPage');mStyle(dPage,{w:'100%',h:'100%'})
+	let areas = `
+		'dMessage dMessage'
+		'dTop dTop'
+		'dSide dTable'
+		'dStatus dStatus'
+	`;
+	let names = mAreas(dPage,areas,'auto 1fr','auto auto 1fr auto')
+	console.log(names)
+	let divs = document.querySelectorAll('div'); console.log(divs);
+	console.log(mBy('dTestButtons'))
+	//return;
+	mStyle(dPage,{bg:'skyblue'})
+	let palette = paletteTransWhiteBlack(names.length+3).slice(2); console.log(palette);
+	for(const name of names){
+		let d=mBy(name); //console.log(name,d)
+		mStyle(d, { bg: palette.shift(), fg:'contrast', padding: 10, wbox: true });
+	}
+	mStyle('dMessage',{},{html:'Check in at Gate A33 ...boarding in 25 minutes'})
+	mStyle('dTable', { opacity:.5, bgSrc: '../assets/img/airport/airport2.jpg' });
+}
+async function test7_airport1() {
+	let dPage = document.getElementById('dPage');mStyle(dPage,{w:'100%',h:'100%'})
+	let areas = `
+		'top top'
+		'left right'
+	`;
+	let names = mAreas(dPage,areas,'auto 1fr','auto 1fr')
+	areas = `
+		'dTestButtons dTestButtons'
+		'dSidebar dSearch'
+		'dSidebar dFiddle'
+		'dSidebar dTable'
+		'dSidebar dFooter'
+	`;
+	let cols = 'auto 1fr';
+	let rows = 'auto auto 1fr auto auto';
+	names = names.concat(mAreas('right',areas,cols,rows));
+	removeInPlace(names,'right')
+	console.log(names)
+	let divs = document.querySelectorAll('div'); console.log(divs);
+	console.log(mBy('dTestButtons'))
+	//return;
+	mStyle(dPage,{bg:'skyblue'})
+	let palette = paletteTransWhiteBlack(names.length + 2).slice(1); //console.log(palette);
+	for(const name of names){
+		let d=mBy(name); console.log(name,d)
+		mStyle(d, { bg: palette.pop(), fg:'contrast', padding: 10, wbox: true });
+	}
+	mStyle('top',{},{html:'Check in at Gate A33 ...boarding in 25 minutes'})
+	mStyle('dFiddle', { opacity:.5, bgSrc: '../assets/img/airport/airport2.jpg' });
+}
+async function test7a() {
+	let container = document.getElementById('dPage');
+	let topDiv = mDom(container, { bg: 'lightblue', padding: 10 }, { html: "Top div - grows with content." });
+	topDiv.style.gridArea = 'top';
+
+	let leftDiv = mDom(container, { overy: 'auto', w: 60, transition: 'width 0.5s ease', bg: 'lightgray', padding: 10 });
+	leftDiv.style.gridArea = 'left';
+
+	let menuSymbol = mDom(leftDiv, { cursor: 'pointer', fz: 24 }, { html: getMenuSymbol() });
+
+	let rightDiv = mDom(container, { overy: 'scroll', bg: 'lightgreen', padding: 10 }, { html: "Right content area with scrollable content." });
+	rightDiv.style.gridArea = 'right';
+
+	mStyle(container, { display: 'grid', gridCols: 'auto 1fr', gridRows: 'auto 1fr', dir: 'column', h: '100vh' });
+	container.style.gridTemplateAreas = `
+			'top top'
+			'left right'
+	`;
+
+}
+async function test7NO() {
+	let dPage = document.getElementById('dPage');
+	let areas = `
+		'dTestButtons dTestButtons'
+		'dSidebar dSearch'
+		'dSidebar dFiddle'
+		'dSidebar dTable'
+		'dSidebar dFooter'
+	`;
+	let cols = 'auto 1fr';
+	let rows = 'auto auto 1fr auto auto';
+	mAreas(dPage, areas, cols, rows);
+}
+async function test7_airport() {
 	let d = document.body; d.innerHTML = ''; mStyle(d, { w: '100vw', h: '100vh', padding: 0, margin: 0, wbox: true, overy: 'hidden' })
 	mDom(d, { h: '100%', w: '100%', bgSrc: '../assets/img/airport/airport2.jpg' }); return; //OK
 
