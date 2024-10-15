@@ -2,35 +2,43 @@ onload = start;
 
 async function start() { loadColors(); await test7(); }
 
-async function test7() {
-	let dPage = document.getElementById('dPage');mStyle(dPage,{w:'100%',h:'100%'})
+async function test7_YES() {
+	let dPage = document.getElementById('dPage'); 
+	mStyle(dPage, { w: '100%', h: '100%', bg: 'skyblue' })
 	let areas = `
 		'dMessage dMessage'
 		'dTop dTop'
 		'dSide dTable'
 		'dStatus dStatus'
 	`;
-	let names = mAreas(dPage,areas,'auto 1fr','auto auto 1fr auto')
-	console.log(names)
-	let divs = document.querySelectorAll('div'); console.log(divs);
-	console.log(mBy('dTestButtons'))
-	//return;
-	mStyle(dPage,{bg:'skyblue'})
-	let palette = paletteTransWhiteBlack(names.length+3).slice(2); console.log(palette);
-	for(const name of names){
-		let d=mBy(name); //console.log(name,d)
-		mStyle(d, { bg: palette.shift(), fg:'contrast', padding: 10, wbox: true });
-	}
-	mStyle('dMessage',{},{html:'Check in at Gate A33 ...boarding in 25 minutes'})
-	mStyle('dTable', { opacity:.5, bgSrc: '../assets/img/airport/airport2.jpg' });
+	let names = mAreas(dPage, areas, 'auto 1fr', 'auto auto 1fr auto'); //console.log(names)
+	mShade(names);
+	mStyle('dMessage', {}, { html: 'Check in at Gate A33 ...boarding in 25 minutes' })
+	mStyle('dTable', { opacity: .5, bgSrc: '../assets/img/airport/airport2.jpg' });
+
+	//mach aus dTop eine Topline sowie bei ode
+}
+async function test7_YES() {
+	let dPage = document.getElementById('dPage'); 
+	mStyle(dPage, { w: '100%', h: '100%', bg: 'skyblue' })
+	let areas = `
+		'dMessage dMessage'
+		'dTop dTop'
+		'dSide dTable'
+		'dStatus dStatus'
+	`;
+	let names = mAreas(dPage, areas, 'auto 1fr', 'auto auto 1fr auto'); //console.log(names)
+	mShade(names);
+	mStyle('dMessage', {}, { html: 'Check in at Gate A33 ...boarding in 25 minutes' })
+	mStyle('dTable', { opacity: .5, bgSrc: '../assets/img/airport/airport2.jpg' });
 }
 async function test7_airport1() {
-	let dPage = document.getElementById('dPage');mStyle(dPage,{w:'100%',h:'100%'})
+	let dPage = document.getElementById('dPage'); mStyle(dPage, { w: '100%', h: '100%' })
 	let areas = `
 		'top top'
 		'left right'
 	`;
-	let names = mAreas(dPage,areas,'auto 1fr','auto 1fr')
+	let names = mAreas(dPage, areas, 'auto 1fr', 'auto 1fr')
 	areas = `
 		'dTestButtons dTestButtons'
 		'dSidebar dSearch'
@@ -40,20 +48,20 @@ async function test7_airport1() {
 	`;
 	let cols = 'auto 1fr';
 	let rows = 'auto auto 1fr auto auto';
-	names = names.concat(mAreas('right',areas,cols,rows));
-	removeInPlace(names,'right')
+	names = names.concat(mAreas('right', areas, cols, rows));
+	removeInPlace(names, 'right')
 	console.log(names)
 	let divs = document.querySelectorAll('div'); console.log(divs);
 	console.log(mBy('dTestButtons'))
 	//return;
-	mStyle(dPage,{bg:'skyblue'})
+	mStyle(dPage, { bg: 'skyblue' })
 	let palette = paletteTransWhiteBlack(names.length + 2).slice(1); //console.log(palette);
-	for(const name of names){
-		let d=mBy(name); console.log(name,d)
-		mStyle(d, { bg: palette.pop(), fg:'contrast', padding: 10, wbox: true });
+	for (const name of names) {
+		let d = mBy(name); console.log(name, d)
+		mStyle(d, { bg: palette.pop(), fg: 'contrast', padding: 10, wbox: true });
 	}
-	mStyle('top',{},{html:'Check in at Gate A33 ...boarding in 25 minutes'})
-	mStyle('dFiddle', { opacity:.5, bgSrc: '../assets/img/airport/airport2.jpg' });
+	mStyle('top', {}, { html: 'Check in at Gate A33 ...boarding in 25 minutes' })
+	mStyle('dFiddle', { opacity: .5, bgSrc: '../assets/img/airport/airport2.jpg' });
 }
 async function test7a() {
 	let container = document.getElementById('dPage');
@@ -97,7 +105,6 @@ async function test7_airport() {
 	d = mDom(d, { w100: true, h100: true, bgImage: '../assets/img/airport/airport2.jpg' });
 	//mClass(d, 'fullpage airport');
 }
-
 async function test7NO() {
 	show_coding_ui();
 }

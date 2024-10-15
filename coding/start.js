@@ -1,5 +1,5 @@
 
-async function start() { test14(); }
+async function start() { test12(); }
 
 async function test14() {
 	show_coding_ui();

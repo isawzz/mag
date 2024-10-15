@@ -34,62 +34,6 @@ function downloadAsCode(obj,fname) {
 	// Clean up by removing the link
 	document.body.removeChild(link);
 }
-function filterColorsByFunc(colors, func) {
-	let filteredColors = [];
-	for (let color of colors) {
-		if (func(color)) {
-			filteredColors.push(color);
-		}
-	}
-	return filteredColors;
-}
-function mapColorsByFunc(colors, func) {
-	let mappedColors = [];
-	for (let color of colors) {
-		mappedColors.push(func(color));
-	}
-	return mappedColors;
-}
-function mPaletteTrans() {
-	let palette = paletteTransWhiteBlack(arguments.length); //console.log(palette);
-	for (const did of arguments) {
-		let d = toElem(did);
-		mStyle(d, { bg: palette.pop(), fg: 'contrast', family: 'opensans', wbox: true, padding: 10 });
-	}
-}
-function oceanLayout(d, bg, level = 0) {
-	let d0 = toElem(d)
-	mStyle(d0, { bg, padding: 0, margin: 0, wbox:true });
-	mClear(d0);
-	dTop = mDomid(d0, 'dTop' + level);
-	dMiddle = mDom(d0, { classes: 'colsAutoFrAuto' }, { id: 'dMiddle' + level });
-	dSidebar = mDomid(dMiddle, 'dSidebar' + level);
-	dTable = mDomid(dMiddle, 'dTable' + level); 
-	let divs = [dTop, dSidebar, dTable];
-	mPaletteTrans(...divs);
-	divs.map(x => mStyle(x, {wbox:true}, { html: x.id }))
-
-	//let dTable = mBy('dTable0'); 	
-	mStyle(dTable, { overy: 'scroll', hmax: dTable.offsetHeight, wbox: true });
-
-}
-function rColorTrans(opaPer = 100, lumPer = 70, satPer = 100, hue) {
-	if (isList(hue) && hue.length > 2) {
-		//interpret as choose one of these hues
-		hue = rChoose(hue);
-	} else if (isList(hue)) {
-		//interpret as range min,max
-		hue = Math.random() * (hue[1] - hue[0]) + hue[0];
-	} else if (isdef(hue)) {
-		//interpret as modulo
-		hue = divInt(rHue(), hue) * hue;
-	} else hue = Math.round(Math.random() * 360);
-	//console.log('hue', hue)
-	return colorFrom({h:hue, s:satPer, l:lumPer}, opaPer / 100);
-}
-function sortColorsByFunc(colors, func) {
-	return colors.sort(func);
-}
 
 
 
