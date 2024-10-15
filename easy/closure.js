@@ -6641,8 +6641,8 @@ function mDom(dParent, styles = {}, opts = {}) {
   let d = document.createElement(tag);
   if (isdef(dParent)) mAppend(dParent, d);
   if (tag == 'textarea') styles.wrap = 'hard';
-  applyOpts(d, opts);
   mStyle(d, styles);
+  applyOpts(d, opts);
   return d;
 }
 function mDom100(dParent, styles = {}, opts = {}) { copyKeys({ w100: true, h100: true, box: true }, styles); return mDom(dParent, styles, opts); }
@@ -6703,6 +6703,9 @@ function mDummyFocus() {
   if (nundef(mBy('dummy'))) addDummy(document.body, 'cc');
   mBy('dummy').focus();
 }
+function mFlexBaseline(d) { mStyle(d, { display: 'flex', 'align-items': 'baseline' }); }
+function mFlexLR(d) { mStyle(d, { display: 'flex', 'justify-content': 'space-between', 'align-items': 'center' }); }
+function mFlexSpacebetween(d) { mFlexLR(d); }
 function measureElement(el) {
   let info = window.getComputedStyle(el, null);
   return { w: info.width, h: info.height };
@@ -7342,7 +7345,7 @@ function mStyle(elem, styles = {}, opts = {}) {
     gridRows: (elem, v) => elem.style.gridTemplateRows = isNumber(v) ? `repeat(${v},1fr)` : v,
     gridCols: (elem, v) => elem.style.gridTemplateColumns = isNumber(v) ? `repeat(${v},1fr)` : v,
     hpadding: (elem, v) => elem.style.padding = `0 ${v}px`,
-    vpadding: (elem, v) => elem.style.padding = `${v}px 0`,
+    vpadding: (elem, v) => elem.style.padding = `${v}px ${valf(styles.hpadding,0)}px`,
     hmargin: (elem, v) => elem.style.margin = `0 ${v}px`,
     vmargin: (elem, v) => elem.style.margin = `${v}px 0`,
     wbox: (elem, v) => elem.style.boxSizing = v ? 'border-box' : 'content-box',
@@ -8367,9 +8370,9 @@ function playerStatCount(key, n, dParent, styles = {}, opts = {}) {
   let d = mDiv(dParent, styles);
   let o = M.superdi[key];
   if (typeof key == 'function') key(d, { h: sz, hline: sz, w: '100%', fg: 'grey' });
-  else if (isFilename(key)) showim2(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
+  else if (isFilename(key)) mKey(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
   else if (isColor(key)) mDom(d, { bg: key, h: sz, fz: sz, w: '100%', fg: key }, { html: ' ' });
-  else if (isdef(o)) showim2(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
+  else if (isdef(o)) mKey(key, d, { h: sz, hline: sz, w: '100%', fg: 'grey' }, opts);
   else mText(key, d, { h: sz, fz: sz, w: '100%' });
   d.innerHTML += `<span ${isdef(opts.id) ? `id='${opts.id}'` : ''} style="font-weight:bold;color:inherit">${n}</span>`;
   return d;
@@ -9773,39 +9776,6 @@ function showGames(ms = 500) {
     mDiv(d1, { fz: 18, align: 'center', fg }, null, g.friendly);
   }
 }
-function showim1(imgKey, d, styles = {}, opts = {}) {
-  let o = lookup(M.superdi, [imgKey]);
-  let src;
-  if (nundef(o) && imgKey.includes('.')) src = imgKey;
-  else if (isdef(o) && isdef(opts.prefer)) src = valf(o[opts.prefer], o.img);
-  else if (isdef(o)) src = valf(o.img, o.photo)
-  if (nundef(src)) src = rChoose(M.allImages).path;
-  let [w, h] = mSizeSuccession(styles, 40);
-  addKeys({ w, h }, styles)
-  let img = mDom(d, styles, { tag: 'img', src });
-  return img;
-}
-function showim2(imgKey, d, styles = {}, opts = {}) {
-  let o = lookup(M.superdi, [imgKey]);
-  let src;
-  if (isFilename(imgKey)) src = imgKey;
-  else if (isdef(o) && isdef(opts.prefer)) src = valf(o[opts.prefer], o.img);
-  else if (isdef(o)) src = valf(o.img, o.photo)
-  let [w, h] = mSizeSuccession(styles, 40);
-  addKeys({ w, h }, styles);
-  if (nundef(o) && nundef(src)) src = rChoose(M.allImages).path;
-  if (isdef(src)) return mDom(d, styles, { tag: 'img', src });
-  fz = .8 * h;
-  let [family, html] = isdef(o.text) ? ['emoNoto', o.text] : isdef(o.fa) ? ['pictoFa', String.fromCharCode('0x' + o.fa)] : isdef(o.ga) ? ['pictoGame', String.fromCharCode('0x' + o.ga)] : isdef(o.fa6) ? ['fa6', String.fromCharCode('0x' + o.fa6)] : ['algerian', o.friendly];
-  addKeys({ family, fz, hline: fz, display: 'inline' }, styles);
-  let el = mDom(d, styles, { html }); mCenterCenterFlex(el);
-  return el;
-  if (isdef(o.text)) el = mDom(d, { fz: fz, hline: fz, family: 'emoNoto', fg: rColor(), display: 'inline' }, { html: o.text });
-  else if (isdef(o.fa)) el = mDom(d, { fz: fz, hline: fz, family: 'pictoFa', bg: 'transparent', fg: rColor(), display: 'inline' }, { html: String.fromCharCode('0x' + o.fa) });
-  else if (isdef(o.ga)) el = mDom(d, { fz: fz, hline: fz, family: 'pictoGame', bg: 'beige', fg: rColor(), display: 'inline' }, { html: String.fromCharCode('0x' + o.ga) });
-  else if (isdef(o.fa6)) el = mDom(d, { fz: fz, hline: fz, family: 'fa6', bg: 'transparent', fg: rColor(), display: 'inline' }, { html: String.fromCharCode('0x' + o.fa6) });
-  return el;
-}
 function showImage(key, dParent, styles = {}, useSymbol = false) {
   let o = M.superdi[key];
   if (nundef(o)) { console.log('showImage:key not found', key); return; }
@@ -10135,7 +10105,7 @@ function showUserImage(uname, d, sz = 40) {
   if (nundef(m)) {
     key = 'unknown_user';
   }
-  return showim1(key, d, { 'object-position': 'center top', 'object-fit': 'cover', h: sz, w: sz, round: true, border: `${u.color} 3px solid` });
+  return mKey(key, d, { 'object-position': 'center top', 'object-fit': 'cover', h: sz, w: sz, round: true, border: `${u.color} 3px solid` });
 }
 function showValidMoves(table) {
   if (nundef(table.moves)) { console.log('no moves yet!'); return; }
@@ -11995,7 +11965,7 @@ function wsPrintSymbol(dParent, sz, key) {
   let src = valf(files[key], key == 'food' ? files[rChoose(keys)] : null);
   if (src) return mDom(dParent, styles, { tag: 'img', width: sz, height: sz, src: files[valf(key, rChoose(keys))] });
   let o = M.superdi[key];
-  return showim2(key, dParent, styles);
+  return mKey(key, dParent, styles);
 }
 function wsSetup(table) {
   let fen = {};
@@ -12030,7 +12000,7 @@ function wsShowCardItem(item, d, fa) {
   wsFood(item.foodTokens, item.op, dtop, sz * .8);
   wsTitle(item, dCard, sztop, fz, gap);
   let [szPic, yPic] = [h / 2, sztop + gap]
-  let d1 = showim2(item.key, dCard, { rounding: 12, w: szPic, h: szPic }, { prefer: 'photo' });
+  let d1 = mKey(item.key, dCard, { rounding: 12, w: szPic, h: szPic }, { prefer: 'photo' });
   mPlace(d1, 'tr', gap, yPic);
   let leftBorderOfPic = w - (szPic + gap);
   let dleft = mDom(dCard, { w: leftBorderOfPic, h: szPic }); mPlace(dleft, 'tl', gap / 2, sztop + gap);
@@ -12038,7 +12008,7 @@ function wsShowCardItem(item, d, fa) {
   let dval = mDom(dleft, { fg, w: sz * 1.2, align: 'center', fz: fz * 1.8, weight: 'bold' }, { html: item.value });
   mLinebreak(dleft, 2 * gap)
   let szSym = sz * 1.5;
-  let a = showim2(item.abstract, dleft, { w: szSym, h: szSym, fg });
+  let a = mKey(item.abstract, dleft, { w: szSym, h: szSym, fg });
   mLinebreak(dleft, 3 * gap)
   let dPlaetze = item.live.dPlaetze = showPlaetze(dleft, item, gap * 2);
   item.dpower = mDom(dCard, { fz: fz * 1.2, padding: gap, matop: sztop + szPic + gap * 3, w100: true, bg, fg: 'contrast', box: true });

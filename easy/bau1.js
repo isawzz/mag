@@ -1,23 +1,31 @@
 
-function mAreas(dParent, areas, gridCols, gridRows) {
-	mClear(dParent); mStyle(dParent, { padding: 0 })
-	let names = arrNoDuplicates(toWords(areas)); //console.log(names);
-	let dg = mDom(dParent); 
-	for (const name of names) {
-		let d = mDom(dg, { family: 'opensans', padding: 10, wbox: true }, { id: name });
-		d.style.gridArea = name;
-	}
-	mStyle(dg, { display: 'grid', gridCols, gridRows, dir: 'column', h: '100%' });
-	dg.style.gridTemplateAreas = areas;
-	return names;
+function mHomeLogo(d,key,handler){
+	let ui=mKey(key,d,{fz:30,cursor:'pointer'},{onclick:handler});
+	//ui.onclick=handler;
+	return ui;
 }
-function mShade(names){
-	let palette = paletteTransWhiteBlack(names.length + 3).slice(2); console.log(palette);
-	for (const name of names) {
-		let d = mBy(name); //console.log(name,d)
-		mStyle(d, { bg: palette.shift(), fg: 'contrast', padding: 10, wbox: true });
-	}
-
+function mKey(imgKey, d, styles = {}, opts = {}) {
+  let o = lookup(M.superdi, [imgKey]);
+  let src;
+  if (nundef(o) && imgKey.includes('.')) src = imgKey;
+  else if (isdef(o) && isdef(opts.prefer)) src = valf(o[opts.prefer], o.img);
+  else if (isdef(o)) src = valf(o.img, o.photo)
+  if (nundef(src)) src = rChoose(M.allImages).path;
+  let [w, h] = mSizeSuccession(styles, 40);
+  addKeys({ w, h }, styles)
+	addKeys({ tag: 'img', src }, opts)
+  let img = mDom(d, styles, opts);
+  return img;
 }
+function mLink(d,text,handler,kennzahl=0){
+	let ui=mDom(d, {className:'a',fg:colorDark(M.appSettings.bg,90),maleft:12,deco:'none',rounding:10,hpadding:10,vpadding:4}, {tag:'a', html:text, href:'#', onclick:handler, kennzahl});
 
-
+	return ui;
+}
+async function onclickDay(ev){
+	console.log('day!',ev.target.getAttribute('kennzahl'));
+	//
+}
+async function onclickHome(ev){
+	console.log('home!')
+}

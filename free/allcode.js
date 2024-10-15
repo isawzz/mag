@@ -9769,7 +9769,7 @@ function showGames(ms = 500) {
     mDiv(d1, { fz: 18, align: 'center', fg }, null, g.friendly);
   }
 }
-function showim1(imgKey, d, styles = {}, opts = {}) {
+function mKey(imgKey, d, styles = {}, opts = {}) {
   let o = lookup(M.superdi, [imgKey]);
   let src;
   if (nundef(o) && imgKey.includes('.')) src = imgKey;
@@ -10131,7 +10131,7 @@ function showUserImage(uname, d, sz = 40) {
   if (nundef(m)) {
     key = 'unknown_user';
   }
-  return showim1(key, d, { 'object-position': 'center top', 'object-fit': 'cover', h: sz, w: sz, round: true, border: `${u.color} 3px solid` });
+  return mKey(key, d, { 'object-position': 'center top', 'object-fit': 'cover', h: sz, w: sz, round: true, border: `${u.color} 3px solid` });
 }
 function showValidMoves(table) {
   if (nundef(table.moves)) { console.log('no moves yet!'); return; }

@@ -8,7 +8,7 @@
   ],
   "exclude": [
     "basejs",
-    "_coding",
+    "coding",
     "combu",
     "odf",
     "*_fail",

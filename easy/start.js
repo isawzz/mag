@@ -2,6 +2,23 @@ onload = start;
 
 async function start() { loadColors(); await test7(); }
 
+async function test7(){
+	await loadAssets();
+	M.appSettings={bg:'skyblue'};
+	let dPage = document.getElementById('dPage'); 
+	mStyle(dPage, { w: '100%', h: '100%', bg: M.appSettings.bg })
+	let areas = `
+		'dTop'
+		'dMain'
+		'dStatus'
+	`;
+	let names = mAreas(dPage, areas, '1fr', 'auto 1fr auto'); //console.log(names)
+	mShade(names);
+	mFlexBaseline('dTop')
+	mHomeLogo('dTop','airplane',onclickHome);
+	let d1=mDom('dTop');
+	mLink(d1,'DAY',onclickDay);
+}
 async function test7_YES() {
 	let dPage = document.getElementById('dPage'); 
 	mStyle(dPage, { w: '100%', h: '100%', bg: 'skyblue' })
