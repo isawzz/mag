@@ -6273,6 +6273,11 @@ function mClass(d) {
   } else for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]);
 }
 function mClassRemove(d) { d = toElem(d); for (let i = 1; i < arguments.length; i++) d.classList.remove(arguments[i]); }
+function mClassToggle(d, classes) {
+  let wlist = toWords(classes);
+  d = toElem(d);
+  for (const c of wlist) if (d.classList.contains(c)) mClassRemove(d, c); else mClass(d, c);
+}
 function mClear(d) {
   toElem(d).innerHTML = '';
 }

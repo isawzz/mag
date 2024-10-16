@@ -4,8 +4,18 @@ body {
   height: 100vh;
 }
 
+.a{
+  color: #00000070;
+  background: #ffffffA0;
+}
 .a:hover {
-  filter:sepia(); 
+  filter: invert(50%);
+  /* filter:hue-rotate(60);  */
+  /* filter:sepia();  */
   /* filter: contrast(); */
   /* filter: invert(); */
+}
+.active {
+  background: #00000070;
+  color:white;
 }
