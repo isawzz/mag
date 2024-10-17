@@ -1,7 +1,21 @@
 html,
 body {
   margin: 0;
+  padding:0;
   height: 100vh;
+}
+button {
+  padding: 5px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: '#000000a0';
 }
 
 .a{
@@ -9,11 +23,7 @@ body {
   background: #ffffffA0;
 }
 .a:hover {
-  filter: invert(50%);
-  /* filter:hue-rotate(60);  */
-  /* filter:sepia();  */
-  /* filter: contrast(); */
-  /* filter: invert(); */
+  color: red;
 }
 .active {
   background: #00000070;

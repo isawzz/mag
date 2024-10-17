@@ -6260,6 +6260,7 @@ function mCheckbox(dg, name, value) {
   return di;
 }
 function mClass(d) {
+  //console.log('d',d)
   d = toElem(d);
   if (arguments.length == 2) {
     let arg = arguments[1];
@@ -6914,7 +6915,7 @@ function mGetStyle(elem, prop) {
   let val;
   elem = toElem(elem);
   if (prop == 'bg') { val = getStyleProp(elem, 'background-color'); if (isEmpty(val)) return getStyleProp(elem, 'background'); }
-  else if (isdef(STYLE_PARAMS[prop])) { val = getStyleProp(elem, STYLE_PARAMS[prop]); }
+  else if (isdef(STYLE_PARAMS_2[prop])) { val = getStyleProp(elem, STYLE_PARAMS_2[prop]); }
   else {
     switch (prop) {
       case 'vmargin': val = stringBefore(elem.style.margin, ' '); break;
@@ -7061,7 +7062,7 @@ function mLinebreak(dParent, gap) {
   if (display == 'flex') {
     d = mDiv(dParent, { fz: 2, 'flex-basis': '100%', h: 0, w: '100%' }, null, ' &nbsp; ');
   } else {
-    d = mDiv(dParent, {}, null, '<br>');
+    d = mDiv(dParent, {hline:gap}, null, '<br>');
   }
   if (isdef(gap)) { d.style.minHeight = gap + 'px'; d.innerHTML = ' &nbsp; '; d.style.opacity = .2; }
   return d;
@@ -7350,7 +7351,7 @@ function mStyle(elem, styles = {}, opts = {}) {
     gridRows: (elem, v) => elem.style.gridTemplateRows = isNumber(v) ? `repeat(${v},1fr)` : v,
     gridCols: (elem, v) => elem.style.gridTemplateColumns = isNumber(v) ? `repeat(${v},1fr)` : v,
     hpadding: (elem, v) => elem.style.padding = `0 ${v}px`,
-    vpadding: (elem, v) => elem.style.padding = `${v}px ${valf(styles.hpadding,0)}px`,
+    vpadding: (elem, v) => elem.style.padding = `${v}px ${valf(styles.hpadding, 0)}px`,
     hmargin: (elem, v) => elem.style.margin = `0 ${v}px`,
     vmargin: (elem, v) => elem.style.margin = `${v}px 0`,
     wbox: (elem, v) => elem.style.boxSizing = v ? 'border-box' : 'content-box',

@@ -9,4 +9,16 @@
   grid-template-columns: auto 1fr auto;
   height: 100%;
 }
+.a{
+  color: #00000070;
+  background: #ffffffA0;
+}
+.a:hover {
+  /* filter: invert(50%); */
+  color: red;
+  /* filter:hue-rotate(60);  */
+  /* filter:sepia();  */
+  /* filter: contrast(); */
+  /* filter: invert(); */
+}
 
