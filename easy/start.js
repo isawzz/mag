@@ -1,7 +1,28 @@
 onload = start;
 
-async function start() { loadColors(); await test7(); }
+async function start() { loadColors(); await test8z(); }
 
+async function test8z() {
+	await loadAssets();
+	Z = await mGetRoute('z', { done: 'Nil github' }); console.log('Z', Z);
+	let dPage = document.getElementById('dPage');
+	mStyle(dPage, { w: '100%', h: '100%', bg: 'skyblue' }); //page coloring
+
+	let names = mAreas(dPage, ` 'dTop' 'dMain' 'dStatus' `, '1fr', 'auto 1fr auto');
+	mShade(names); //area coloring
+	mStyle('dMain', { padding: 4 })
+	mFlexBaseline('dTop'); mStyle('dTop', { padding: 4, pabottom: 10 })
+	mStyle('dStatus', { padding: 4 }, { html: '&nbsp;' })
+
+	let dTop = mDom('dTop'); //top menu
+	let dHome = mHomeLogo(dTop, 'airplane', onclickHome, 'top'); //logo
+	let dExample = mLinkMenu(dTop, 'EXAMPLE', onclickExample, 'top');
+	mLinkMenu(dTop, 'DAY', onclickDay, 'top');
+	mLinkMenu(dTop, 'GAME', onclickGame, 'top');
+	mLinkMenu(dTop, 'ZONE', onclickZone, 'top');
+
+	dExample.click();
+}
 async function test7() {
 	await loadAssets();
 	let dPage = document.getElementById('dPage');

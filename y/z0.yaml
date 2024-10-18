@@ -1,0 +1,16 @@
+dateStart: '2024-10-15'
+dateEnd: '2024-10-18'
+today:
+  Nil github:
+    - '08:31'
+    - '08:32'
+points: 123
+schradiek:
+  'n': 2
+  points: 10
+walk1K:
+  'n': 3
+  points: 5
+Nil github:
+  'n': 4
+  points: 1

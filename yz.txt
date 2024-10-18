@@ -1,6 +1,3 @@
-
-
-
 _____ fr 4.10.24 airport 1932
 6:40 AM 10/4/2024 780
 _____ sa 5.10.24 airport 1375
@@ -53,6 +50,13 @@ dazu brauch ich sicher notes
 _____ di 15.10.24 airport 1260
 6:09 AM 10/15/2024 780
 what is a perfect day?
+_____ mi 16.10.24 airport 1260
+_____ do 17.10.24 airport 1260
+_____ fr 18.10.24 airport 1260
+7:04 AM 10/18/2024 0
+7:06 AM 10/18/2024 2 
+- serverdata
+- darf NICHT auf github sein!!!
 
 
 

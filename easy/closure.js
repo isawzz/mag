@@ -4498,6 +4498,23 @@ function getEventValue(o) {
   if (isEmpty(o.time)) return o.text;
   return o.time + ' ' + stringBefore(o.text, '\n');
 }
+function getFormattedDate() {
+  const date = new Date();
+  
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, '0'); // Add leading zero if needed
+
+  return `${year}-${month}-${day}`;
+}
+function getFormattedTime() {
+  const date = new Date();
+
+  const hours = String(date.getHours()).padStart(2, '0'); // Get hours (24-hour format)
+  const minutes = String(date.getMinutes()).padStart(2, '0'); // Get minutes
+
+  return `${hours}:${minutes}`;
+}
 function getFunctionsNameThatCalledThisFunction() {
   let c1 = getFunctionsNameThatCalledThisFunction.caller;
   if (nundef(c1)) return 'no caller!';

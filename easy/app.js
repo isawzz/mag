@@ -13,6 +13,7 @@ dotenv.config();
 const PORT = process.env.PORT || 3000;
 const assetsDirectory = path.join(__dirname, '..', 'assets');
 const uploadDirectory = path.join(__dirname, '..', 'y');
+const zDirectory = path.join(__dirname, '..', 'zdata');
 const dbDirectory = path.join(__dirname, '..', 'y', 'dbyaml');
 const configFile = path.join(uploadDirectory, 'config.yaml');
 const usersFile = path.join(dbDirectory, 'users.yaml');
@@ -22,11 +23,14 @@ const superdiFile = path.join(uploadDirectory, 'superdi.yaml');
 const cacheFile = path.join(uploadDirectory, 'cache.yaml');
 const detailsFile = path.join(uploadDirectory, 'details.yaml');
 const listsFile = path.join(uploadDirectory, 'lists.yaml');
+const zOpen = path.join(uploadDirectory, 'z0.yaml');
+const zClosed = path.join(zDirectory, 'z0.yaml');
 const tablesDir = path.join(uploadDirectory, 'tables');
 const tablesFile = path.join(uploadDirectory, 'tableinfo.yaml');
 const usersDir = path.join(uploadDirectory, 'users');
 var Session = {}; // session ist nur fuer temp data: just mem
 var Superdi = {};
+var Z = {};
 //var Spectators={}; //spectators on tables - never saved
 
 const app = express();
@@ -121,6 +125,24 @@ async function getFiles(dir) {
 	return files;
 
 }
+function getFormattedDate() {
+	const date = new Date();
+
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+	const day = String(date.getDate()).padStart(2, '0'); // Add leading zero if needed
+
+	return `${year}-${month}-${day}`;
+}
+function getFormattedTime() {
+	const date = new Date();
+
+	const hours = String(date.getHours()).padStart(2, '0'); // Get hours (24-hour format)
+	const minutes = String(date.getMinutes()).padStart(2, '0'); // Get minutes
+
+	return `${hours}:${minutes}`;
+}
+function getNow() { return Date.now(); }
 function getTablePath(id) { return path.join(tablesDir, `${id}.yaml`); }
 function getTablesInfo() {
 	let info = [];
@@ -283,7 +305,8 @@ function saveUser(name, o) {
 	let y = yaml.dump(Session.users[name]);
 	fs.writeFileSync(getUserPath(name), y, 'utf8');
 }
-function saveYaml(o,p) { let y = yaml.dump(o); fs.writeFileSync(p, y, 'utf8'); }
+function saveYaml(o, p) { let y = yaml.dump(o); fs.writeFileSync(p, y, 'utf8'); }
+function saveZ() { let y = yaml.dump(Z.open); fs.writeFileSync(zOpen, y, 'utf8'); }
 function stringAfter(sFull, sSub) {
 	let idx = sFull.indexOf(sSub);
 	if (idx < 0) return '';
@@ -481,10 +504,10 @@ app.post('/ask_list', async (req, res) => {
 		let prompt = `plain comma separated list of ${num} different ${word}s. no yapping`; //, formatted as yaml list.`;
 		let result = await fetchAnswerOpenai(prompt);
 		let text = result.message.content;
-		let list = text.split(',').map(x=>x.trim());
-		M.lists[word]=list;
+		let list = text.split(',').map(x => x.trim());
+		M.lists[word] = list;
 		saveLists();
-		res.json({list,result,text,msg:'openai'});
+		res.json({ list, result, text, msg: 'openai' });
 	}
 });
 app.post('/ask_list_no', async (req, res) => {
@@ -572,16 +595,12 @@ app.get('/otherUser', (req, res) => {
 	let params = req.query;
 	// console.log('params',params,Object.values(params));
 	let list = Array.from(Object.values(params));
-	//console.log(list)
 	let i = list.indexOf(Session.lastUser);
-	//console.log(i)
 	let name = Session.lastUser = i < 0 ? list[0] : list[(i + 1) % list.length];
-	// let [name1, name2] = [params.name1, params.name2];
-	// let name = Session.lastUser = (Session.lastUser == name1 ? name2 : name1);
 	res.json(name);
 });
 app.get('/session', (req, res) => {
-	console.log('==> get session')
+	//console.log('==> get session', Z)
 	res.json({ users: Session.users, config: Session.config, tables: getTablesInfo() });
 });
 app.get('/table', (req, res) => {
@@ -616,6 +635,27 @@ app.get('/users', (req, res) => {
 		di[k] = users[k];
 	}
 	return res.json(di);
+});
+app.get('/z', (req, res) => {
+	let params = req.query;
+	console.log('==> get z'); //:\n params', params, typeof params);
+	let today = getFormattedDate();
+	if (Z.open.dateEnd != today) {
+		//gesamter today tag muss archived werden!
+		Z.open.dateEnd = today;
+		for (const k in Z.open.today) {
+			let list = Z.open.today[k];
+			if (nundef(Z.open[k])) Z.open[k]={n:0,points:1};
+			Z.open[k].n += list.length;
+			Z.open.points += Z.open[k].points*list.length;
+		}
+		console.log('..archiving');
+		//neues today anlegen!!!
+		Z.open.today = {};
+	}
+	lookupAddToList(Z.open, ['today', params.done], getFormattedTime());
+	saveZ();
+	res.json(Z.open);
 });
 
 //#region post routes (uses emit)
@@ -691,14 +731,14 @@ app.post('/postEvent', (req, res) => {
 	res.json(data);
 });
 app.post('/postYaml', (req, res) => {
-	let o=req.body.o;
-	let p=path.join(__dirname,req.body.path);
-	saveYaml(o,p);
-	if (p.includes('y/lists')) M.lists=o;
-	if (p.includes('y/details')) M.details=o;
-	if (p.includes('y/superdi')) M.superdi=o;
-	if (p.includes('y/cache')) M.cache=o;
-	if (p.includes('y/config')) Session.config=o;
+	let o = req.body.o;
+	let p = path.join(__dirname, req.body.path);
+	saveYaml(o, p);
+	if (p.includes('y/lists')) M.lists = o;
+	if (p.includes('y/details')) M.details = o;
+	if (p.includes('y/superdi')) M.superdi = o;
+	if (p.includes('y/cache')) M.cache = o;
+	if (p.includes('y/config')) Session.config = o;
 	res.json(o);
 });
 app.post('/postImage', (req, res) => {
@@ -926,6 +966,10 @@ async function init() {
 	M.lists = valf(yaml.load(yamlFile), {});
 	yamlFile = fs.readFileSync(cacheFile, 'utf8');
 	M.cache = yaml.load(yamlFile); //console.log('cache',M.cache)
+	yamlFile = fs.readFileSync(zOpen, 'utf8');
+	Z.open = valf(yaml.load(yamlFile), {});
+	yamlFile = fs.readFileSync(zClosed, 'utf8');
+	Z.closed = valf(yaml.load(yamlFile), {});
 	Session.tables = {};
 	let tablefiles = await fsp.readdir(tablesDir);
 	for (const f of tablefiles) {

@@ -1,4 +1,7 @@
 
+js get date in yyyy-mm-dd format
+js get time in hh:mm format (24hours)
+
 js function that receives a container of specific size and inserts 2 divs: the top one should have 
 height auto. the bottom one should cover all the rest of the container height. when the top one grows, 
 the bottom one should automatically shrink in height. the bottom one should have overflow-y = 'scroll'
