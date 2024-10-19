@@ -1,7 +1,19 @@
 onload = start;
 
-async function start() { loadColors(); await test8z(); }
+async function start() { loadColors(); await test9_stats(); }
 
+async function test9_stats() {
+	// Example usage:
+	const values = [1, 2, 2, 3, 4, 4, 4, 5, 5, 6];
+	const stats = calculateStatistics(values);
+
+	console.log("Mean:", stats.mean);
+	console.log("Median:", stats.median);
+	console.log("Mode:", stats.mode);
+	console.log("Variance:", stats.variance);
+	console.log("Standard Deviation:", stats.standardDeviation);
+
+}
 async function test8z() {
 	await loadAssets();
 	Z = await mGetRoute('z', { done: 'Nil github' }); console.log('Z', Z);

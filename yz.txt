@@ -1,3 +1,35 @@
+_____ sa 19.10.24 airport 1770
+6:13 AM 10/19/2024 0
+- open chatgpt
+
+5/100 + 50/100 * 90/100 + 45/100 * 70/100 = 0.815
+
+
+Gegeben ist folgender Datensatz:
+Arithmetisches Mittel = 6      
+Datenreihe 5,2   6,6   4,8     7,2     6,2    5,0
+Berechne die Spannweite, die Varianz und Standardabweichung vom Mittelwert!
+
+solve and explain: Aus einer Urne mit 10 verschieden Kugeln werden 4 Kugeln nacheinander und ohne Berücksichtigung der Reihenfolge mit Zurücklegen gezogen. Wie viele Möglichkeiten ergeben sich daraus?
+
+3 kugeln
+ziehe 2 MIT zuruecklegen!
+
+11 12 13 22 21 23 33 31 32
+
+3*3 = 9 moeglichkeiten
+wenn aber die reihenfolge nicht beachtet wird:
+11 22 33 12 13 23 sind es nur 6 moeglichkeiten!
+
+4 balls
+
+11 22 33 44 12 13 14 23 24 34
+
+4+2-1 over k
+
+5!/2!3! = 5*4/2=10
+
+
 _____ fr 4.10.24 airport 1932
 6:40 AM 10/4/2024 780
 _____ sa 5.10.24 airport 1375
