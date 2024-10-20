@@ -12,6 +12,41 @@ Berechne die Spannweite, die Varianz und Standardabweichung vom Mittelwert!
 
 solve and explain: Aus einer Urne mit 10 verschieden Kugeln werden 4 Kugeln nacheinander und ohne Berücksichtigung der Reihenfolge mit Zurücklegen gezogen. Wie viele Möglichkeiten ergeben sich daraus?
 
+
+explain why drawing 2 cards out of 4 different card WITH replacing them each time ist n+k-1 over k
+
+stars and bars
+
+4 boxes
+= 3 bar
+
+xx|  |  |  
+ x|x |  |  
+ X|  |X |  
+ x|  |  |x  
+  |xx|  |  
+  | x|x |  
+  | x|  |x  
+  |  |xx|  
+  |  | x|x  
+  |  |  |xx  
+
+anrodnung von 5 gegenstaenden, von denen je 2 bzw 3 gleich sind
+
+(n-1+k)! ist anordnung von 5 verschiedenen gegenstaenden
+von diesen sind 2! gleich weil ja die x nicht unterscheidbar sind
+und (n-1)! gleich weil die | nicht unterscheidbar sind
+
+also:
+
+(n-1+k)! / k! (n-1)! =
+(n-1+k)! / k! (n-1+k-1)! =
+(n-1+k over k)
+
+put 2 cards in them
+
+
+
 3 kugeln
 ziehe 2 MIT zuruecklegen!
 
