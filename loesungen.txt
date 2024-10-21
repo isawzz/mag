@@ -1,0 +1,47 @@
+
+Loesungen
+
+A_081
+d) Auf der Basis von statistischen Aufzeichnungen geht man davon aus, dass ein bestimmter Spieler bei jedem Freiwurf mit einer Wahrscheinlichkeit von 87,7 % in den Korb trifft. Der Spieler wettet, dass er bei 10 Freiwürfen mindestens 9 Treffer erzielt.
+
+– Berechnen Sie die Wahrscheinlichkeit, dass der Spieler die Wette verliert.
+
+A_283
+a) spannweite = 235,1−209,8 = ca 25mio
+b) Die Berechnung 
+(235,1−209,8)/209,8≈0,12 
+ergibt einen relativen Zuwachs von etwa 12 %.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

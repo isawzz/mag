@@ -1,4 +1,6 @@
 
+js function that calculates the minimum number of trials necessary to get a success with a probability of x percent for binomial distribution with success probability p.
+
 js get date in yyyy-mm-dd format
 js get time in hh:mm format (24hours)
 

@@ -7370,7 +7370,7 @@ function mStyle(elem, styles = {}, opts = {}) {
     hpadding: (elem, v) => elem.style.padding = `0 ${v}px`,
     vpadding: (elem, v) => elem.style.padding = `${v}px ${valf(styles.hpadding, 0)}px`,
     hmargin: (elem, v) => elem.style.margin = `0 ${v}px`,
-    vmargin: (elem, v) => elem.style.margin = `${v}px 0`,
+    vmargin: (elem, v) => elem.style.margin = `${v}px ${valf(styles.hmargin, 0)}px`,
     wbox: (elem, v) => elem.style.boxSizing = v ? 'border-box' : 'content-box',
     wrap: (elem, v) => { if (v == 'hard') elem.setAttribute('wrap', 'hard'); else elem.style.flexWrap = 'wrap'; }
   };
