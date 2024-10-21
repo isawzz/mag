@@ -1,7 +1,26 @@
 onload = start;
 
-async function start() { loadColors(); await test10(); }
+async function start() { loadColors(); await test11(); }
 
+async function test11(){
+	let x=[0,1,2,3];
+	let p=[1/8,3/8,3/8,1/8];
+	let n=4;
+	//compute expected value
+	let res=0;
+	for (let i=0;i<n;i++){
+		res+=x[i]*p[i];
+	}
+	console.log('res',res);
+	//compute variance
+	let v=0;
+	for (let i=0;i<n;i++){
+		v+=p[i]*(x[i]-res)**2;
+	}
+	console.log('v',v);
+	//compute standard deviation
+	console.log('std',Math.sqrt(v));
+}
 async function test10() {
 	await loadAssets();
 	Z = await mGetRoute('z', { done: 'Nil github' }); //console.log('Z', Z);

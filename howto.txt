@@ -1,4 +1,11 @@
 
+Jemand wuerfelt mit 3 wuerfeln und notiert die anzahl der wuerfel die eine gerade augenzahl zeigen.
+1) berechne den Erwartungswert und die Varianz.
+
+Jemand wirft dreimal eine Muenze und notiert die Anzahl von 'Wappen'. 
+1) berechne den Erwartungswert und die Varianz.
+
+
 js function that calculates the minimum number of trials necessary to get a success with a probability of x percent for binomial distribution with success probability p.
 
 js get date in yyyy-mm-dd format
