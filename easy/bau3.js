@@ -16,7 +16,7 @@ async function onclickNormal(ev) {
 
 	let d2 = mDom(dTable, { display:'flex', dir: 'column', padding: 10, gap: 10, className:'input' });
 	mDom(d2, {}, { html: 'Calculate normalCdf:' })
-	inputs = ['x', 'mean', 'from', 'to'];
+	inputs = ['x', 'mean', 'stdev'];
 	for (const name of inputs) {
 		mInput(d2, { hpadding: 10, vpadding: 2 }, `inp_c${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
@@ -26,7 +26,7 @@ async function onclickNormal(ev) {
 
 	let d3 = mDom(dTable, { display:'flex', dir: 'column', padding: 10, gap: 10, className:'input' });
 	mDom(d3, {}, { html: 'normal Erwartungswert:' })
-	inputs = ['n', 'p'];
+	inputs = ['mean'];
 	for (const name of inputs) {
 		mInput(d3, { hpadding: 10, vpadding: 2 }, `inp_mu${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
@@ -36,7 +36,7 @@ async function onclickNormal(ev) {
 
 	let d4 = mDom(dTable, { display:'flex', dir: 'column', padding: 10, gap: 10, className:'input' });
 	mDom(d4, {}, { html: 'normal Varianz / Standardabweichung:' })
-	inputs = ['n', 'p'];
+	inputs = ['stdev'];
 	for (const name of inputs) {
 		mInput(d4, { hpadding: 10, vpadding: 2 }, `inp_v${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
@@ -54,3 +54,22 @@ async function onclickNormalPdf(ev) {
 	let res = normalPdf(x, mean, stdev);
 	mBy('result_pdf').innerHTML = res;
 }
+async function onclickNormalCdf(ev) {
+	let x = +mBy('inp_cx').value;
+	let mean = +mBy('inp_cmean').value;
+	let stdev = +mBy('inp_cstdev').value;
+	let res = normalCdf(x, mean, stdev);
+	mBy('result_cdf').innerHTML = res;
+}
+async function onclickNormalMu(ev) {
+	let mean = +mBy('inp_mumean').value;
+	let res = mean;
+	mBy('result_mu').innerHTML = res;
+}
+async function onclickNormalVar(ev) {
+	let stdev = +mBy('inp_vstdev').value;
+	let v = stdev*stdev;
+	mBy('result_var').innerHTML = v;
+	mBy('result_stdev').innerHTML = stdev;
+}
+
