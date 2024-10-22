@@ -1,25 +1,25 @@
 onload = start;
 
-async function start() { loadColors(); await test11(); }
+async function start() { loadColors(); await test10(); }
 
-async function test11(){
-	let x=[0,1,2,3];
-	let p=[1/8,3/8,3/8,1/8];
-	let n=4;
+async function test11() {
+	let x = [0, 1, 2, 3];
+	let p = [1 / 8, 3 / 8, 3 / 8, 1 / 8];
+	let n = 4;
 	//compute expected value
-	let res=0;
-	for (let i=0;i<n;i++){
-		res+=x[i]*p[i];
+	let res = 0;
+	for (let i = 0; i < n; i++) {
+		res += x[i] * p[i];
 	}
-	console.log('res',res);
+	console.log('res', res);
 	//compute variance
-	let v=0;
-	for (let i=0;i<n;i++){
-		v+=p[i]*(x[i]-res)**2;
+	let v = 0;
+	for (let i = 0; i < n; i++) {
+		v += p[i] * (x[i] - res) ** 2;
 	}
-	console.log('v',v);
+	console.log('v', v);
 	//compute standard deviation
-	console.log('std',Math.sqrt(v));
+	console.log('std', Math.sqrt(v));
 }
 async function test10() {
 	await loadAssets();
@@ -42,6 +42,14 @@ async function test10() {
 	mLinkMenu(dTop, 'ZONE', onclickZone, 'top');
 
 	dCalc.click();
+
+	setTimeout(() => {
+		//enter values
+		let inp = mBy('inp_x'); //console.log(inp)
+		inp.value = '0 1 2 3';
+		inp = mBy('inp_y');
+		inp.value = '1/8 3/8 3/8 1/8';
+	}, 20);
 }
 async function test9_stats() {
 	// Example usage:

@@ -1,4 +1,11 @@
 
+function mLinkToggle(d, text, handler, init, kennzahl) {
+	if (nundef(kennzahl)) kennzahl = getUID();
+	let ui = mDom(d, { className: 'a', maleft: 12, deco: 'none', rounding: 10, hpadding: 10, vpadding: 4 }, { tag: 'a', html: text, href: '#', onclick: handler, kennzahl, val: init });
+
+	return ui;
+}
+
 //#region layout versuche top side left with AI
 function mAreas(dParent, gridAreas, gridCols, gridRows) {
 	if (isList(gridAreas)) gridAreas = gridAreas.map(x => `'${x}'`).join(' ');
