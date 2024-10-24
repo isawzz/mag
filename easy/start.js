@@ -1,7 +1,26 @@
 onload = start;
 
-async function start() { loadColors(); await test10(); }
+async function start() { loadColors(); await test12_vegan(); }
 
+async function test12_vegan(){
+	let bg = '#8EA41D';
+	let dPage = document.getElementById('dPage');
+	mStyle(dPage, { w: '100%', h: '100%', bg:'white' }); //page coloring
+
+	let names = M.divNames = mAreas(dPage, ` 'dTop' 'dMain' 'dStatus' `, '1fr', 'auto 1fr auto');
+
+	let ntop = mAreas('dTop', ` 'dTitle dBanner' `, '1fr auto', 'auto');
+	mDom('dTop',{fz:50,fg:'white',family:'algerian',margin:10},{html: "Amanda's Kitchen"})
+	mStyle('dTop',{bg,display:'flex',jcontent:'start',aitems:'start',hmax:100, overflow:'hidden'});
+	// mDom('dTop',{'font-size':'100px',fg:'white'},{html:"Amanda's Kitchen"})
+	mDom('dTop',{fz:50,fg:'white',family:'algerian',margin:10},{html: "Amanda's Kitchen"})
+	mDom('dTop',{matop:-100},{tag:'img',src:'../veganrecipes/images/veganBanner.png'});
+
+	mStyle('dMain',{bg:colorTrans(bg,'.25'),fg:'black'});
+
+
+	await loadAssets();
+}
 async function test11() {
 	let x = [0, 1, 2, 3];
 	let p = [1 / 8, 3 / 8, 3 / 8, 1 / 8];
@@ -39,9 +58,10 @@ async function test10() {
 	mLinkMenu(dTop, 'DAY', onclickDay, 'top');
 	let dExample = mLinkMenu(dTop, 'EXAMPLE', onclickExample, 'top');
 	mLinkMenu(dTop, 'GAME', onclickGame, 'top');
+	let v = mLinkMenu(dTop, 'VEGAN RECIPES', onclickVeganRecipes, 'top');
 	mLinkMenu(dTop, 'ZONE', onclickZone, 'top');
 
-	dCalc.click();
+	v.click();
 
 	setTimeout(() => {
 		//enter values

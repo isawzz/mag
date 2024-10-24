@@ -7377,7 +7377,7 @@ function mStyle(elem, styles = {}, opts = {}) {
   for (const k in styles) {
     let v = styles[k];
     let key = STYLE_PARAMS_2[k];
-    let val = isNumber(v) && !noUnit.some(x => k.includes(x)) ? '' + Number(v) + 'px' : v;
+    let val = isNumber(v) && !noUnit.some(x => k.includes(x)) || k == 'fz' ? '' + Number(v) + 'px' : v;
     if (k.includes('flex')) console.log(key, val);
     if (isdef(key)) { elem.style.setProperty(key, val); continue; }
     if (v == 'contrast') { //nur bei fg verwenden!!!!

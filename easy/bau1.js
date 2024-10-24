@@ -50,6 +50,25 @@ async function onclickHome(ev) {
 	mShadeLight(names)
 	mRemoveClass(ev.target, 'active'); //just set other top menu buttons inactive!
 }
+async function onclickVeganRecipes(ev) {
+	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', 'green_bamboo');
+	mShadeLight(names)
+	let dSide = mBy('dSide'); mStyle(dSide, { padding: 10, wbox: true });
+
+	let dMenu = mDom('dSide', { display: 'flex', dir: 'column' }); //side menu
+
+	let recipes=['Pumpkin Soup','Semmelknoedel','Stir Fry'];
+	for(const name of recipes){
+		let b = mLinkMenu(dMenu, 'Pumpkin Soup', onclickRecipe(ev), 'side');
+	}
+	// let gencase = mLinkMenu(dMenu, 'Pumpkin Soup', onclickPumpkinSoup, 'side');
+	// let x = mLinkMenu(dMenu, 'Semmelknoedel', onclickSemmelknoedel, 'side');
+	// mLinkMenu(dMenu, 'Stir Fry', onclickStirFry, 'side');
+	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
+	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
+
+	gencase.click();
+}
 async function onclickZone(ev) {
 	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', 'indigo');
 	mShadeLight(names)
@@ -86,7 +105,24 @@ async function onclickStatistik(ev) {
 		mDom(d1, { hpadding: 10, vpadding: 2, matop: -5 }, { id: `res_${id}`, html: '&nbsp;' });
 	}
 }
+async function onclickFMuVar(ev) {
+	let xlist = getValuesFromInput('inp_x');
+	let ylist = getValuesFromInput('inp_y');
 
+	let cdfResult = calculateCDF(xlist,ylist); console.log(cdfResult);
+	mBy('res_F').innerHTML = cdfResult.map(x=>x.cumulativeProbability).join(' ');
+
+	// let mu = calculateExpectedValue(xlist,ylist); console.log(mu);
+
+	let res = calculateStatistics(xlist, ylist); console.log(res)
+	mBy('res_mu').innerHTML = res.mu;
+	mBy('res_var').innerHTML = res.v;
+	mBy('res_stdev').innerHTML = res.stdev;
+	mBy('res_mean').innerHTML = res.mean;
+	mBy('res_median').innerHTML = res.median;
+	mBy('res_mode').innerHTML = res.mode.join(' ');
+
+}	
 //#endregion
 
 //#region Binomial
