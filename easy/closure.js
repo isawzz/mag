@@ -5998,29 +5998,44 @@ async function loadAndScaleImage(imageUrl) {
   }
 }
 async function loadAssets() {
-  M = await mGetYaml('../y/m.yaml');
-  M.superdi = await mGetYaml('../y/superdi.yaml');
-  M.details = await mGetYaml('../y/details.yaml');
-  let [di, byColl, byFriendly, byCat, allImages] = [M.superdi, {}, {}, {}, {}];
-  for (const k in di) {
-    let o = di[k];
-    for (const cat of o.cats) lookupAddIfToList(byCat, [cat], k);
-    for (const coll of o.colls) lookupAddIfToList(byColl, [coll], k);
-    lookupAddIfToList(byFriendly, [o.friendly], k)
-    if (isdef(o.img)) {
-      let fname = stringAfterLast(o.img, '/')
-      allImages[fname] = { fname, path: o.img, k };
-    }
-  }
-  M.allImages = allImages;
-  M.byCat = byCat;
-  M.byCollection = byColl;
-  M.byFriendly = byFriendly;
-  M.categories = Object.keys(byCat); M.categories.sort();
-  M.collections = Object.keys(byColl); M.collections.sort();
-  M.names = Object.keys(byFriendly); M.names.sort();
-  M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
-  [M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
+
+	let sessionType = detectSessionType(); console.log(sessionType)
+	if (sessionType == 'telecave') {
+		let res = await postPHP({}, 'assets'); //console.log(res);
+		let jsonObject = JSON.parse(res); //console.log(jsonObject);
+		let di = {};
+		for (const k in jsonObject) {
+			di[k] = jsyaml.load(jsonObject[k]); //JSON.parse(jsonObject[k]);
+			//console.log(k, JSON.parse(jsonObject[k]));
+		}
+		M=di.m;
+		for(const k in di)if(k!='m')M[k]=di[k];
+	} else {
+		M = await mGetYaml('../y/m.yaml');
+		M.superdi = await mGetYaml('../y/superdi.yaml');
+		M.details = await mGetYaml('../y/details.yaml');
+		M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
+	}
+
+	let [di, byColl, byFriendly, byCat, allImages] = [M.superdi, {}, {}, {}, {}];
+	for (const k in di) {
+		let o = di[k];
+		for (const cat of o.cats) lookupAddIfToList(byCat, [cat], k);
+		for (const coll of o.colls) lookupAddIfToList(byColl, [coll], k);
+		lookupAddIfToList(byFriendly, [o.friendly], k)
+		if (isdef(o.img)) {
+			let fname = stringAfterLast(o.img, '/')
+			allImages[fname] = { fname, path: o.img, k };
+		}
+	}
+	M.allImages = allImages;
+	M.byCat = byCat;
+	M.byCollection = byColl;
+	M.byFriendly = byFriendly;
+	M.categories = Object.keys(byCat); M.categories.sort();
+	M.collections = Object.keys(byColl); M.collections.sort();
+	M.names = Object.keys(byFriendly); M.names.sort();
+	[M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
 }
 function loadColors(bh = 18, bs = 20, bl = 20) {
   if (nundef(M.dicolor)) {
@@ -8458,6 +8473,31 @@ async function postImage(img, path) {
   let o = { image: dataUrl, filename: path };
   let resp = await mPostRoute('postImage', o);
   console.log('resp', resp); //sollte path enthalten!
+}
+async function postPHP(data, cmd) {
+	let o = {};
+	o.data = valf(data, {});
+	o.cmd = cmd;
+	o = JSON.stringify(o);
+	try {
+		const response = await fetch("api.php", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: o
+		});
+
+		if (response.ok) {
+			const responseText = await response.text();
+			return responseText;
+			//handle_result(responseText, cmd);
+		} else {
+			console.error('Error in response:', response.status, response.statusText);
+		}
+	} catch (error) {
+		console.error('Error during fetch:', error);
+	}
 }
 async function postUserChange(data, override = false) {
   data = valf(data, U);

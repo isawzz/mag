@@ -1,25 +1,96 @@
 onload = start;
 
-async function start() { loadColors(); await test12_vegan(); }
+async function start() { loadColors(); await test13(); }
 
-async function test12_vegan(){
+async function test13(){
 	let bg = '#8EA41D';
 	let dPage = document.getElementById('dPage');
-	mStyle(dPage, { w: '100%', h: '100%', bg:'white' }); //page coloring
+	mStyle(dPage, { w: '100%', h: '100%', bg, fg: 'white' }); //page coloring
 
-	let names = M.divNames = mAreas(dPage, ` 'dTop' 'dMain' 'dStatus' `, '1fr', 'auto 1fr auto');
+	let [dTop, dMain, dStatus] = M.divNames = mAreas(dPage, ` 'dTop' 'dMain' 'dStatus' `, '1fr', 'auto 1fr auto');
 
-	let ntop = mAreas('dTop', ` 'dTitle dBanner' `, '1fr auto', 'auto');
-	mDom('dTop',{fz:50,fg:'white',family:'algerian',margin:10},{html: "Amanda's Kitchen"})
-	mStyle('dTop',{bg,display:'flex',jcontent:'start',aitems:'start',hmax:100, overflow:'hidden'});
-	// mDom('dTop',{'font-size':'100px',fg:'white'},{html:"Amanda's Kitchen"})
-	mDom('dTop',{fz:50,fg:'white',family:'algerian',margin:10},{html: "Amanda's Kitchen"})
-	mDom('dTop',{matop:-100},{tag:'img',src:'../veganrecipes/images/veganBanner.png'});
+	let margin = 4;
+	mStyle(dTop, { margin, bg, display: 'flex', jcontent: 'start', aitems: 'start', hmax: 130, overflow: 'hidden' });
+	let [dTitle, dBanner] = mAreas('dTop', ` 'dTitle dBanner' `, '1fr auto', 'auto');
+	mDom(dTitle, { fz: 40, family: 'algerian', margin: 20 }, { html: "Amanda's Kitchen" })
+	mDom(dBanner, { wmin: 2000, hmin: 400, matop: -200, bgSrc: '../veganrecipes/images/veganBanner.png', bgRepeat: 'no-repeat', bgSize: 'cover', opacity: .8 });
 
-	mStyle('dMain',{bg:colorTrans(bg,'.25'),fg:'black'});
+	mStyle(dMain, { margin, matop: 0, hmin: 100, bg: colorMix(bg, 'white', 50), fg: 'black' });
+	mStyle(dStatus, { align: 'center', margin, matop: 0 }, { html: 'Copyright 2024' });
 
+	let [side, main] = mAreas(dMain, ` 'dSize dRecipe' `, '238px 1fr', '1fr');
+	mStyle(side, { bg: colorMix(bg, 'white', 80) });
 
+	let titles = ['Newest!', 'Snacks', 'Main Dishes', 'Sides', 'Desserts'];
+	for (const t of titles) {
+		let d = mDom(side, { className: 'a', cursor: 'pointer', rounding: 10, margin: 10, padding: 10, w100: true }, { html: t, onclick: onclickRecipeSide, menu: 'side', kennzahl: getUID() });
+	}
 	await loadAssets();
+	console.log(M)
+}
+async function test12_vegan() {
+	let bg = '#8EA41D';
+	let dPage = document.getElementById('dPage');
+	mStyle(dPage, { w: '100%', h: '100%', bg, fg: 'white' }); //page coloring
+
+	let [dTop, dMain, dStatus] = M.divNames = mAreas(dPage, ` 'dTop' 'dMain' 'dStatus' `, '1fr', 'auto 1fr auto');
+
+	let margin = 4;
+	mStyle(dTop, { margin, bg, display: 'flex', jcontent: 'start', aitems: 'start', hmax: 130, overflow: 'hidden' });
+	let [dTitle, dBanner] = mAreas('dTop', ` 'dTitle dBanner' `, '1fr auto', 'auto');
+	mDom(dTitle, { fz: 40, family: 'algerian', margin: 20 }, { html: "Amanda's Kitchen" })
+	mDom(dBanner, { wmin: 2000, hmin: 400, matop: -200, bgSrc: '../veganrecipes/images/veganBanner.png', bgRepeat: 'no-repeat', bgSize: 'cover', opacity: .8 });
+
+	mStyle(dMain, { margin, matop: 0, hmin: 100, bg: colorMix(bg, 'white', 50), fg: 'black' });
+	mStyle(dStatus, { align: 'center', margin, matop: 0 }, { html: 'Copyright 2024' });
+
+	let [side, main] = mAreas(dMain, ` 'dSize dRecipe' `, '238px 1fr', '1fr');
+	mStyle(side, { bg: colorMix(bg, 'white', 80) });
+
+	let titles = ['Newest!', 'Snacks', 'Main Dishes', 'Sides', 'Desserts'];
+	for (const t of titles) {
+		// let d = mLinkMenu(side, t, {margin:20},onclickRecipeSide, 'side');
+		let d = mDom(side, { className: 'a', cursor: 'pointer', rounding: 10, margin: 10, padding: 10, w100: true }, { html: t, onclick: onclickRecipeSide, menu: 'side', kennzahl: getUID() });
+		//mClass(d, 'a');
+		//mStyle(d,{margin:20,w:200})k
+		//mLinebreak(side);
+		// let d = mDom(side, { cursor: 'pointer', fz: 20, margin: 10, bg: colorMix(bg, 'white', 90), fg: 'white', rounding: 10, hpadding: 10, vpadding: 4 }, { html: t });
+		//d.onclick = () => { console.log(t); }
+	}
+
+	// let [dSearch,dFilter,dList]=mAreas(main, ` 'dSearch dFilter' 'dList dList`, 'auto 1fr', 'auto 1fr');
+	// mDom(dSearch, {fz:20, margin:10, family:'algerian', bg:colorMix(bg, 'white', 90), fg:'black', rounding:10, hpadding:10, vpadding:4}, {html:'Search:'});
+	// mDom(dFilter, {fz:20, margin:10, family:'algerian', bg:colorMix(bg, 'white', 90), fg:'black', rounding:10, hpadding:10, vpadding:4}, {html:'Filter:'});
+	// let d = mDom(main, {fz:20, margin:10, family:'algerian', bg:colorMix(bg, 'white', 90), fg:'black', rounding:10, hpadding:10, vpadding:4}, {html:'Recipe:'});
+
+	// Call the function to test
+	//await fetchYamlFile();
+	//await fetchYamlFiles(['m.yaml', 'superdi.yaml', 'details.yaml', 'dicolor.yaml', 'config.yaml']);
+	
+	// await loadYamlFile('../y/m.yaml');
+	//await loadAssets();
+
+	let res = await postPHP({}, 'assets'); console.log(res);
+
+	let jsonObject = JSON.parse(res); console.log(jsonObject);
+	M={};
+	for(const k in jsonObject){
+		M[k]=jsyaml.load(jsonObject[k]); //JSON.parse(jsonObject[k]);
+		//console.log(k, JSON.parse(jsonObject[k]));
+	}
+	console.log(M)
+}
+async function onclickRecipeSide(ev) {
+	hToggleClassMenu(ev); return;
+	a = ev.target; console.log(a)
+	let menu = a.getAttribute('menu');
+	//let others = document.querySelectorAll(`a[menu='${menu}']`);
+	// let others = document.querySelectorAll(`div[menu='${menu}']`); console.log('others', others)
+	let others = document.querySelectorAll(`[menu='${menu}']`); console.log('others', others)
+	for (const o of others) {
+		mClassRemove(o, 'active')
+	}
+	mClassToggle(a, 'active');
 }
 async function test11() {
 	let x = [0, 1, 2, 3];
@@ -47,7 +118,7 @@ async function test10() {
 	mStyle(dPage, { w: '100%', h: '100%', bg: 'skyblue' }); //page coloring
 
 	let names = M.divNames = mAreas(dPage, ` 'dTop' 'dMain' 'dStatus' `, '1fr', 'auto 1fr auto');
-	//mShade(names); //area coloring
+	mShade(names); //area coloring
 	mStyle('dMain', { padding: 4 })
 	mFlexBaseline('dTop'); mStyle('dTop', { padding: 4, pabottom: 10 })
 	mStyle('dStatus', { padding: 4 }, { html: '&nbsp;' })

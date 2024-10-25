@@ -1,5 +1,22 @@
 
 function arrNoDuplicates(arr) { return [...new Set(arr)]; }
+function colorChannelMixer(colorChannelA, colorChannelB, amountToMix) {
+  var channelA = colorChannelA * amountToMix;
+  var channelB = colorChannelB * (1 - amountToMix);
+  return parseInt(channelA + channelB);
+}
+function colorMix(c1, c2, percent = 50) {
+  return colorCalculator(percent / 100, colorFrom(c2), colorFrom(c1), true);
+}
+function colorMix1(c1, c2, percent=50) {
+  let rgbA = colorHexToRgbArray(c1, true); //let rgbA = [o1.r, o1.g, o1.b];
+  let rgbB = colorHexToRgbArray(c2, true); //let rgbB = [o2.r, o2.g, o2.b];
+  amountToMix = percent / 100;
+  var r = colorChannelMixer(rgbA[0], rgbB[0], amountToMix);
+  var g = colorChannelMixer(rgbA[1], rgbB[1], amountToMix);
+  var b = colorChannelMixer(rgbA[2], rgbB[2], amountToMix);
+  return colorFrom("rgb(" + r + "," + g + "," + b + ")");
+}
 function divInt(a, b) { return Math.trunc(a / b); }
 function downloadAsCode(obj, fname) {
 	function convertObjectToCode(obj) {
@@ -37,7 +54,8 @@ function downloadAsCode(obj, fname) {
 function hToggleClassMenu(a) {
 	a = a.target; //toElem(a);
 	let menu = a.getAttribute('menu');
-	let others = document.querySelectorAll(`a[menu='${menu}']`);
+	//let others = document.querySelectorAll(`a[menu='${menu}']`);
+	let others = document.querySelectorAll(`[menu='${menu}']`);
 	for (const o of others) {
 		mClassRemove(o, 'active')
 	}
@@ -88,9 +106,12 @@ function mLinkSide(d, text, handler, menu, kennzahl) {
 	let ui = mDom(d, { rounding: 10, hpadding: 10, vpadding: 4 }, { tag: 'a', html: text, href: '#', onclick: handler, kennzahl, menu });
 	return ui;
 }
-function mLinkMenu(d, text, handler, menu, kennzahl) {
+function mLinkMenu(d, text, styles={}, handler=null, menu=null, kennzahl=null) {
 	if (nundef(kennzahl)) kennzahl = getUID();
-	let ui = mDom(d, { className: 'a', hmargin: 8, vmargin:2, deco: 'none', rounding: 10, hpadding: 9, vpadding: 3 }, { tag: 'a', html: text, href: '#', onclick: handler, kennzahl, menu });
+
+	addKeys({ className: 'a', hmargin: 8, vmargin:2, deco: 'none', rounding: 10, hpadding: 9, vpadding: 3 }, styles)
+
+	let ui = mDom(d, styles, { tag: 'a', html: text, href: '#', onclick: handler, kennzahl, menu });
 
 	return ui;
 }
