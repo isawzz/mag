@@ -1,6 +1,6 @@
 onload = start;
 
-async function start() { loadColors(); await test13(); }
+async function start() { loadColors(); await test10(); }
 
 async function test13(){
 	await loadRecipes();
@@ -114,7 +114,7 @@ async function test11() {
 }
 async function test10() {
 	await loadAssets();
-	Z = await mGetRoute('z', { done: 'Nil github' }); //console.log('Z', Z);
+	//Z = await mGetRoute('z', { done: 'Nil github' }); //console.log('Z', Z);
 	let dPage = document.getElementById('dPage');
 	mStyle(dPage, { w: '100%', h: '100%', bg: 'skyblue' }); //page coloring
 
@@ -126,14 +126,14 @@ async function test10() {
 
 	let dTop = mDom('dTop'); //top menu
 	let dHome = mHomeLogo(dTop, 'airplane', onclickHome, 'top'); //logo
-	let dCalc = mLinkMenu(dTop, 'CALC', onclickCalc, 'top');
-	mLinkMenu(dTop, 'DAY', onclickDay, 'top');
-	let dExample = mLinkMenu(dTop, 'EXAMPLE', onclickExample, 'top');
-	mLinkMenu(dTop, 'GAME', onclickGame, 'top');
-	let v = mLinkMenu(dTop, 'VEGAN RECIPES', onclickVeganRecipes, 'top');
-	mLinkMenu(dTop, 'ZONE', onclickZone, 'top');
+	let dCalc = mLinkMenu(dTop, 'CALC', {}, onclickCalc, 'top');
+	mLinkMenu(dTop, 'DAY', {}, onclickDay, 'top');
+	let dExample = mLinkMenu(dTop, 'EXAMPLE', {}, onclickExample, 'top');
+	mLinkMenu(dTop, 'GAME', {}, onclickGame, 'top');
+	let v = mLinkMenu(dTop, 'VEGAN RECIPES', {}, onclickVeganRecipes, 'top');
+	mLinkMenu(dTop, 'ZONE', {}, onclickZone, 'top');
 
-	v.click();
+	dCalc.click();
 
 	setTimeout(() => {
 		//enter values

@@ -7,9 +7,9 @@ async function onclickCalc(ev) {
 
 	let dMenu = mDom('dSide', { display: 'flex', dir: 'column' }); //side menu
 
-	let gencase = mLinkMenu(dMenu, 'Statistik', onclickStatistik, 'side');
-	let x = mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
-	mLinkMenu(dMenu, 'Normal', onclickNormal, 'side');
+	let gencase = mLinkMenu(dMenu, 'Statistik', {}, onclickStatistik, 'side');
+	let x = mLinkMenu(dMenu, 'Binomial', {}, onclickBinomial, 'side');
+	mLinkMenu(dMenu, 'Normal', {}, onclickNormal, 'side');
 	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
 	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
 
