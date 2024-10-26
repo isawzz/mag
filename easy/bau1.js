@@ -1,5 +1,7 @@
 
 
+
+
 async function onclickRecipeType(ev) {
 	hToggleClassMenu(ev); mClear('dTable');
 	let name = ev.target.innerHTML; console.log(name);
