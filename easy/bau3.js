@@ -10,11 +10,11 @@ async function onclickCalc(ev) {
 	let gencase = mLinkMenu(dMenu, 'Statistik', {}, onclickStatistik, 'side');
 	let x = mLinkMenu(dMenu, 'Binomial', {}, onclickBinomial, 'side');
 	let normal = mLinkMenu(dMenu, 'Normal', {}, onclickNormal, 'side');
-	let all = mLinkMenu(dMenu, 'Alles', {}, onclickAll, 'side');
+	//let all = mLinkMenu(dMenu, 'Alles', {}, onclickAll, 'side');
 	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
 	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
 
-	normal.click();
+	//all.click();
 
 }
 async function onclickDay(ev) {
@@ -58,8 +58,8 @@ async function onclickVeganRecipes(ev) {
 
 	let dMenu = mDom('dSide', { display: 'flex', dir: 'column' }); //side menu
 
-	let recipes=['Pumpkin Soup','Semmelknoedel','Stir Fry'];
-	for(const name of recipes){
+	let recipes = ['Pumpkin Soup', 'Semmelknoedel', 'Stir Fry'];
+	for (const name of recipes) {
 		let b = mLinkMenu(dMenu, 'Pumpkin Soup', onclickRecipe(ev), 'side');
 	}
 	// let gencase = mLinkMenu(dMenu, 'Pumpkin Soup', onclickPumpkinSoup, 'side');
@@ -81,7 +81,7 @@ async function onclickStatistik(ev) {
 	hToggleClassMenu(ev); mClear('dTable');
 	let dTable = mBy('dTable'); //mStyle('dTable',{padding:10, display:'flex',wrap:'true',gap:10}); //,acontent:'start'});
 
-	let d1 = mDom(dTable, { w:'100%',margin: 10, display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
+	let d1 = mDom(dTable, { w: '100%', margin: 10, display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
 	mDom(d1, {}, { html: '<h1>Mit wenigen Daten:</h1>' })
 	let inputs = [['Werte fuer X:', 'x Werte', 'x'], ['Wahrscheinlichkeiten:', 'f(x) Werte', 'y']];
 	for (const list of inputs) {
@@ -110,8 +110,8 @@ async function onclickFMuVar(ev) {
 	let xlist = getValuesFromInput('inp_x');
 	let ylist = getValuesFromInput('inp_y');
 
-	let cdfResult = calculateCDF(xlist,ylist); console.log(cdfResult);
-	mBy('res_F').innerHTML = cdfResult.map(x=>x.cumulativeProbability).join(' ');
+	let cdfResult = calculateCDF(xlist, ylist); console.log(cdfResult);
+	mBy('res_F').innerHTML = cdfResult.map(x => x.cumulativeProbability).join(' ');
 
 	// let mu = calculateExpectedValue(xlist,ylist); console.log(mu);
 
@@ -123,66 +123,66 @@ async function onclickFMuVar(ev) {
 	mBy('res_median').innerHTML = res.median;
 	mBy('res_mode').innerHTML = res.mode.join(' ');
 
-}	
+}
 //#endregion
 
 //#region Binomial
 async function onclickBinomial(ev) {
 	hToggleClassMenu(ev); mClear('dTable');
 
-	let dTable = mBy('dTable'); mStyle('dTable',{padding:10, display:'flex',wrap:'true',acontent:'start',gap:10});
+	let dTable = mBy('dTable'); mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 10 });
 
-	let d1 = mDom(dTable, { display:'flex', dir: 'column', padding: 10, gap: 10, className:'input' });
+	let d1 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
 	mDom(d1, {}, { html: 'Calculate binomialPdf:' })
 	let inputs = ['n', 'p', 'k'];
 	for (const name of inputs) {
 		mInput(d1, { hpadding: 10, vpadding: 2 }, `inp_${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
-	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { tag:'button', id: `b_pdf`, html: `GO!`, onclick: onclickBinomialPdf });
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', id: `b_pdf`, html: `GO!`, onclick: onclickBinomialPdf });
 	mDom(d1, {}, { html: 'Result:' })
-	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_pdf`, html:'&nbsp;'});
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_pdf`, html: '&nbsp;' });
 
-	let d2 = mDom(dTable, { display:'flex', dir: 'column', padding: 10, gap: 10, className:'input' });
+	let d2 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
 	mDom(d2, {}, { html: 'Calculate binomialCdf:' })
 	inputs = ['n', 'p', 'from', 'to'];
 	for (const name of inputs) {
 		mInput(d2, { hpadding: 10, vpadding: 2 }, `inp_c${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
-	mDom(d2, { hpadding: 10, vpadding: 2, className: 'input' }, { tag:'button', id: `b_cdf`, html: `GO!`, onclick: onclickBinomialCdf });
+	mDom(d2, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', id: `b_cdf`, html: `GO!`, onclick: onclickBinomialCdf });
 	mDom(d2, {}, { html: 'Result:' })
-	mDom(d2, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_cdf`, html:'&nbsp;'});
+	mDom(d2, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_cdf`, html: '&nbsp;' });
 
-	let d3 = mDom(dTable, { display:'flex', dir: 'column', padding: 10, gap: 10, className:'input' });
+	let d3 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
 	mDom(d3, {}, { html: 'binomial Erwartungswert:' })
 	inputs = ['n', 'p'];
 	for (const name of inputs) {
 		mInput(d3, { hpadding: 10, vpadding: 2 }, `inp_mu${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
-	mDom(d3, { hpadding: 10, vpadding: 2, className: 'input' }, { tag:'button', id: `b_mu`, html: `GO!`, onclick: onclickBinomialMu });
+	mDom(d3, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', id: `b_mu`, html: `GO!`, onclick: onclickBinomialMu });
 	mDom(d3, {}, { html: 'Erwartungswert:' })
-	mDom(d3, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_mu`, html:'&nbsp;'});
+	mDom(d3, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_mu`, html: '&nbsp;' });
 
-	let d4 = mDom(dTable, { display:'flex', dir: 'column', padding: 10, gap: 10, className:'input' });
+	let d4 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
 	mDom(d4, {}, { html: 'binomial Varianz / Standardabweichung:' })
 	inputs = ['n', 'p'];
 	for (const name of inputs) {
 		mInput(d4, { hpadding: 10, vpadding: 2 }, `inp_v${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
-	mDom(d4, { hpadding: 10, vpadding: 2, className: 'input' }, { tag:'button', id: `b_v`, html: `GO!`, onclick: onclickBinomialVar});
+	mDom(d4, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', id: `b_v`, html: `GO!`, onclick: onclickBinomialVar });
 	mDom(d4, {}, { html: 'Varianz:' })
-	mDom(d4, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_var`, html:'&nbsp;'});
+	mDom(d4, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_var`, html: '&nbsp;' });
 	mDom(d4, {}, { html: 'Standardabweichung:' })
-	mDom(d4, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_stdev`, html:'&nbsp;'});
+	mDom(d4, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_stdev`, html: '&nbsp;' });
 
-	let d5 = mDom(dTable, { display:'flex', dir: 'column', padding: 10, gap: 10, className:'input' });
+	let d5 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
 	mDom(d5, {}, { html: 'Min trials for success with probability x:' })
 	inputs = ['x', 'p'];
 	for (const name of inputs) {
 		mInput(d5, { hpadding: 10, vpadding: 2 }, `inp_mt${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
-	mDom(d5, { hpadding: 10, vpadding: 2, className: 'input' }, { tag:'button', id: `b_mt`, html: `GO!`, onclick: onclickBinomialMinTrials});
+	mDom(d5, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', id: `b_mt`, html: `GO!`, onclick: onclickBinomialMinTrials });
 	mDom(d5, {}, { html: 'Result:' })
-	mDom(d5, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_mt`, html:'&nbsp;'});
+	mDom(d5, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_mt`, html: '&nbsp;' });
 }
 async function onclickBinomialPdf(ev) {
 	let n = +mBy('inp_n').value;
@@ -204,17 +204,17 @@ async function onclickBinomialMinTrials(ev) {
 	let p = +mBy('inp_mtp').value;
 	let res = minTrialsForSuccess(x, p);
 	mBy('result_mt').innerHTML = res;
-}	
+}
 async function onclickBinomialMu(ev) {
 	let n = +mBy('inp_mun').value;
 	let p = +mBy('inp_mup').value;
-	let res = n*p;
+	let res = n * p;
 	mBy('result_mu').innerHTML = res;
 }
 async function onclickBinomialVar(ev) {
 	let n = +mBy('inp_vn').value;
 	let p = +mBy('inp_vp').value;
-	let v = n*p*(1-p);
+	let v = n * p * (1 - p);
 	mBy('result_var').innerHTML = v;
 	mBy('result_stdev').innerHTML = Math.sqrt(v);
 }
@@ -234,53 +234,20 @@ async function onclickAll(ev) {
 	}
 	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', html: `GO!`, onclick: onclickNormalAlles });
 	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', html: `clear`, onclick: onclickNormalClear });
-	mDom(d1, {}, { html: 'Result:' })
+	mDom(d1, {}, { html: 'min:' })
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_min`, html: '&nbsp;' });
+	mDom(d1, {}, { html: 'max:' })
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_max`, html: '&nbsp;' });
+	mDom(d1, {}, { html: 'f(x):' })
 	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_pdf`, html: '&nbsp;' });
+	mDom(d1, {}, { html: 'F(x):' })
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_cdf`, html: '&nbsp;' });
 
-	return;
-	let d2 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
-	mDom(d2, {}, { html: 'Calculate normalCdf:' })
-	inputs = ['x', 'mean', 'stdev'];
-	for (const name of inputs) {
-		mInput(d2, { hpadding: 10, vpadding: 2 }, `inp_c${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
-	}
-	mDom(d2, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', id: `b_cdf`, html: `GO!`, onclick: onclickNormalCdf });
-	mDom(d2, {}, { html: 'Result:' })
-	mDom(d2, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_cdf`, html: '&nbsp;' });
 
-	let d3 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
-	mDom(d3, {}, { html: 'normal Erwartungswert:' })
-	inputs = ['mean'];
-	for (const name of inputs) {
-		mInput(d3, { hpadding: 10, vpadding: 2 }, `inp_mu${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
-	}
-	mDom(d3, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', id: `b_mu`, html: `GO!`, onclick: onclickNormalMu });
-	mDom(d3, {}, { html: 'Erwartungswert:' })
-	mDom(d3, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_mu`, html: '&nbsp;' });
-
-	let d4 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
-	mDom(d4, {}, { html: 'normal Varianz / Standardabweichung:' })
-	inputs = ['stdev'];
-	for (const name of inputs) {
-		mInput(d4, { hpadding: 10, vpadding: 2 }, `inp_v${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
-	}
-	mDom(d4, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', id: `b_v`, html: `GO!`, onclick: onclickNormalVar });
-	mDom(d4, {}, { html: 'Varianz:' })
-	mDom(d4, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_var`, html: '&nbsp;' });
-	mDom(d4, {}, { html: 'Standardabweichung:' })
-	mDom(d4, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_stdev`, html: '&nbsp;' });
-
-	let d5 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
-	mDom(d5, {}, { html: 'Intervall in dem X mit p prozent wahrscheinlichkeit liegt:' })
-	inputs = ['percent','mu','sigma'];
-	for (const name of inputs) {
-		mInput(d5, { hpadding: 10, vpadding: 2 }, `inp_i${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
-	}
-	mDom(d5, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', id: `b_v`, html: `GO!`, onclick: onclickNormalInterval });
-	mDom(d5, {}, { html: 'min:' })
-	mDom(d5, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_min`, html: '&nbsp;' });
-	mDom(d5, {}, { html: 'max:' })
-	mDom(d5, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_max`, html: '&nbsp;' });
+	mBy('inp_nx').value = 0; 
+	mBy('inp_npercent').value = 90; 
+	mBy('inp_nmean').value = 320; 
+	mBy('inp_nstdev').value = 156;
 }
 async function onclickNormal(ev) {
 	hToggleClassMenu(ev); mClear('dTable');
@@ -331,7 +298,7 @@ async function onclickNormal(ev) {
 
 	let d5 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
 	mDom(d5, {}, { html: 'Intervall in dem X mit p prozent wahrscheinlichkeit liegt:' })
-	inputs = ['percent','mu','sigma'];
+	inputs = ['percent', 'mu', 'sigma'];
 	for (const name of inputs) {
 		mInput(d5, { hpadding: 10, vpadding: 2 }, `inp_i${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
@@ -344,11 +311,26 @@ async function onclickNormal(ev) {
 async function onclickNormalAlles(ev) {
 	let x = +mBy('inp_nx').value;
 	let percent = +mBy('inp_npercent').value;
-	let mean = +mBy('inp_nmean').value;
-	let stdev = +mBy('inp_nstdev').value;
-	let res = calculateInterval(mean, stdev, percent);
-	mBy('result_min').innerHTML = res[0];
-	mBy('result_max').innerHTML = res[1];
+	let mu = +mBy('inp_nmean').value;
+	let sigma = +mBy('inp_nstdev').value;
+
+	if (!isNaN(percent)) {
+		if (percent <= 0 || percent >= 100) { throw new Error("Percent must be between 0 and 100."); }
+		const p = percent / 100;
+		const z = math.normalInv(p, 0, 1);
+
+		// Calculate the interval around the mean for the given normal distribution N(mu, sigma)
+		const lowerBound = mu - z * sigma;
+		const upperBound = mu + z * sigma;
+
+		mBy('result_min').innerHTML = lowerBound;
+		mBy('result_max').innerHTML = upperBound;
+
+	} else {
+		mBy('result_pdf').innerHTML = math.normalPdf(x, mu, sigma)
+		mBy('result_cdf').innerHTML = math.normalCdf(x, mu, sigma)
+	}
+
 }
 async function onclickNormalClear(ev) {
 	mBy('result_min').innerHTML = '&nbsp;';
@@ -372,7 +354,7 @@ async function onclickNormalCdf(ev) {
 	let res = normalCdf(x, mean, stdev);
 	mBy('result_cdf').innerHTML = res;
 }
-async function onclickNormalInterval(ev){
+async function onclickNormalInterval(ev) {
 	let percent = +mBy('inp_ipercent').value;
 	let mean = +mBy('inp_imu').value;
 	let stdev = +mBy('inp_isigma').value;

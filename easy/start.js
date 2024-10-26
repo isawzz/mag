@@ -26,13 +26,13 @@ async function test14() {
 
 	dCalc.click();
 
-	setTimeout(() => {
-		//enter values
-		let inp = mBy('inp_x'); //console.log(inp)
-		inp.value = '0 1 2 3';
-		inp = mBy('inp_y');
-		inp.value = '1/8 3/8 3/8 1/8';
-	}, 20);
+	// setTimeout(() => {
+	// 	//enter values
+	// 	let inp = mBy('inp_x'); //console.log(inp)
+	// 	inp.value = '0 1 2 3';
+	// 	inp = mBy('inp_y');
+	// 	inp.value = '1/8 3/8 3/8 1/8';
+	// }, 20);
 }
 async function test13(){
 	await loadRecipes();
