@@ -67,7 +67,15 @@ if ($cmd == 'table'){
 	$config = file_get_contents($path . 'config.yaml');
 	$dicolor = file_get_contents('../assets/dicolor.yaml');
 	$result = (object) ['m' => $m, 'superdi' => $superdi, 'details' => $details, 'dicolor' => $dicolor, 'config' => $config];
-
+}else if ($cmd == "recipes") {
+	$path = '../easy/recipes/';
+	$recipes = file_get_contents($path . 'recipes.yaml');
+	$result['recipes'] = $recipes;
+	$list = $data->list;
+	foreach ($list as $item){
+		$recipe = file_get_contents($path . $item . '/' . $item .	 '.yaml');
+		$result[$item] = $recipe;
+	}
 }else if ($cmd == 'add_players'){ 
 	$friendly = $data->friendly;
 	$uname = $data->uname;

@@ -5998,7 +5998,7 @@ async function loadAndScaleImage(imageUrl) {
   }
 }
 async function loadAssets() {
-
+  if (nundef(M)) M={};
 	let sessionType = detectSessionType(); console.log(sessionType)
 	if (sessionType == 'telecave') {
 		let res = await postPHP({}, 'assets'); //console.log(res);
@@ -6008,10 +6008,11 @@ async function loadAssets() {
 			di[k] = jsyaml.load(jsonObject[k]); //JSON.parse(jsonObject[k]);
 			//console.log(k, JSON.parse(jsonObject[k]));
 		}
-		M=di.m;
+		for(const k in di.m) M[k]=di.m[k];
 		for(const k in di)if(k!='m')M[k]=di[k];
 	} else {
-		M = await mGetYaml('../y/m.yaml');
+		let m = await mGetYaml('../y/m.yaml');
+    for(const k in m) M[k]=m[k];
 		M.superdi = await mGetYaml('../y/superdi.yaml');
 		M.details = await mGetYaml('../y/details.yaml');
 		M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
