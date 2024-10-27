@@ -1,6 +1,6 @@
 onload = start;
 
-async function start() { loadColors(); await test13(); }
+async function start() { loadColors(); await test14(); }
 
 async function test14() {
 	await loadAssets();
