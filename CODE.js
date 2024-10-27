@@ -5,16 +5,28 @@ function mLinkToggle(d, text, handler, init, kennzahl) {
 
 	return ui;
 }
-function _calculateStatistics(values,mu) {
+async function onclickRecipeSide(ev) {
+	hToggleClassMenu(ev); return;
+	a = ev.target; console.log(a)
+	let menu = a.getAttribute('menu');
+	//let others = document.querySelectorAll(`a[menu='${menu}']`);
+	// let others = document.querySelectorAll(`div[menu='${menu}']`); console.log('others', others)
+	let others = document.querySelectorAll(`[menu='${menu}']`); console.log('others', others)
+	for (const o of others) {
+		mClassRemove(o, 'active')
+	}
+	mClassToggle(a, 'active');
+}
+function _calculateStatistics(values, mu) {
 	// Mean
 	const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
 
 	// Median
 	const sortedValues = [...values].sort((a, b) => a - b);
 	const mid = Math.floor(sortedValues.length / 2);
-	const median = sortedValues.length % 2 === 0 ? 
-			(sortedValues[mid - 1] + sortedValues[mid]) / 2 : 
-			sortedValues[mid];
+	const median = sortedValues.length % 2 === 0 ?
+		(sortedValues[mid - 1] + sortedValues[mid]) / 2 :
+		sortedValues[mid];
 
 	// Mode
 	const frequencyMap = {};
@@ -22,13 +34,13 @@ function _calculateStatistics(values,mu) {
 	let mode = [];
 
 	values.forEach(value => {
-			frequencyMap[value] = (frequencyMap[value] || 0) + 1;
-			if (frequencyMap[value] > maxFreq) {
-					maxFreq = frequencyMap[value];
-					mode = [value];
-			} else if (frequencyMap[value] === maxFreq) {
-					mode.push(value);
-			}
+		frequencyMap[value] = (frequencyMap[value] || 0) + 1;
+		if (frequencyMap[value] > maxFreq) {
+			maxFreq = frequencyMap[value];
+			mode = [value];
+		} else if (frequencyMap[value] === maxFreq) {
+			mode.push(value);
+		}
 	});
 	mode = [...new Set(mode)]; // Remove duplicates if multiple modes
 
@@ -39,11 +51,11 @@ function _calculateStatistics(values,mu) {
 	const standardDeviation = Math.sqrt(variance);
 
 	return {
-			mean: mean,
-			median: median,
-			mode: mode,
-			variance: variance,
-			standardDeviation: standardDeviation
+		mean: mean,
+		median: median,
+		mode: mode,
+		variance: variance,
+		standardDeviation: standardDeviation
 	};
 }
 
@@ -529,12 +541,12 @@ function mLayoutTopLeftTable_YES(container) {
 }
 function mLayoutTopLeftTable(container) {
 
-  mStyle(container, { display: 'flex', dir: 'column', h: '100%', w:'100%' });
-  let d1=mDom(container,{bg:'lightblue',padding:10},{html:'top'})
-  let drest=mDom(container,{display:'flex',flexGrow:1,overflow:'hidden',w:'100%'});
-  let d2=mDom(drest,{w:60,bg:'lightgray',transition:'width 0.5s ease'});
-  let dsym=mDom(d2,{cursor:'pointer',fz:24,padding:10},{html:getMenuSymbol()})
-  let d3=mDom(drest,{flexGrow:1,overy:'scroll',bg:'lightgreen',padding:10},{html:'content'});
+	mStyle(container, { display: 'flex', dir: 'column', h: '100%', w: '100%' });
+	let d1 = mDom(container, { bg: 'lightblue', padding: 10 }, { html: 'top' })
+	let drest = mDom(container, { display: 'flex', flexGrow: 1, overflow: 'hidden', w: '100%' });
+	let d2 = mDom(drest, { w: 60, bg: 'lightgray', transition: 'width 0.5s ease' });
+	let dsym = mDom(d2, { cursor: 'pointer', fz: 24, padding: 10 }, { html: getMenuSymbol() })
+	let d3 = mDom(drest, { flexGrow: 1, overy: 'scroll', bg: 'lightgreen', padding: 10 }, { html: 'content' });
 
 	// Add some extra content to make the right div scrollable
 	for (let i = 0; i < 120; i++) {
@@ -554,19 +566,19 @@ function mLayoutTopLeftTable(container) {
 		sidebarOpen = !sidebarOpen;
 	});
 
-  return [d1,d2,d3]; //{dTop:d1,dSidebar:d2,dTable:d3,isOpen:sidebarOpen}
+	return [d1, d2, d3]; //{dTop:d1,dSidebar:d2,dTable:d3,isOpen:sidebarOpen}
 }
 
-function _mLayoutTopLeftTable(container,scroll=true) {
-  mStyle(container, { display: 'grid', gridRows: 'auto 1fr', h: '100%' });
-  let d1 = mDom(container);
-  let drest = mDom(container,{ display: 'grid', gridCols: 'auto 1fr', h: '100%', w:'100%' }); 
+function _mLayoutTopLeftTable(container, scroll = true) {
+	mStyle(container, { display: 'grid', gridRows: 'auto 1fr', h: '100%' });
+	let d1 = mDom(container);
+	let drest = mDom(container, { display: 'grid', gridCols: 'auto 1fr', h: '100%', w: '100%' });
 	let d2 = mDom(drest);
 	let d3 = mDom(drest);
-  if (scroll) mStyle(d3, { overflow: 'scroll' });
-  return [d1, d2, d3];
+	if (scroll) mStyle(d3, { overflow: 'scroll' });
+	return [d1, d2, d3];
 }
-function addColorSorting(bh=18,bs=20,bl=20) {
+function addColorSorting(bh = 18, bs = 20, bl = 20) {
 	let list = M.colorList;
 	let [bh, bs, bl] = [18, 20, 20];
 	for (const x of list) {
@@ -653,31 +665,31 @@ function insertDivs_orig(container) {
 	topDiv.style.backgroundColor = 'lightblue'; // Optional styling
 	topDiv.style.padding = '10px';
 	topDiv.textContent = "Top div - height is auto, grows with content.";
-	
+
 	// Create the bottom div
 	const bottomDiv = document.createElement('div');
 	bottomDiv.style.backgroundColor = 'lightgreen'; // Optional styling
 	bottomDiv.style.padding = '10px';
 	bottomDiv.style.overflowY = 'scroll';
 	bottomDiv.textContent = "Bottom div - scrollable if content overflows.";
-	
+
 	// Add some content to the bottom div to demonstrate scrolling
 	for (let i = 0; i < 20; i++) {
-			const p = document.createElement('p');
-			p.textContent = `Scrollable content ${i + 1}`;
-			bottomDiv.appendChild(p);
+		const p = document.createElement('p');
+		p.textContent = `Scrollable content ${i + 1}`;
+		bottomDiv.appendChild(p);
 	}
 
 	// Apply CSS to the container to use Grid layout
 	container.style.display = 'grid';
 	container.style.gridTemplateRows = 'auto 1fr'; // Top div auto, bottom div fills the remaining space
 	container.style.height = '100%'; // Ensure container has height constraint
-	
+
 	// Append the divs to the container
 	container.appendChild(topDiv);
 	container.appendChild(bottomDiv);
 
-	return [topDiv,bottomDiv]
+	return [topDiv, bottomDiv]
 }
 function insertDivs(container) {
 	// Create the top div
@@ -685,56 +697,56 @@ function insertDivs(container) {
 	topDiv.style.backgroundColor = 'lightblue'; // Optional styling
 	topDiv.style.padding = '10px';
 	topDiv.textContent = "Top div - height is auto, grows with content.";
-	
+
 	// Create the bottom div
 	const bottomDiv = document.createElement('div');
 	bottomDiv.style.backgroundColor = 'lightgreen'; // Optional styling
 	bottomDiv.style.padding = '10px';
 	bottomDiv.style.overflowY = 'scroll';
 	bottomDiv.textContent = "Bottom div - scrollable if content overflows.";
-	
+
 	// Add some content to the bottom div to demonstrate scrolling
 	for (let i = 0; i < 20; i++) {
-			const p = document.createElement('p');
-			p.textContent = `Scrollable content ${i + 1}`;
-			bottomDiv.appendChild(p);
+		const p = document.createElement('p');
+		p.textContent = `Scrollable content ${i + 1}`;
+		bottomDiv.appendChild(p);
 	}
 
 	// Apply CSS to the container to use Grid layout
 	container.style.display = 'grid';
 	container.style.gridTemplateRows = 'auto 1fr'; // Top div auto, bottom div fills the remaining space
 	container.style.height = '100%'; // Ensure container has height constraint
-	
+
 	// Append the divs to the container
 	container.appendChild(topDiv);
 	container.appendChild(bottomDiv);
 
-	return [topDiv,bottomDiv]
+	return [topDiv, bottomDiv]
 }
 
-function presentImages(){
-	let dUpper = mBy('dUpper');	console.log('__________',dUpper);
-	
+function presentImages() {
+	let dUpper = mBy('dUpper'); console.log('__________', dUpper);
+
 	mClear(dUpper);
-	let w=dUpper.offsetWidth-27; console.log('w',w);
-	let wi=Math.floor(w/3) - 10;console.log('wi',wi);
-	let hi = Math.floor(wi*2/3);
+	let w = dUpper.offsetWidth - 27; console.log('w', w);
+	let wi = Math.floor(w / 3) - 10; console.log('wi', wi);
+	let hi = Math.floor(wi * 2 / 3);
 	//let perRow=Math.floor(w/300); console.log('perRow', perRow);
 	//let wImg=Math.floor(w/perRow); wImg-=(perRow-1)*10; console.log('wImg', wImg);
 	//let hImg=wImg*2/3;
 	let images = M.recipes.map(img => '../assets/img/recipes/' + img);
-	images.forEach(img => mDom(dUpper, { w:'30%',bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
+	images.forEach(img => mDom(dUpper, { w: '30%', bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src: img }));
 }
-function presentImages(){
+function presentImages() {
 	let dUpper = mBy('dUpper');
 	console.log(dUpper);
 	mClear(dUpper);
-	let w=dUpper.offsetWidth-40; console.log('w',w);
-	let perRow=Math.floor(w/300); console.log('perRow', perRow);
-	let wImg=Math.floor(w/perRow); wImg-=(perRow-1)*10; console.log('wImg', wImg);
-	let hImg=wImg*2/3;
+	let w = dUpper.offsetWidth - 40; console.log('w', w);
+	let perRow = Math.floor(w / 300); console.log('perRow', perRow);
+	let wImg = Math.floor(w / perRow); wImg -= (perRow - 1) * 10; console.log('wImg', wImg);
+	let hImg = wImg * 2 / 3;
 	let images = M.recipes.map(img => '../assets/img/recipes/' + img);
-	images.forEach(img => mDom(dUpper, { w:wImg,h: hImg, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src:img }));
+	images.forEach(img => mDom(dUpper, { w: wImg, h: hImg, bg: rColor(), fg: 'contrast', hline: 'normal' }, { tag: 'img', src: img }));
 }
 //#endregion
 
@@ -750,39 +762,39 @@ function showStyles(elem) { let st = mGetStyles(elem, ['bg', 'fg']); console.log
 
 //#region lacuna
 async function placeYourMeeple(ev) {
-  //console.log('placeYourMeeple',B.counter++);//,ev.target);
-  let d = mBy('dCanvas');
-  document.onclick = null;
-  d.onmousemove = null;
-  let sz = rChoose(range(10, 40)); //10;
-  let b = mGetStyle(d, 'border-width'); //console.log(b);
-  let p = mGetStyle(d, 'padding'); console.log(p);
-  x = ev.clientX - d.offsetLeft - b - sz;
-  y = ev.clientY - d.offsetTop - b - sz;
-  // x = ev.clientX - sz / 2 - d.offsetLeft - d.parentNode.offsetLeft;
-  // y = ev.clientY - sz / 2 - d.offsetTop - d.parentNode.offsetTop;
-  // x = ev.clientX - sz / 2;// - d.offsetLeft - d.parentNode.offsetLeft;
-  // y = ev.clientY - sz / 2;// - d.offsetTop - d.parentNode.offsetTop;
-  // let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border: getPlayerProp('color'), id: getUID(), owner: getUname() };
-  let pMeeple = { x, y, sz, bg: 'red', border: 'gold', id: getUID(), owner: 'hallo' };
-  // fen.meeples.push(jsCopy(pMeeple));//**** */
-  drawMeeple(d, pMeeple);
-  lookupAddToList(B, ['meeples'], pMeeple);
-  let linesActivated = B.linesActivated = getActivatedLines(B.lines);
-  console.log('linesActivated', linesActivated);
-  B.selectedPoints = [];
-  B.endPoints = [];
-  B.possiblePairs = [];
-  if (linesActivated.length == 1) {
-    //grab these points and finish move
-    B.selectedPoints.push(linesActivated[0].p1.id);
-    B.selectedPoints.push(linesActivated[0].p2.id);
-    let res = await lacunaMoveComplete(B.selectedPoints); console.log('res', res);
-  } else {
-    animateEndpointsOfActivatedLines();
-  }
+	//console.log('placeYourMeeple',B.counter++);//,ev.target);
+	let d = mBy('dCanvas');
+	document.onclick = null;
+	d.onmousemove = null;
+	let sz = rChoose(range(10, 40)); //10;
+	let b = mGetStyle(d, 'border-width'); //console.log(b);
+	let p = mGetStyle(d, 'padding'); console.log(p);
+	x = ev.clientX - d.offsetLeft - b - sz;
+	y = ev.clientY - d.offsetTop - b - sz;
+	// x = ev.clientX - sz / 2 - d.offsetLeft - d.parentNode.offsetLeft;
+	// y = ev.clientY - sz / 2 - d.offsetTop - d.parentNode.offsetTop;
+	// x = ev.clientX - sz / 2;// - d.offsetLeft - d.parentNode.offsetLeft;
+	// y = ev.clientY - sz / 2;// - d.offsetTop - d.parentNode.offsetTop;
+	// let pMeeple = { x: x - sz / 2, y: y - sz / 2, sz, bg: 'black', border: getPlayerProp('color'), id: getUID(), owner: getUname() };
+	let pMeeple = { x, y, sz, bg: 'red', border: 'gold', id: getUID(), owner: 'hallo' };
+	// fen.meeples.push(jsCopy(pMeeple));//**** */
+	drawMeeple(d, pMeeple);
+	lookupAddToList(B, ['meeples'], pMeeple);
+	let linesActivated = B.linesActivated = getActivatedLines(B.lines);
+	console.log('linesActivated', linesActivated);
+	B.selectedPoints = [];
+	B.endPoints = [];
+	B.possiblePairs = [];
+	if (linesActivated.length == 1) {
+		//grab these points and finish move
+		B.selectedPoints.push(linesActivated[0].p1.id);
+		B.selectedPoints.push(linesActivated[0].p2.id);
+		let res = await lacunaMoveComplete(B.selectedPoints); console.log('res', res);
+	} else {
+		animateEndpointsOfActivatedLines();
+	}
 }
-function _generateGridPoints(n,w,h){
+function _generateGridPoints(n, w, h) {
 	const points = [];
 	let { rows, cols } = divideRectangleIntoGrid(w, h * .8, n);
 	const xSpacing = w / (cols + 1);
@@ -838,103 +850,103 @@ function drawInteractiveLine0(p1, p2, color = 'black', thickness = 10) {
 	//lines.push(line); // Store the line for later reference
 }
 
-function generateStar(dParent,x,y){
+function generateStar(dParent, x, y) {
 	let html = `<svg width="100" height="100">
 			<polygon points="50 0 86.6 50 100 0 75 35 50 70.7 25 35 0 0" fill="yellow" />
 		</svg>`;
-	let d=mDom(dParent,{w:100,h:100,pos:'absolute',left:x,top:y},{html});
+	let d = mDom(dParent, { w: 100, h: 100, pos: 'absolute', left: x, top: y }, { html });
 	return html;
 }
 function numTranslate(n, newmax, newmin = 0, oldmax = 1000, oldmin = 0) { return Math.round(newmin + (newmax - newmin) * (n - oldmin) / (oldmax - oldmin)); }
 
-function pointFromFen(pfen,dParent,margin){
-  //a fen point is 'x_y_type_owner'
-  //result should be {x,y,type,owner,div,sz,bg} x on page,y on page,owner may be null
-  let rect=getRect(dParent); 
-  let [w,h,xoff,yoff] = [rect.w,rect.h,rect.x,rect.y];console.log(w,h,xoff,yoff)
-  console.log(pfen)
-  const [x, y, type, owner] = pfen.split('_').map(val => isNaN(val) ? val : parseInt(val, 10));
-  const p = {
-      x: Math.round((x / 1000) * w + xoff+margin), // Convert x to page coordinates
-      y: Math.round((y / 1000) * h + yoff+margin), // Convert y to page coordinates
-      type,
-      owner: owner === 'null' ? null : owner, // Handle null owner
-      div: null, // Placeholder for the div element
-      sz: 20, //Math.max(10,Math.round(20/1000 * Math.min(w,h))), // Default size (can be adjusted)
-      bg: rColor(),//'black' // Default background color (can be adjusted)
-  };
-  console.log(p)
-  p.div=mDom(dParent,{position:'absolute',w:p.sz,h:p.sz,left:p.x - p.sz / 2,top:p.y - p.sz / 2,bg:p.bg},{'data-type':p.type});
-  return p;
+function pointFromFen(pfen, dParent, margin) {
+	//a fen point is 'x_y_type_owner'
+	//result should be {x,y,type,owner,div,sz,bg} x on page,y on page,owner may be null
+	let rect = getRect(dParent);
+	let [w, h, xoff, yoff] = [rect.w, rect.h, rect.x, rect.y]; console.log(w, h, xoff, yoff)
+	console.log(pfen)
+	const [x, y, type, owner] = pfen.split('_').map(val => isNaN(val) ? val : parseInt(val, 10));
+	const p = {
+		x: Math.round((x / 1000) * w + xoff + margin), // Convert x to page coordinates
+		y: Math.round((y / 1000) * h + yoff + margin), // Convert y to page coordinates
+		type,
+		owner: owner === 'null' ? null : owner, // Handle null owner
+		div: null, // Placeholder for the div element
+		sz: 20, //Math.max(10,Math.round(20/1000 * Math.min(w,h))), // Default size (can be adjusted)
+		bg: rColor(),//'black' // Default background color (can be adjusted)
+	};
+	console.log(p)
+	p.div = mDom(dParent, { position: 'absolute', w: p.sz, h: p.sz, left: p.x - p.sz / 2, top: p.y - p.sz / 2, bg: p.bg }, { 'data-type': p.type });
+	return p;
 }
 
 function pointFromFen(fen, w, h, margin, dParent) {
-  // Split the FEN string into components
-  const [x, y, type, owner] = fen.split('_').map(val => isNaN(val) ? val : parseInt(val, 10));
+	// Split the FEN string into components
+	const [x, y, type, owner] = fen.split('_').map(val => isNaN(val) ? val : parseInt(val, 10));
 
-  // Create a point object with page coordinates
-  const p = {
-      x: Math.round((x / 1000) * w) + margin, // Convert x to page coordinates
-      y: Math.round((y / 1000) * h) + margin, // Convert y to page coordinates
-      type,
-      owner: owner === 'null' ? null : owner, // Handle null owner
-      div: null, // Placeholder for the div element
-      sz: 10, // Default size (can be adjusted)
-      bg: 'black' // Default background color (can be adjusted)
-  };
+	// Create a point object with page coordinates
+	const p = {
+		x: Math.round((x / 1000) * w) + margin, // Convert x to page coordinates
+		y: Math.round((y / 1000) * h) + margin, // Convert y to page coordinates
+		type,
+		owner: owner === 'null' ? null : owner, // Handle null owner
+		div: null, // Placeholder for the div element
+		sz: 10, // Default size (can be adjusted)
+		bg: 'black' // Default background color (can be adjusted)
+	};
 
-  // Create the div element representing the point
-  let d=mDom(dParent,{position:'absolute',w:p.sz,h:p.sz,left:p.x - p.sz / 2,top:p.y - p.sz / 2,bg:p.bg},{'data-type':p.type});
-  // point.div = document.createElement('div');
-  // point.div.style.position = 'absolute';
-  // point.div.style.width = `${point.sz}px`;
-  // point.div.style.height = `${point.sz}px`;
-  // point.div.style.left = `${point.x - point.sz / 2}px`; // Center the point div
-  // point.div.style.top = `${point.y - point.sz / 2}px`; // Center the point div
-  // point.div.style.backgroundColor = point.bg;
-  // point.div.setAttribute('data-type', point.type); // Store the type as a data attribute
-  // // Append the point div to the parent div
-  // dParent.appendChild(point.div);
+	// Create the div element representing the point
+	let d = mDom(dParent, { position: 'absolute', w: p.sz, h: p.sz, left: p.x - p.sz / 2, top: p.y - p.sz / 2, bg: p.bg }, { 'data-type': p.type });
+	// point.div = document.createElement('div');
+	// point.div.style.position = 'absolute';
+	// point.div.style.width = `${point.sz}px`;
+	// point.div.style.height = `${point.sz}px`;
+	// point.div.style.left = `${point.x - point.sz / 2}px`; // Center the point div
+	// point.div.style.top = `${point.y - point.sz / 2}px`; // Center the point div
+	// point.div.style.backgroundColor = point.bg;
+	// point.div.setAttribute('data-type', point.type); // Store the type as a data attribute
+	// // Append the point div to the parent div
+	// dParent.appendChild(point.div);
 
-  return p;
+	return p;
 }
 async function showInstructionStandard(table, instruction) {
-  let myTurn = isMyTurn(table);
-  if (!myTurn) staticTitle(table); else animatedTitle();
-  if (nundef(instruction)) return;
-  let styleInstruction = { hmin:42, display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
-  let dinst = mBy('dInstruction');
-  if (nundef(dinst)) return;
-  mClear(dinst);
-  let html;
-  if (myTurn) {
-    styleInstruction.maleft = -30;
-    html = `
+	let myTurn = isMyTurn(table);
+	if (!myTurn) staticTitle(table); else animatedTitle();
+	if (nundef(instruction)) return;
+	let styleInstruction = { hmin: 42, display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
+	let dinst = mBy('dInstruction');
+	if (nundef(dinst)) return;
+	mClear(dinst);
+	let html;
+	if (myTurn) {
+		styleInstruction.maleft = -30;
+		html = `
         ${getWaitingHtml()}
         <span style="color:red;font-weight:bold;max-height:25px">You</span>
         &nbsp;${instruction};
         `;
-  } else { html = `waiting for: ${getTurnPlayers(table)}` }
-  mDom(dinst, styleInstruction, { html });
+	} else { html = `waiting for: ${getTurnPlayers(table)}` }
+	mDom(dinst, styleInstruction, { html });
 }
 async function showInstructionCompact(table, instruction) {
-  let myTurn = isMyTurn(table);
-  if (!myTurn) staticTitle(table); else animatedTitle();
-  if (nundef(instruction)) return;
-  let styleInstruction = { hmin:42, display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
-  let dinst = mBy('dInstruction');
-  if (nundef(dinst)) return;
-  mClear(dinst);
-  let html;
-  if (myTurn) {
-    styleInstruction.maleft = -30;
-    html = `
+	let myTurn = isMyTurn(table);
+	if (!myTurn) staticTitle(table); else animatedTitle();
+	if (nundef(instruction)) return;
+	let styleInstruction = { hmin: 42, display: 'flex', 'justify-content': 'center', 'align-items': 'center' };
+	let dinst = mBy('dInstruction');
+	if (nundef(dinst)) return;
+	mClear(dinst);
+	let html;
+	if (myTurn) {
+		styleInstruction.maleft = -30;
+		html = `
         ${getWaitingHtml()}
         <span style="color:red;font-weight:bold;max-height:25px">You</span>
         &nbsp;${instruction};
         `;
-  } else { html = `waiting for: ${getTurnPlayers(table)}` }
-  mDom(dinst, styleInstruction, { html });
+	} else { html = `waiting for: ${getTurnPlayers(table)}` }
+	mDom(dinst, styleInstruction, { html });
 }
 
 async function updateTestButtonsPlayers(table) {
@@ -967,20 +979,20 @@ async function updateTestButtonsPlayers(table) {
 }
 
 async function showTable(id) {
-  let me = getUname();
-  let table = await mGetRoute('table', { id });  //console.log('table',table)
-  if (!table) { showMessage('table deleted!'); return await showTables('showTable'); }
-  let func = DA.funcs[table.game];
-  T = table;
-  clearMain();
-  let d = mBy('dExtraLeft');
-  d.innerHTML = `<h2>${getGameProp('friendly').toUpperCase()}: ${table.friendly} (${table.step})</h2>`; // title
-  let items = func.present(table);
-  func.stats(table);
-  if (table.status == 'over') { showGameover(table, 'dTitle'); return; }
-  assertion(table.status == 'started', `showTable status ERROR ${table.status}`);
-  await updateTestButtonsPlayers(table);
-  func.activate(table, items);
+	let me = getUname();
+	let table = await mGetRoute('table', { id });  //console.log('table',table)
+	if (!table) { showMessage('table deleted!'); return await showTables('showTable'); }
+	let func = DA.funcs[table.game];
+	T = table;
+	clearMain();
+	let d = mBy('dExtraLeft');
+	d.innerHTML = `<h2>${getGameProp('friendly').toUpperCase()}: ${table.friendly} (${table.step})</h2>`; // title
+	let items = func.present(table);
+	func.stats(table);
+	if (table.status == 'over') { showGameover(table, 'dTitle'); return; }
+	assertion(table.status == 'started', `showTable status ERROR ${table.status}`);
+	await updateTestButtonsPlayers(table);
+	func.activate(table, items);
 }
 
 function instructionUpdate() {
@@ -998,14 +1010,14 @@ function lacuna() {
 		//console.log(n, neach);
 		fen.points = lacunaGeneratePoints(w, h, n, neach, sz, .6, true); //console.log(jsCopy(points[0]));
 
-		fen.colorsInUse = Array.from(new Set(fen.points.map(x=>x.bg))); console.log('colorsUsed',fen.colorsInUse)
+		fen.colorsInUse = Array.from(new Set(fen.points.map(x => x.bg))); console.log('colorsUsed', fen.colorsInUse)
 		for (const name in table.players) {
 			let pl = table.players[name];
 			pl.score = 0;
 			pl.positions = [];
 			pl.flowers = {};
-			for(const c of fen.colorsInUse){
-				pl.flowers[c]=0;
+			for (const c of fen.colorsInUse) {
+				pl.flowers[c] = 0;
 			}
 		}
 
@@ -1013,7 +1025,7 @@ function lacuna() {
 		table.plorder = jsCopy(table.playerNames);
 		table.turn = [rChoose(table.playerNames)];
 
-		
+
 
 		return fen;
 	}
@@ -1028,20 +1040,20 @@ function lacuna() {
 			if (pl.playmode == 'bot') { mStyle(item.img, { rounding: 0 }); }
 			let d = iDiv(item); mCenterFlex(d); mLinebreak(d); mIfNotRelative(d);
 
-			
-			for(const c in pl.flowers){
-				let n=pl.flowers[c];
+
+			for (const c in pl.flowers) {
+				let n = pl.flowers[c];
 				playerStatCount(c, n, d); //, {}, {id:`stat_${plname}_score`});	
 			}
 
-			
+
 			if (table.turn.includes(plname)) { mDom(d, { position: 'absolute', left: -3, top: 0 }, { html: getWaitingHtml() }); }
 		}
 
 	}
 
 	function present(table) {
-		B={};
+		B = {};
 		let dTable = presentBgaRoundTable();
 		let fen = table.fen;
 		let [w, h, sz, n, neach, points, meeples] = [fen.w, fen.h, fen.sz, fen.n, fen.neach, jsCopy(fen.points), jsCopy(fen.meeples)];
@@ -1067,9 +1079,9 @@ function lacuna() {
 	return { setup, present, stats, activate };
 }
 
-function drawLine1(p1,p2) {
+function drawLine1(p1, p2) {
 	// Calculate the distance between the two points (line length)
-	let [x1,y1,x2,y2]=[p1.cxPage,p1.cyPage,p2.cxPage,p2.cyPage];
+	let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
 	const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 
 	// Calculate the angle between the two points
@@ -1080,31 +1092,31 @@ function drawLine1(p1,p2) {
 	line.className = 'line';
 	line.style.height = `${length}px`;
 	line.style.transform = `rotate(${angle}deg)`;
-	
+
 	// Position the line to be centered on the endpoints
 	line.style.left = `${x1}px`;
 	line.style.top = `${y1}px`;
-	
+
 	// Append the line to the body
 	document.body.appendChild(line);
 
 	return line;
 }
 function onMouseMoveLine1(event) {
-  const mouseX = event.clientX;
-  const mouseY = event.clientY;
+	const mouseX = event.clientX;
+	const mouseY = event.clientY;
 
-  DA.lines.forEach(line => {
-    const rect = line.getBoundingClientRect();
-    if (
-      mouseX >= rect.left && mouseX <= rect.right &&
-      mouseY >= rect.top && mouseY <= rect.bottom
-    ) {
-      line.style.backgroundColor = 'red'; // Change color on hover
-    } else {
-      line.style.backgroundColor = 'black'; // Reset color when not hovered
-    }
-  });
+	DA.lines.forEach(line => {
+		const rect = line.getBoundingClientRect();
+		if (
+			mouseX >= rect.left && mouseX <= rect.right &&
+			mouseY >= rect.top && mouseY <= rect.bottom
+		) {
+			line.style.backgroundColor = 'red'; // Change color on hover
+		} else {
+			line.style.backgroundColor = 'black'; // Reset color when not hovered
+		}
+	});
 }
 
 function pointLineDistance1(px, py, ax, ay, bx, by) {
@@ -1163,7 +1175,7 @@ function drawInteractiveLine0(p1, p2, color = 'black') {
 function drawInteractiveLine1(p1, p2, color = 'black') {
 	const line = document.createElement('div');
 	const thickness = 20; // Set the line thickness (height) to 20px
-	const offs = thickness / 2; 
+	const offs = thickness / 2;
 	let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
 
 	const distance = Math.hypot(x2 - x1, y2 - y1);
@@ -1192,7 +1204,7 @@ function drawInteractiveLine1(p1, p2, color = 'black') {
 function drawInteractiveLine2(p1, p2, color = 'black') {
 	const line = document.createElement('div');
 	const thickness = 20; // Set the line thickness (height) to 20px
-	const offs = thickness / 2; 
+	const offs = thickness / 2;
 	let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
 
 	const distance = Math.hypot(x2 - x1, y2 - y1);
@@ -1213,10 +1225,10 @@ function drawInteractiveLine2(p1, p2, color = 'black') {
 	document.body.appendChild(line);
 	return line;
 }
-function drawInteractiveLine00(p1, p2, color='black') {
+function drawInteractiveLine00(p1, p2, color = 'black') {
 	const line = document.createElement('div');
-	let thickness = 10; let offs = thickness/2;
-	let [x1,y1,x2,y2]=[p1.cxPage,p1.cyPage,p2.cxPage,p2.cyPage];
+	let thickness = 10; let offs = thickness / 2;
+	let [x1, y1, x2, y2] = [p1.cxPage, p1.cyPage, p2.cxPage, p2.cyPage];
 	// let [x1,y1,x2,y2]=[p1.cxPage-offs,p1.cyPage-offs,p2.cxPage-offs,p2.cyPage-offs];
 	// let [x1,y1,x2,y2]=[p1.cxPage,p1.cyPage-offs,p2.cxPage,p2.cyPage-offs];
 
@@ -1232,8 +1244,8 @@ function drawInteractiveLine00(p1, p2, color='black') {
 	line.style.left = `${x1}px`;
 	line.style.top = `${y1}px`;
 
-	line.addEventListener('mouseover', () => {		line.style.backgroundColor = 'red';	});
-	line.addEventListener('mouseout', () => {		line.style.backgroundColor = color;	});
+	line.addEventListener('mouseover', () => { line.style.backgroundColor = 'red'; });
+	line.addEventListener('mouseout', () => { line.style.backgroundColor = color; });
 
 	document.body.appendChild(line);
 	return line;
@@ -1794,11 +1806,11 @@ function drawCircleOnCanvas(ctx, x, y, radius) {
 	ctx.stroke();
 }
 function mCanvas(dParent, styles = {}, bstyles = {}, play = null, pause = null, origin = 'tl') {
-  let cv = mCreate('canvas');
-  mAppend(toElem(dParent), cv);
-  addKeys({ w: 500, h: 500, bg: '#222', rounding: 10 }, styles);
-  mStyle(cv, styles);
-  let [w, h] = [cv.width, cv.height] = [styles.w, styles.h];
+	let cv = mCreate('canvas');
+	mAppend(toElem(dParent), cv);
+	addKeys({ w: 500, h: 500, bg: '#222', rounding: 10 }, styles);
+	mStyle(cv, styles);
+	let [w, h] = [cv.width, cv.height] = [styles.w, styles.h];
 	return cv;
 }
 
@@ -1829,22 +1841,22 @@ function siebenVonJederFarbe() {
 	return list;
 }
 
-function rPositions(width,height, n) {
+function rPositions(width, height, n) {
 	const rows = Math.floor(Math.sqrt(n));
 	const cols = Math.ceil(n / rows);
 	const cellWidth = width / cols;
 	const cellHeight = height / rows;
 	const radius = Math.min(cellWidth, cellHeight) / 5;
 
-	let list=[];
+	let list = [];
 	for (let i = 0; i < n; i++) {
 		const row = Math.floor(i / cols);
 		const col = i % cols;
 		const x = col * cellWidth + (Math.random() * (cellWidth - 2 * radius) + radius);
 		const y = row * cellHeight + (Math.random() * (cellHeight - 2 * radius) + radius);
-		list.push({x,y});
+		list.push({ x, y });
 	}
-	return {list,radius};
+	return { list, radius };
 }
 
 function placeCircles1(container, n) {
@@ -1858,44 +1870,44 @@ function placeCircles1(container, n) {
 
 	// Clear existing circles
 	while (container.firstChild) {
-			container.removeChild(container.firstChild);
+		container.removeChild(container.firstChild);
 	}
 
 	const circles = [];
 
 	// Generate points with slight randomness for more varied distribution
 	for (let i = 0; i < n; i++) {
-			let valid = false;
-			let x, y;
+		let valid = false;
+		let x, y;
 
-			while (!valid) {
-					const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
-					const distance = radius * Math.sqrt(i / n) + (Math.random() - 0.5) * radius * 0.1;
+		while (!valid) {
+			const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
+			const distance = radius * Math.sqrt(i / n) + (Math.random() - 0.5) * radius * 0.1;
 
-					x = radius + distance * Math.cos(angle);
-					y = radius + distance * Math.sin(angle);
+			x = radius + distance * Math.cos(angle);
+			y = radius + distance * Math.sin(angle);
 
-					valid = true;
-					for (const circle of circles) {
-							const dx = circle.x - x;
-							const dy = circle.y - y;
-							if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
-									valid = false;
-									break;
-							}
-					}
+			valid = true;
+			for (const circle of circles) {
+				const dx = circle.x - x;
+				const dy = circle.y - y;
+				if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
+					valid = false;
+					break;
+				}
 			}
+		}
 
-			circles.push({ x, y });
+		circles.push({ x, y });
 
-			// Create and position the circle
-			const circle = document.createElement('div');
-			circle.classList.add('circle');
-			circle.style.width = `${circleRadius * 2}px`;
-			circle.style.height = `${circleRadius * 2}px`;
-			circle.style.left = `${x - circleRadius}px`;
-			circle.style.top = `${y - circleRadius}px`;
-			container.appendChild(circle);
+		// Create and position the circle
+		const circle = document.createElement('div');
+		circle.classList.add('circle');
+		circle.style.width = `${circleRadius * 2}px`;
+		circle.style.height = `${circleRadius * 2}px`;
+		circle.style.left = `${x - circleRadius}px`;
+		circle.style.top = `${y - circleRadius}px`;
+		container.appendChild(circle);
 	}
 }
 
@@ -1911,45 +1923,45 @@ function placeCircles1(container, n) {
 
 	// Clear existing circles
 	while (container.firstChild) {
-			container.removeChild(container.firstChild);
+		container.removeChild(container.firstChild);
 	}
 
 	const circles = [];
 
 	// Generate points with slight randomness for more varied distribution
 	for (let i = 0; i < n; i++) {
-			let valid = false;
-			let x, y;
+		let valid = false;
+		let x, y;
 
-			while (!valid) {
-					const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
-					const distance = Math.sqrt(i / n);
+		while (!valid) {
+			const angle = i * goldenAngle + (Math.random() - 0.5) * goldenAngle * 0.2;
+			const distance = Math.sqrt(i / n);
 
-					// Calculate x and y within the ellipse
-					x = radiusX + distance * radiusX * Math.cos(angle);
-					y = radiusY + distance * radiusY * Math.sin(angle);
+			// Calculate x and y within the ellipse
+			x = radiusX + distance * radiusX * Math.cos(angle);
+			y = radiusY + distance * radiusY * Math.sin(angle);
 
-					valid = true;
-					for (const circle of circles) {
-							const dx = circle.x - x;
-							const dy = circle.y - y;
-							if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
-									valid = false;
-									break;
-							}
-					}
+			valid = true;
+			for (const circle of circles) {
+				const dx = circle.x - x;
+				const dy = circle.y - y;
+				if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
+					valid = false;
+					break;
+				}
 			}
+		}
 
-			circles.push({ x, y });
+		circles.push({ x, y });
 
-			// Create and position the circle
-			const circle = document.createElement('div');
-			circle.classList.add('circle');
-			circle.style.width = `${circleRadius * 2}px`;
-			circle.style.height = `${circleRadius * 2}px`;
-			circle.style.left = `${x - circleRadius}px`;
-			circle.style.top = `${y - circleRadius}px`;
-			container.appendChild(circle);
+		// Create and position the circle
+		const circle = document.createElement('div');
+		circle.classList.add('circle');
+		circle.style.width = `${circleRadius * 2}px`;
+		circle.style.height = `${circleRadius * 2}px`;
+		circle.style.left = `${x - circleRadius}px`;
+		circle.style.top = `${y - circleRadius}px`;
+		container.appendChild(circle);
 	}
 }
 
@@ -1962,45 +1974,45 @@ function placeCircles1(container, n) {
 
 
 function arrSort(arr) {
-  return arr.sort((a, b) => {
-    // Convert both elements to strings for comparison
-    const aStr = a.toString();
-    const bStr = b.toString();
+	return arr.sort((a, b) => {
+		// Convert both elements to strings for comparison
+		const aStr = a.toString();
+		const bStr = b.toString();
 
-    // Use localeCompare to handle string comparison
-    return aStr.localeCompare(bStr, undefined, { numeric: true });
-  });
+		// Use localeCompare to handle string comparison
+		return aStr.localeCompare(bStr, undefined, { numeric: true });
+	});
 }
-async function mPostYaml(o,path){
-	return await mPostRoute('postYaml',{o,path});
+async function mPostYaml(o, path) {
+	return await mPostRoute('postYaml', { o, path });
 }
-function trimToAlphanum(str,allow_=true) {
-  return str.replace(/^[^a-zA-Z0-9_]+|[^a-zA-Z0-9_]+$/g, '');
+function trimToAlphanum(str, allow_ = true) {
+	return str.replace(/^[^a-zA-Z0-9_]+|[^a-zA-Z0-9_]+$/g, '');
 }
 function normalizeString(s, sep = '_', keep = []) {
-  s = s.toLowerCase().trim();
-  let res = '';
-  for (let i = 0; i < s.length; i++) { if (isAlphaNum(s[i]) || keep.includes(s[i])) res += s[i]; else if (last(res)!=sep) res += sep; }
-  return res;
+	s = s.toLowerCase().trim();
+	let res = '';
+	for (let i = 0; i < s.length; i++) { if (isAlphaNum(s[i]) || keep.includes(s[i])) res += s[i]; else if (last(res) != sep) res += sep; }
+	return res;
 }
-function replaceAllSpecialCharsFromList(str, list, sBy, removeConsecutive=true) { 
-	for(const sSub of list){
-		str=replaceAllSpecialChars(str,sSub,sBy);
+function replaceAllSpecialCharsFromList(str, list, sBy, removeConsecutive = true) {
+	for (const sSub of list) {
+		str = replaceAllSpecialChars(str, sSub, sBy);
 	}
-	if (removeConsecutive){
-		let sresult='';
-		while(str.length>0){
-			let sSub=str.substring(0,sBy.length);
-			str = stringAfter(str,sSub);
+	if (removeConsecutive) {
+		let sresult = '';
+		while (str.length > 0) {
+			let sSub = str.substring(0, sBy.length);
+			str = stringAfter(str, sSub);
 			if (sSub == sBy && sresult.endsWith(sBy)) continue;
 			sresult += sSub;
-			if (str.length<sBy.length) {sresult+=str;break;}
+			if (str.length < sBy.length) { sresult += str; break; }
 		}
-		str=sresult;
+		str = sresult;
 	}
 	return str;
 }
-function superTrim(s){
+function superTrim(s) {
 	// Remove all tab or newline characters and trim spaces
 	s = s.replace(/[\t\n]/g, ' ').trim();
 
@@ -2024,8 +2036,8 @@ function getSeparators(allowed) {
 	return specialChars;
 }
 
-function toListEntry(s,sep = '_', keep = []) {
-	let nogo3=['and'];
+function toListEntry(s, sep = '_', keep = []) {
+	let nogo3 = ['and'];
 
 
 }
@@ -2084,19 +2096,19 @@ function pYamlDetails(keyword, type, props) {
 function showYaml(o, title, dParent, styles = {}, opts = {}) {
 	o = toFlatObject(o);
 	//return showObject(o, null, dParent, styles, addKeys({ title }, opts));
-	let d = mDom(dParent,styles,opts); 
-	mDom(d, {}, { tag: 'h2', html: title }); 
-	let keys = Object.keys(o); 
-	let grid = mGrid(keys.length,2,d,{rounding:8,padding:4,bg:'#eee',wmax:500},{wcols:'auto'});
-	let cellStyles = {hpadding:4};
-	if (isList(o)){
+	let d = mDom(dParent, styles, opts);
+	mDom(d, {}, { tag: 'h2', html: title });
+	let keys = Object.keys(o);
+	let grid = mGrid(keys.length, 2, d, { rounding: 8, padding: 4, bg: '#eee', wmax: 500 }, { wcols: 'auto' });
+	let cellStyles = { hpadding: 4 };
+	if (isList(o)) {
 		arrSort(o);
-		o.map((x,i)=>{mDom(grid,{fg:'red',align:'right'},{html:i});mDom(grid,{maleft:10},{html:x});});
-	}else if (isDict(o)){
+		o.map((x, i) => { mDom(grid, { fg: 'red', align: 'right' }, { html: i }); mDom(grid, { maleft: 10 }, { html: x }); });
+	} else if (isDict(o)) {
 		keys.sort();
-		for(const k of keys){
-			mDom(grid,{fg:'red',align:'right'},{html:k})
-			mDom(grid,{maleft:10},{html:o[k]});
+		for (const k of keys) {
+			mDom(grid, { fg: 'red', align: 'right' }, { html: k })
+			mDom(grid, { maleft: 10 }, { html: o[k] });
 		}
 	}
 	return d;
@@ -2124,7 +2136,7 @@ function trimQuotes(str) { return str.replace(/^['"`]+|['"`]+$/g, ''); }
 //#endregion
 
 //#region lacuna zeug vor august 24
-function mist(){
+function mist() {
 	addIf(DA.selectedPairIds, id);
 	let poss = DA.pairInfo.filter(x => x.includes(id));
 	assertion(poss.length >= 1, 'no pair selected')
@@ -2134,24 +2146,24 @@ function mist(){
 		lacunaRemovePair(DA.selectedPairIds.join(','));
 	} else {
 		//console.log(divs)
-		divs.map(x=>mClassRemove(x, 'pulseFastInfinite'));
+		divs.map(x => mClassRemove(x, 'pulseFastInfinite'));
 		possids = [];
-		for(const pair of poss){
+		for (const pair of poss) {
 			possids = possids.concat(pair.split(','));
 		}
-		possids.map(x=>mClass(x, 'pulseFastInfinite'));
+		possids.map(x => mClass(x, 'pulseFastInfinite'));
 		mRemoveClass(div, 'pulseFastInfinite');
 		lacunaSelectPair(poss);
 	}
 }
 function sortByLeastX(olist) {
 	return olist.sort((a, b) => {
-			// Find the minimum x value in each pair
-			const minX_A = Math.min(a.xStart, a[1].x);
-			const minX_B = Math.min(b[0].x, b[1].x);
+		// Find the minimum x value in each pair
+		const minX_A = Math.min(a.xStart, a[1].x);
+		const minX_B = Math.min(b[0].x, b[1].x);
 
-			// Sort by the minimum x value
-			return minX_A - minX_B;
+		// Sort by the minimum x value
+		return minX_A - minX_B;
 	});
 }
 function lacunaSelectPair(ev, pairs, p) {
@@ -2177,7 +2189,7 @@ function lacunaSelectPair(ev, pairs, p) {
 
 	//if p is included in only 1 pair of pairs, select it and remove both points and the line between
 
-	
+
 	for (const pair of p.pairs) {
 		//highlight the end points corresponding to this pair
 		let [pstart, pend] = pair.split(',').map(x => mBy(x));
@@ -2185,21 +2197,21 @@ function lacunaSelectPair(ev, pairs, p) {
 		mClass(pend, 'pulseFastInfinite');
 	}
 }
-function mist(){
-	for(const k in linesByPair){
-		let line=linesByPair[k];
-		let allOtherPairs=Object.keys(linesByPair).filter(x=>x!==k);
-		for(let i=0;i<line.length-1;i++){
+function mist() {
+	for (const k in linesByPair) {
+		let line = linesByPair[k];
+		let allOtherPairs = Object.keys(linesByPair).filter(x => x !== k);
+		for (let i = 0; i < line.length - 1; i++) {
 			//compare this point to all points of all other lines
-			let p1=line[i];
-			for(const kOther of allOtherPairs){
-				for(const p2 of kOther){
-					let dist=getDistanceBetweenPoints(p1,p2);
-					console.log(p1,p2,dist);
-					if (dist<sz){
-						p1.bg='blue';mStyle(p1.div,{bg:'blue'});
-						p2.bg='blue';mStyle(p2.div,{bg:'blue'});
-						addIf(p2.pairs,k);
+			let p1 = line[i];
+			for (const kOther of allOtherPairs) {
+				for (const p2 of kOther) {
+					let dist = getDistanceBetweenPoints(p1, p2);
+					console.log(p1, p2, dist);
+					if (dist < sz) {
+						p1.bg = 'blue'; mStyle(p1.div, { bg: 'blue' });
+						p2.bg = 'blue'; mStyle(p2.div, { bg: 'blue' });
+						addIf(p2.pairs, k);
 						addIf()
 						//for(const 1addIf(p1.pairs,p2.id);
 						//p1.pairs.push()
@@ -2241,7 +2253,7 @@ function lacunaPresent1(points, w, h, sz) {
 	}
 
 	//console.log(Object.keys(di).length);
-	let di1 = DA.info.di = clusterize(di,10);
+	let di1 = DA.info.di = clusterize(di, 10);
 	//console.log(Object.keys(di1).length); //return;
 
 	//console.log(di);

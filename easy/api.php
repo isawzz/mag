@@ -70,11 +70,11 @@ if ($cmd == 'table'){
 }else if ($cmd == "recipes") {
 	$path = '../easy/recipes/';
 	$recipes = file_get_contents($path . 'recipes.yaml');
-	$result['recipes'] = $recipes;
+	$result->recipes = $recipes;
 	$list = $data->list;
 	foreach ($list as $item){
 		$recipe = file_get_contents($path . $item . '/' . $item .	 '.yaml');
-		$result[$item] = $recipe;
+		$result->$item = $recipe;
 	}
 }else if ($cmd == 'add_players'){ 
 	$friendly = $data->friendly;

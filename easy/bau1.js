@@ -10,9 +10,9 @@ async function onclickRecipeType(ev) {
 	let list = M.recipes.recipes[key]; console.log(list);
 	for (const k of list) {
 		if (nundef(M.recipes[k])) continue;
-		let o= M.recipes[k]; console.log(o);
+		let o = M.recipes[k]; console.log(o);
 		let path = `../easy/recipes/${k}/${o.image}`;
-		let d = mDom(dTable, { bg: 'orange', fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${k}` });
+		let d = mDom(dTable, { bg: 'orange', fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${fromNormalized(k)}<br>` });
 		mDom(d, { padding: 10, margin: 3, h: 200 }, { tag: 'img', src: path });
 		d.onclick = onclickRecipe;
 

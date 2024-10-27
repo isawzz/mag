@@ -1,6 +1,6 @@
 onload = start;
 
-async function start() { loadColors(); await test14(); }
+async function start() { loadColors(); await test13(); }
 
 async function test14() {
 	await loadAssets();
@@ -61,6 +61,15 @@ async function test13(){
 	await loadAssets();
 	console.log(M)
 }
+
+
+
+
+
+
+
+
+//#region weg
 async function test12_vegan() {
 	let bg = '#8EA41D';
 	let dPage = document.getElementById('dPage');
@@ -82,8 +91,7 @@ async function test12_vegan() {
 
 	let titles = ['Newest!', 'Snacks', 'Main Dishes', 'Sides', 'Desserts'];
 	for (const t of titles) {
-		// let d = mLinkMenu(side, t, {margin:20},onclickRecipeSide, 'side');
-		let d = mDom(side, { className: 'a', cursor: 'pointer', rounding: 10, margin: 10, padding: 10, w100: true }, { html: t, onclick: onclickRecipeSide, menu: 'side', kennzahl: getUID() });
+		let d = mDom(side, { className: 'a', cursor: 'pointer', rounding: 10, margin: 10, padding: 10, w100: true }, { html: t, onclick: onclickRecipe, menu: 'side', kennzahl: getUID() });
 		//mClass(d, 'a');
 		//mStyle(d,{margin:20,w:200})k
 		//mLinebreak(side);
@@ -112,18 +120,6 @@ async function test12_vegan() {
 		//console.log(k, JSON.parse(jsonObject[k]));
 	}
 	console.log(M)
-}
-async function onclickRecipeSide(ev) {
-	hToggleClassMenu(ev); return;
-	a = ev.target; console.log(a)
-	let menu = a.getAttribute('menu');
-	//let others = document.querySelectorAll(`a[menu='${menu}']`);
-	// let others = document.querySelectorAll(`div[menu='${menu}']`); console.log('others', others)
-	let others = document.querySelectorAll(`[menu='${menu}']`); console.log('others', others)
-	for (const o of others) {
-		mClassRemove(o, 'active')
-	}
-	mClassToggle(a, 'active');
 }
 async function test11() {
 	let x = [0, 1, 2, 3];
@@ -499,6 +495,7 @@ async function testMist() {
 		}
 	}
 }
+//#endregion
 async function test2() {
 	loadColors();
 	console.log(M.colorNames);
