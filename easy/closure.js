@@ -919,8 +919,12 @@ async function clickFirstTable() {
 }
 function clickOnElemWithAttr(prop, val) {
   let d = document.querySelectorAll(`[${prop}="${val}"]`)[0];
-  if (isdef(d)) d.click();
-  return d;
+  if (nundef(d)) d = findElementBy(prop, val);
+  if (isdef(d)) {
+    d.click();
+    return d;
+  }
+  return null;
 }
 async function clickOnGame(gamename) { await showGameMenu(gamename); }
 async function clickOnPlayer(name) { return await showGameMenuPlayerDialog(name); }
@@ -3346,6 +3350,19 @@ function findEdgeVert(ctx, y1, y2, w, cgoal, lighting = true) {
   let vfreq = findMostFrequentVal(list, 'y');
   return list.filter(o => o.y == vfreq);
 }
+function findElementBy(prop, val) {
+  // Get all elements in the document
+  const elements = document.querySelectorAll('*');
+  
+  // Loop through each element and check its innerHTML
+  for (let element of elements) {
+    if (element[prop] === val) {
+      return element;  // Return the first matching element
+    }
+  }
+  
+  return null;  // Return null if no match is found
+}
 function findIsolatedPairs(nodes, prop = 'bg', threshold = 3) {
   const isolatedPairs = [], obstaclePairs = [];
   for (let i = 0; i < nodes.length; i++) {
@@ -4500,7 +4517,7 @@ function getEventValue(o) {
 }
 function getFormattedDate() {
   const date = new Date();
-  
+
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
   const day = String(date.getDate()).padStart(2, '0'); // Add leading zero if needed
@@ -5998,45 +6015,45 @@ async function loadAndScaleImage(imageUrl) {
   }
 }
 async function loadAssets() {
-  if (nundef(M)) M={};
-	let sessionType = detectSessionType(); console.log(sessionType)
-	if (sessionType == 'telecave') {
-		let res = await postPHP({}, 'assets'); //console.log(res);
-		let jsonObject = JSON.parse(res); //console.log(jsonObject);
-		let di = {};
-		for (const k in jsonObject) {
-			di[k] = jsyaml.load(jsonObject[k]); //JSON.parse(jsonObject[k]);
-			//console.log(k, JSON.parse(jsonObject[k]));
-		}
-		for(const k in di.m) M[k]=di.m[k];
-		for(const k in di)if(k!='m')M[k]=di[k];
-	} else {
-		let m = await mGetYaml('../y/m.yaml');
-    for(const k in m) M[k]=m[k];
-		M.superdi = await mGetYaml('../y/superdi.yaml');
-		M.details = await mGetYaml('../y/details.yaml');
-		M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
-	}
+  if (nundef(M)) M = {};
+  let sessionType = detectSessionType(); console.log(sessionType)
+  if (sessionType == 'telecave') {
+    let res = await postPHP({}, 'assets'); //console.log(res);
+    let jsonObject = JSON.parse(res); //console.log(jsonObject);
+    let di = {};
+    for (const k in jsonObject) {
+      di[k] = jsyaml.load(jsonObject[k]); //JSON.parse(jsonObject[k]);
+      //console.log(k, JSON.parse(jsonObject[k]));
+    }
+    for (const k in di.m) M[k] = di.m[k];
+    for (const k in di) if (k != 'm') M[k] = di[k];
+  } else {
+    let m = await mGetYaml('../y/m.yaml');
+    for (const k in m) M[k] = m[k];
+    M.superdi = await mGetYaml('../y/superdi.yaml');
+    M.details = await mGetYaml('../y/details.yaml');
+    M.dicolor = await mGetYaml(`../assets/dicolor.yaml`);
+  }
 
-	let [di, byColl, byFriendly, byCat, allImages] = [M.superdi, {}, {}, {}, {}];
-	for (const k in di) {
-		let o = di[k];
-		for (const cat of o.cats) lookupAddIfToList(byCat, [cat], k);
-		for (const coll of o.colls) lookupAddIfToList(byColl, [coll], k);
-		lookupAddIfToList(byFriendly, [o.friendly], k)
-		if (isdef(o.img)) {
-			let fname = stringAfterLast(o.img, '/')
-			allImages[fname] = { fname, path: o.img, k };
-		}
-	}
-	M.allImages = allImages;
-	M.byCat = byCat;
-	M.byCollection = byColl;
-	M.byFriendly = byFriendly;
-	M.categories = Object.keys(byCat); M.categories.sort();
-	M.collections = Object.keys(byColl); M.collections.sort();
-	M.names = Object.keys(byFriendly); M.names.sort();
-	[M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
+  let [di, byColl, byFriendly, byCat, allImages] = [M.superdi, {}, {}, {}, {}];
+  for (const k in di) {
+    let o = di[k];
+    for (const cat of o.cats) lookupAddIfToList(byCat, [cat], k);
+    for (const coll of o.colls) lookupAddIfToList(byColl, [coll], k);
+    lookupAddIfToList(byFriendly, [o.friendly], k)
+    if (isdef(o.img)) {
+      let fname = stringAfterLast(o.img, '/')
+      allImages[fname] = { fname, path: o.img, k };
+    }
+  }
+  M.allImages = allImages;
+  M.byCat = byCat;
+  M.byCollection = byColl;
+  M.byFriendly = byFriendly;
+  M.categories = Object.keys(byCat); M.categories.sort();
+  M.collections = Object.keys(byColl); M.collections.sort();
+  M.names = Object.keys(byFriendly); M.names.sort();
+  [M.colorList, M.colorByHex, M.colorByName] = getListAndDictsForDicolors();
 }
 function loadColors(bh = 18, bs = 20, bl = 20) {
   if (nundef(M.dicolor)) {
@@ -7088,16 +7105,14 @@ function mLayoutLine5(dParent, testing = false) {
   let [dRight, dSymRight] = [func(dr), func(dr)];
   return [dSymLeft, dLeft, dMiddle, dRight, dSymRight];
 }
-function mLinebreak(dParent, gap) {
+function mLinebreak(dParent, gap=0) {
   dParent = toElem(dParent);
-  let d;
   let display = getComputedStyle(dParent).display;
   if (display == 'flex') {
-    d = mDiv(dParent, { fz: 2, 'flex-basis': '100%', h: 0, w: '100%' }, null, ' &nbsp; ');
+    d = mDom(dParent, { 'flex-basis': '100%', h: gap, hline:gap, w: '100%' },{html:''});
   } else {
-    d = mDiv(dParent, {hline:gap}, null, '<br>');
+    d=mDom(dParent,{hline:gap,h:gap},{html:'&nbsp;'});
   }
-  if (isdef(gap)) { d.style.minHeight = gap + 'px'; d.innerHTML = ' &nbsp; '; d.style.opacity = .2; }
   return d;
 }
 function mLMR(dParent) {
@@ -8476,29 +8491,29 @@ async function postImage(img, path) {
   console.log('resp', resp); //sollte path enthalten!
 }
 async function postPHP(data, cmd) {
-	let o = {};
-	o.data = valf(data, {});
-	o.cmd = cmd;
-	o = JSON.stringify(o);
-	try {
-		const response = await fetch("api.php", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: o
-		});
+  let o = {};
+  o.data = valf(data, {});
+  o.cmd = cmd;
+  o = JSON.stringify(o);
+  try {
+    const response = await fetch("api.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: o
+    });
 
-		if (response.ok) {
-			const responseText = await response.text();
-			return responseText;
-			//handle_result(responseText, cmd);
-		} else {
-			console.error('Error in response:', response.status, response.statusText);
-		}
-	} catch (error) {
-		console.error('Error during fetch:', error);
-	}
+    if (response.ok) {
+      const responseText = await response.text();
+      return responseText;
+      //handle_result(responseText, cmd);
+    } else {
+      console.error('Error in response:', response.status, response.statusText);
+    }
+  } catch (error) {
+    console.error('Error during fetch:', error);
+  }
 }
 async function postUserChange(data, override = false) {
   data = valf(data, U);

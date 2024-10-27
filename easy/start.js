@@ -60,6 +60,9 @@ async function test13(){
 	}
 	await loadAssets();
 	console.log(M)
+
+	clickOnElemWithAttr('innerHTML', 'Soups');
+	setTimeout(()=>onclickRecipe('lentil_soup'),10)
 }
 
 

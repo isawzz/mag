@@ -14,7 +14,7 @@ async function onclickRecipeType(ev) {
 		let path = `../easy/recipes/${k}/${o.image}`;
 		let d = mDom(dTable, { bg: 'orange', fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${fromNormalized(k)}<br>` });
 		mDom(d, { padding: 10, margin: 3, h: 200 }, { tag: 'img', src: path });
-		d.onclick = onclickRecipe;
+		d.onclick = ()=>onclickRecipe(k);
 
 	}
 
@@ -24,23 +24,22 @@ async function onclickRecipeType(ev) {
 
 
 }
-async function onclickRecipe(ev) {
+async function onclickRecipe(key) {
 	//console.log(ev);
-	let name = ev.target.innerHTML; console.log(name);
-	let key = normalizeString(name); console.log(key);
 	let recipe = M.recipes[key]; console.log(recipe);
 	let dTable = mBy('dTable'); mClear('dTable');
-	mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 10 });
+	mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 0, overy:'scroll' });
+	console.log(recipe.text); 
+	//return;
 	for (const t of recipe.text) {
 		if (t.includes('.jpg') || t.includes('.png')) {
-			let d = mDom(dTable, { bg: 'orange', fg: 'contrast', padding: 10, margin: 3 }, { tag: 'img', src: `../easy/recipes/name/${t}` });
-			d.onclick = onclickImage;
+			let d = mDom(dTable, { height:200,margin:0 }, { tag: 'img', src: `../easy/recipes/${key}/${t}` });
+			//d.onclick = onclickImage;
 		} else {
-			let d = mDom(dTable, { bg: 'orange', fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${t}` });
-			d.onclick = onclickIngredient;
+			let d = mDom(dTable, { margin:0 }, { tag: 'div', html: `${t}` });
+			//d.onclick = onclickIngredient;
 		}
+		for(const i of range(10)) mLinebreak(dTable,0);
 	}
-	let d = mDom(dTable, { bg: 'orange', fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${k}` });
-	d.onclick = onclickIngredient;
 }
 
