@@ -29,11 +29,14 @@ async function onclickRecipe(key) {
 	let recipe = M.recipes[key]; console.log(recipe);
 	let dTable = mBy('dTable'); mClear('dTable');
 	mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 0, overy:'scroll' });
+	mDom(dTable, { family:'algerian' }, { tag: 'h1', html: `${fromNormalized(recipe.title)}` });
+	mLinebreak(dTable,0);
 	console.log(recipe.text); 
+
 	//return;
 	for (const t of recipe.text) {
 		if (t.includes('.jpg') || t.includes('.png')) {
-			let d = mDom(dTable, { height:200,margin:0 }, { tag: 'img', src: `../easy/recipes/${key}/${t}` });
+			let d = mDom(dTable, { height:200,margin:4 }, { tag: 'img', src: `../easy/recipes/${key}/${t}` });
 			//d.onclick = onclickImage;
 		} else {
 			let d = mDom(dTable, { margin:0 }, { tag: 'div', html: `${t}` });
