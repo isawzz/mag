@@ -6,10 +6,10 @@ async function onclickCalc(ev) {
 	let dSide = mBy('dSide'); mStyle(dSide, { padding: 10, wbox: true });
 
 	let dMenu = mDom('dSide', { display: 'flex', dir: 'column' }); //side menu
-	let gencase = mLinkMenu(dMenu, 'Statistik', {}, onclickStatistik, 'side');
+	let gencase = mLinkMenu(dMenu, 'Manual', {}, onclickStatistik, 'side');
 	let x = mLinkMenu(dMenu, 'Binomial', {}, onclickBinomial, 'side');
 	let normal = mLinkMenu(dMenu, 'Normal', {}, onclickNormal, 'side');
-	//let all = mLinkMenu(dMenu, 'Alles', {}, onclickAll, 'side');
+	let all = mLinkMenu(dMenu, 'Alles', {}, onclickAll, 'side');
 	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
 	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
 
@@ -201,34 +201,6 @@ async function onclickBinomialVar(ev) {
 //#endregion
 
 //#region Normal
-async function onclickAll(ev) {
-	hToggleClassMenu(ev); mClear('dTable');
-
-	let dTable = mBy('dTable'); mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 10 });
-
-	let d1 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
-	mDom(d1, {}, { html: 'normal:' })
-	let inputs = ['x', 'percent', 'mean', 'stdev'];
-	for (const name of inputs) {
-		mInput(d1, { hpadding: 10, vpadding: 2 }, `inp_n${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
-	}
-	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', html: `GO!`, onclick: onclickNormalAlles });
-	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', html: `clear`, onclick: onclickNormalClear });
-	mDom(d1, {}, { html: 'min:' })
-	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_min`, html: '&nbsp;' });
-	mDom(d1, {}, { html: 'max:' })
-	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_max`, html: '&nbsp;' });
-	mDom(d1, {}, { html: 'f(x):' })
-	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_pdf`, html: '&nbsp;' });
-	mDom(d1, {}, { html: 'F(x):' })
-	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_cdf`, html: '&nbsp;' });
-
-
-	mBy('inp_nx').value = 0; 
-	mBy('inp_npercent').value = 90; 
-	mBy('inp_nmean').value = 320; 
-	mBy('inp_nstdev').value = 156;
-}
 async function onclickNormal(ev) {
 	hToggleClassMenu(ev); mClear('dTable');
 
@@ -288,38 +260,6 @@ async function onclickNormal(ev) {
 	mDom(d5, {}, { html: 'max:' })
 	mDom(d5, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_max`, html: '&nbsp;' });
 }
-async function onclickNormalAlles(ev) {
-	let x = +mBy('inp_nx').value;
-	let percent = +mBy('inp_npercent').value;
-	let mu = +mBy('inp_nmean').value;
-	let sigma = +mBy('inp_nstdev').value;
-
-	if (!isNaN(percent)) {
-		if (percent <= 0 || percent >= 100) { throw new Error("Percent must be between 0 and 100."); }
-		const p = percent / 100;
-		const z = math.normalInv(p, 0, 1);
-
-		// Calculate the interval around the mean for the given normal distribution N(mu, sigma)
-		const lowerBound = mu - z * sigma;
-		const upperBound = mu + z * sigma;
-
-		mBy('result_min').innerHTML = lowerBound;
-		mBy('result_max').innerHTML = upperBound;
-
-	} else {
-		mBy('result_pdf').innerHTML = math.normalPdf(x, mu, sigma)
-		mBy('result_cdf').innerHTML = math.normalCdf(x, mu, sigma)
-	}
-
-}
-async function onclickNormalClear(ev) {
-	mBy('result_min').innerHTML = '&nbsp;';
-	mBy('result_max').innerHTML = '&nbsp;';
-	mBy('inp_nx').innerHTML = '';
-	mBy('inp_npercent').innerHTML = '';
-	mBy('inp_nmean').innerHTML = '';
-	mBy('inp_nstdev').innerHTML = '';
-}
 async function onclickNormalPdf(ev) {
 	let x = +mBy('inp_x').value;
 	let mean = +mBy('inp_mean').value;
@@ -357,6 +297,63 @@ async function onclickNormalVar(ev) {
 //#endregion
 
 //#region Recipes
+async function onclickVeganRecipes(ev) {
+	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', '#8EA41D');
+	mShadeLight(names);
+
+	showVeganRecipeTypes('dSide');
+}
+function showVeganRecipeTypes(dParent) {
+	mClear(dParent);
+	let titles = ['Newest!', 'Snacks', 'Salads', 'Soups', 'Main Dishes', 'Sides', 'Desserts', 'Basics'];
+	for (const t of titles) {
+		let d = mDom(dParent, { className: 'a', cursor: 'pointer', rounding: 10, margin: 10, padding: 10, w100: true }, { html: t, onclick: onclickRecipeType, menu: 'side', kennzahl: getUID() });
+	}
+}
+async function onclickRecipeType(ev) {
+	hToggleClassMenu(ev); mClear('dTable');
+	let name = ev.target.innerHTML; console.log(name);
+	let key = normalizeString(name); console.log(key);
+	let dTable = mBy('dTable'); mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 10 });
+	let list = M.recipes.recipes[key]; console.log(list);
+
+	for (const k of list) {
+		if (nundef(M.recipes[k])) continue;
+		let o = M.recipes[k]; console.log(o);
+		let path = `../easy/recipes/${k}/${o.image}`;
+		let d = mDom(dTable, { bg: 'orange', fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${fromNormalized(k)}<br>` });
+		mDom(d, { padding: 10, margin: 3, h: 200 }, { tag: 'img', src: path });
+		d.onclick = ()=>onclickRecipe(k);
+
+	}
+
+	//soll jedes recipe ein file haben?
+	//oder soll es ein yaml file sein?
+	//soll snacks dann nachher eine liste von files haben?
+
+
+}
+async function onclickRecipe(key) {
+	//console.log(ev);
+	let recipe = M.recipes[key]; console.log(recipe);
+	let dTable = mBy('dTable'); mClear('dTable');
+	mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 0, overy:'scroll' });
+	mDom(dTable, { family:'algerian' }, { tag: 'h1', html: `${fromNormalized(recipe.title)}` });
+	mLinebreak(dTable,0);
+	console.log(recipe.text); 
+
+	//return;
+	for (const t of recipe.text) {
+		if (t.includes('.jpg') || t.includes('.png')) {
+			let d = mDom(dTable, { height:200,margin:4 }, { tag: 'img', src: `../easy/recipes/${key}/${t}` });
+			//d.onclick = onclickImage;
+		} else {
+			let d = mDom(dTable, { margin:0 }, { tag: 'div', html: `${t}` });
+			//d.onclick = onclickIngredient;
+		}
+		for(const i of range(10)) mLinebreak(dTable,0);
+	}
+}
 //#endregion
 
 

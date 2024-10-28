@@ -5,6 +5,31 @@ function mLinkToggle(d, text, handler, init, kennzahl) {
 
 	return ui;
 }
+
+async function onclickNormalAlles(ev) {
+	let x = +mBy('inp_nx').value;
+	let percent = +mBy('inp_npercent').value;
+	let mu = +mBy('inp_nmean').value;
+	let sigma = +mBy('inp_nstdev').value;
+
+	if (!isNaN(percent)) {
+		if (percent <= 0 || percent >= 100) { throw new Error("Percent must be between 0 and 100."); }
+		const p = percent / 100;
+		const z = math.normalInv(p, 0, 1);
+
+		// Calculate the interval around the mean for the given normal distribution N(mu, sigma)
+		const lowerBound = mu - z * sigma;
+		const upperBound = mu + z * sigma;
+
+		mBy('result_min').innerHTML = lowerBound;
+		mBy('result_max').innerHTML = upperBound;
+
+	} else {
+		mBy('result_pdf').innerHTML = math.normalPdf(x, mu, sigma)
+		mBy('result_cdf').innerHTML = math.normalCdf(x, mu, sigma)
+	}
+
+}
 async function onclickVeganRecipes(ev) {
 	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', '#8EA41D');
 	mShadeLight(names);

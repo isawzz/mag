@@ -141,6 +141,15 @@ function calculateStatistics(xlist,ylist){
 	return {mu,v,stdev,mean,median,mode};
 
 }
+function calculateZ(x, mu, sigma) {
+	if (sigma === 0) {
+		throw new Error("Standard deviation cannot be zero.");
+	}
+
+	// Calculate the z-score
+	const z = (x - mu) / sigma;
+	return z;
+}
 function erf(x) {
   // Constants for approximation
   const a1 =  0.254829592;
@@ -245,6 +254,37 @@ function normalPdf(x, mean, stdDev) {
 }
 function normalCdf(x, mean, stdDev) {
   return 0.5 * (1 + erf((x - mean) / (stdDev * Math.sqrt(2))));
+}
+function normalCdfRange(min, max, mu, sigma) {
+	// Error function approximation
+	function erf1(x) {
+		const sign = (x >= 0) ? 1 : -1;
+		x = Math.abs(x);
+
+		// Coefficients for approximation
+		const a1 = 0.254829592;
+		const a2 = -0.284496736;
+		const a3 = 1.421413741;
+		const a4 = -1.453152027;
+		const a5 = 1.061405429;
+		const p = 0.3275911;
+
+		// Approximation formula
+		const t = 1 / (1 + p * x);
+		const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+
+		return sign * y;
+	}
+
+	// CDF of normal distribution
+	function normalCdf1(x, mu, sigma) {
+		return 0.5 * (1 + erf1((x - mu) / (sigma * Math.sqrt(2))));
+	}
+
+	const cdfMin = normalCdf1(min, mu, sigma);
+	const cdfMax = normalCdf1(max, mu, sigma);
+
+	return cdfMax - cdfMin;
 }
 function normalExpectedValue(mean) {
   return mean; // The expected value (mean) is simply the mean of the distribution

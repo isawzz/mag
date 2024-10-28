@@ -1,61 +1,35 @@
 
-async function onclickVeganRecipes(ev) {
-	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', '#8EA41D');
-	mShadeLight(names);
-
-	showVeganRecipeTypes('dSide');
-}
-function showVeganRecipeTypes(dParent) {
-	mClear(dParent);
-	let titles = ['Newest!', 'Snacks', 'Salads', 'Soups', 'Main Dishes', 'Sides', 'Desserts', 'Basics'];
-	for (const t of titles) {
-		let d = mDom(dParent, { className: 'a', cursor: 'pointer', rounding: 10, margin: 10, padding: 10, w100: true }, { html: t, onclick: onclickRecipeType, menu: 'side', kennzahl: getUID() });
-	}
-}
-async function onclickRecipeType(ev) {
+async function onclickAll(ev) {
 	hToggleClassMenu(ev); mClear('dTable');
-	let name = ev.target.innerHTML; console.log(name);
-	let key = normalizeString(name); console.log(key);
+
 	let dTable = mBy('dTable'); mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 10 });
-	let list = M.recipes.recipes[key]; console.log(list);
 
-	for (const k of list) {
-		if (nundef(M.recipes[k])) continue;
-		let o = M.recipes[k]; console.log(o);
-		let path = `../easy/recipes/${k}/${o.image}`;
-		let d = mDom(dTable, { bg: 'orange', fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${fromNormalized(k)}<br>` });
-		mDom(d, { padding: 10, margin: 3, h: 200 }, { tag: 'img', src: path });
-		d.onclick = ()=>onclickRecipe(k);
-
+	let d1 = mDom(dTable, { display: 'flex', dir: 'column', padding: 10, gap: 10, className: 'input' });
+	mDom(d1, {}, { html: 'normal:' })
+	let inputs = ['xmin','xmax', 'percent', 'mean', 'stdev'];
+	for (const name of inputs) {
+		mInput(d1, { hpadding: 10, vpadding: 2 }, `inp_n${name}`, `<Enter ${name}>`, 'input', 0, '', true, 'number');
 	}
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', html: `GO!`, onclick: onclickNormalAlles });
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { tag: 'button', html: `clear`, onclick: onclickNormalClear });
+	mDom(d1, {}, { html: 'min:' })
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_min`, html: '&nbsp;' });
+	mDom(d1, {}, { html: 'max:' })
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_max`, html: '&nbsp;' });
+	mDom(d1, {}, { html: 'f(x):' })
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_pdf`, html: '&nbsp;' });
+	mDom(d1, {}, { html: 'F(x):' })
+	mDom(d1, { hpadding: 10, vpadding: 2, className: 'input' }, { id: `result_cdf`, html: '&nbsp;' });
 
-	//soll jedes recipe ein file haben?
-	//oder soll es ein yaml file sein?
-	//soll snacks dann nachher eine liste von files haben?
 
-
+	mBy('inp_nxmin').value = 0; 
+	mBy('inp_nxmax').value = 0; 
+	mBy('inp_npercent').value = 90; 
+	mBy('inp_nmean').value = 320; 
+	mBy('inp_nstdev').value = 156;
 }
-async function onclickRecipe(key) {
-	//console.log(ev);
-	let recipe = M.recipes[key]; console.log(recipe);
-	let dTable = mBy('dTable'); mClear('dTable');
-	mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 0, overy:'scroll' });
-	mDom(dTable, { family:'algerian' }, { tag: 'h1', html: `${fromNormalized(recipe.title)}` });
-	mLinebreak(dTable,0);
-	console.log(recipe.text); 
 
-	//return;
-	for (const t of recipe.text) {
-		if (t.includes('.jpg') || t.includes('.png')) {
-			let d = mDom(dTable, { height:200,margin:4 }, { tag: 'img', src: `../easy/recipes/${key}/${t}` });
-			//d.onclick = onclickImage;
-		} else {
-			let d = mDom(dTable, { margin:0 }, { tag: 'div', html: `${t}` });
-			//d.onclick = onclickIngredient;
-		}
-		for(const i of range(10)) mLinebreak(dTable,0);
-	}
-}
+
 
 
 

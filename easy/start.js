@@ -2,7 +2,7 @@ onload = start;
 
 async function start() { loadColors(); await test15(); }
 
-async function test15(){
+async function test15() {
 	await loadRecipes();
 	await loadAssets();
 
@@ -11,7 +11,7 @@ async function test15(){
 
 	let names = M.divNames = mAreas(dPage, ` 'dTop' 'dMain' 'dStatus' `, '1fr', 'auto 1fr auto');
 	mShade(names); //area coloring
-	mStyle('dMain', { padding: 4,overy:'auto' })
+	mStyle('dMain', { padding: 4, overy: 'auto' })
 	mFlexBaseline('dTop'); mStyle('dTop', { padding: 4, pabottom: 10 })
 	mStyle('dStatus', { padding: 4 }, { html: '&nbsp;' })
 
@@ -25,12 +25,12 @@ async function test15(){
 	let v = mLinkMenu(dTop, 'VEGAN RECIPES', {}, onclickVeganRecipes, 'top');
 	mLinkMenu(dTop, 'ZONE', {}, onclickZone, 'top');
 
+	//start in vegan
+	// v.click(); setTimeout(() => clickOnElemWithAttr('innerHTML', 'Soups'), 100);
+	// setTimeout(() => onclickRecipe('lentil_soup'), 100)
 
-	v.click();
-	setTimeout(()=>clickOnElemWithAttr('innerHTML', 'Soups'),100);
-	setTimeout(()=>onclickRecipe('lentil_soup'),100)
-
-
+	//start in calc
+	dCalc.click();
 
 }
 async function test14() {
@@ -65,7 +65,7 @@ async function test14() {
 	// 	inp.value = '1/8 3/8 3/8 1/8';
 	// }, 20);
 }
-async function test13(){
+async function test13() {
 	await loadRecipes();
 	let bg = '#8EA41D';
 	let dPage = document.getElementById('dPage');
@@ -76,7 +76,7 @@ async function test13(){
 	let margin = 4;
 	mStyle(dTop, { margin, bg, display: 'flex', jcontent: 'start', aitems: 'start', hmax: 130, overflow: 'hidden' });
 	let [dTitle, dBanner] = mAreas('dTop', ` 'dTitle dBanner' `, '238px 1fr', 'auto');
-	mDom(dTitle, { fz: 34, family: 'algerian', margin: 20, hmax:100 }, { html: "The Fuzzy Kitchen" })
+	mDom(dTitle, { fz: 34, family: 'algerian', margin: 20, hmax: 100 }, { html: "The Fuzzy Kitchen" })
 	mDom(dBanner, { wmin: 2000, hmin: 400, matop: -200, bgSrc: '../easy/recipes/veganBanner.png', bgRepeat: 'no-repeat', bgSize: 'cover', opacity: .8 });
 
 	mStyle(dMain, { margin, matop: 0, hmin: 100, bg: colorMix(bg, 'white', 50), fg: 'black' });
@@ -93,7 +93,7 @@ async function test13(){
 	console.log(M)
 
 	clickOnElemWithAttr('innerHTML', 'Soups');
-	setTimeout(()=>onclickRecipe('lentil_soup'),10)
+	setTimeout(() => onclickRecipe('lentil_soup'), 10)
 }
 
 
@@ -141,16 +141,16 @@ async function test12_vegan() {
 	// Call the function to test
 	//await fetchYamlFile();
 	//await fetchYamlFiles(['m.yaml', 'superdi.yaml', 'details.yaml', 'dicolor.yaml', 'config.yaml']);
-	
+
 	// await loadYamlFile('../y/m.yaml');
 	//await loadAssets();
 
 	let res = await postPHP({}, 'assets'); console.log(res);
 
 	let jsonObject = JSON.parse(res); console.log(jsonObject);
-	M={};
-	for(const k in jsonObject){
-		M[k]=jsyaml.load(jsonObject[k]); //JSON.parse(jsonObject[k]);
+	M = {};
+	for (const k in jsonObject) {
+		M[k] = jsyaml.load(jsonObject[k]); //JSON.parse(jsonObject[k]);
 		//console.log(k, JSON.parse(jsonObject[k]));
 	}
 	console.log(M)
