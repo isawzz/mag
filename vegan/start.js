@@ -2,7 +2,10 @@ onload = start;
 
 async function start(){test1();}
 async function test1(){
+	loadColors(); 
 	await loadRecipes();
+	await loadAssets();
+	console.log(M)
 	let bg = '#8EA41D';
 	let dPage = document.getElementById('dPage');
 	mStyle(dPage, { w: '100%', h: '100%', bg, fg: 'white' }); //page coloring
