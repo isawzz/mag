@@ -5,6 +5,66 @@ function mLinkToggle(d, text, handler, init, kennzahl) {
 
 	return ui;
 }
+async function onclickVeganRecipes(ev) {
+	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', '#8EA41D');
+	mShadeLight(names);
+
+	//return;
+
+	mStyle('dTable', { overy:'scroll' });
+
+	let titles = ['Newest!', 'Snacks', 'Salads', 'Soups', 'Main Dishes', 'Sides', 'Desserts', 'Basics'];
+	for (const t of titles) {
+		let d = mDom('dSide', { className: 'a', cursor: 'pointer', rounding: 10, margin: 10, padding: 10, w100: true }, { html: t, onclick: onclickRecipeType, menu: 'side', kennzahl: getUID() });
+	}
+
+	// clickOnElemWithAttr('innerHTML', 'Soups');
+	// setTimeout(()=>onclickRecipe('lentil_soup'),10)
+
+}
+async function onclickRecipeType(ev) {
+	hToggleClassMenu(ev); mClear('dTable');
+	let name = ev.target.innerHTML; console.log(name);
+	let key = normalizeString(name); console.log(key);
+	let dTable = mBy('dTable'); mStyle('dTable', { overy:'scroll',padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 10 });
+	let list = M.recipes.recipes[key]; console.log(list);
+	for (const k of list) {
+		if (nundef(M.recipes[k])) continue;
+		let o = M.recipes[k]; console.log(o);
+		let path = `../easy/recipes/${k}/${o.image}`;
+		let d = mDom(dTable, { bg: 'orange', fg: 'contrast', padding: 10, margin: 3 }, { tag: 'div', html: `${fromNormalized(k)}<br>` });
+		mDom(d, { padding: 10, margin: 3, h: 200 }, { tag: 'img', src: path });
+		d.onclick = ()=>onclickRecipe(k);
+
+	}
+
+	//soll jedes recipe ein file haben?
+	//oder soll es ein yaml file sein?
+	//soll snacks dann nachher eine liste von files haben?
+
+
+}
+async function onclickRecipe(key) {
+	//console.log(ev);
+	let recipe = M.recipes[key]; console.log(recipe);
+	let dTable = mBy('dTable'); mClear('dTable');
+	mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 0, overy:'scroll' });
+	mDom(dTable, { family:'algerian' }, { tag: 'h1', html: `${fromNormalized(recipe.title)}` });
+	mLinebreak(dTable,0);
+	console.log(recipe.text); 
+
+	//return;
+	for (const t of recipe.text) {
+		if (t.includes('.jpg') || t.includes('.png')) {
+			let d = mDom(dTable, { height:200,margin:4 }, { tag: 'img', src: `../easy/recipes/${key}/${t}` });
+			//d.onclick = onclickImage;
+		} else {
+			let d = mDom(dTable, { margin:0 }, { tag: 'div', html: `${t}` });
+			//d.onclick = onclickIngredient;
+		}
+		for(const i of range(10)) mLinebreak(dTable,0);
+	}
+}
 async function onclickRecipeSide(ev) {
 	hToggleClassMenu(ev); return;
 	a = ev.target; console.log(a)
@@ -57,6 +117,25 @@ function _calculateStatistics(values, mu) {
 		variance: variance,
 		standardDeviation: standardDeviation
 	};
+}
+async function onclickVeganRecipes(ev) {
+	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', 'green_bamboo');
+	mShadeLight(names)
+	let dSide = mBy('dSide'); mStyle(dSide, { padding: 10, wbox: true });
+
+	let dMenu = mDom('dSide', { display: 'flex', dir: 'column' }); //side menu
+
+	let recipes = ['Pumpkin Soup', 'Semmelknoedel', 'Stir Fry'];
+	for (const name of recipes) {
+		let b = mLinkMenu(dMenu, 'Pumpkin Soup', onclickRecipe(ev), 'side');
+	}
+	// let gencase = mLinkMenu(dMenu, 'Pumpkin Soup', onclickPumpkinSoup, 'side');
+	// let x = mLinkMenu(dMenu, 'Semmelknoedel', onclickSemmelknoedel, 'side');
+	// mLinkMenu(dMenu, 'Stir Fry', onclickStirFry, 'side');
+	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
+	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
+
+	gencase.click();
 }
 
 //#region layout versuche top side left with AI

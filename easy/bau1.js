@@ -1,13 +1,24 @@
 
+async function onclickVeganRecipes(ev) {
+	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', '#8EA41D');
+	mShadeLight(names);
 
-
-
+	showVeganRecipeTypes('dSide');
+}
+function showVeganRecipeTypes(dParent) {
+	mClear(dParent);
+	let titles = ['Newest!', 'Snacks', 'Salads', 'Soups', 'Main Dishes', 'Sides', 'Desserts', 'Basics'];
+	for (const t of titles) {
+		let d = mDom(dParent, { className: 'a', cursor: 'pointer', rounding: 10, margin: 10, padding: 10, w100: true }, { html: t, onclick: onclickRecipeType, menu: 'side', kennzahl: getUID() });
+	}
+}
 async function onclickRecipeType(ev) {
 	hToggleClassMenu(ev); mClear('dTable');
 	let name = ev.target.innerHTML; console.log(name);
 	let key = normalizeString(name); console.log(key);
 	let dTable = mBy('dTable'); mStyle('dTable', { padding: 10, display: 'flex', wrap: 'true', acontent: 'start', gap: 10 });
 	let list = M.recipes.recipes[key]; console.log(list);
+
 	for (const k of list) {
 		if (nundef(M.recipes[k])) continue;
 		let o = M.recipes[k]; console.log(o);
@@ -45,4 +56,7 @@ async function onclickRecipe(key) {
 		for(const i of range(10)) mLinebreak(dTable,0);
 	}
 }
+
+
+
 

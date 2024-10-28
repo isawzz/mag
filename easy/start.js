@@ -1,7 +1,38 @@
 onload = start;
 
-async function start() { loadColors(); await test14(); }
+async function start() { loadColors(); await test15(); }
 
+async function test15(){
+	await loadRecipes();
+	await loadAssets();
+
+	let dPage = document.getElementById('dPage');
+	mStyle(dPage, { w: '100%', h: '100%', bg: 'skyblue' }); //page coloring
+
+	let names = M.divNames = mAreas(dPage, ` 'dTop' 'dMain' 'dStatus' `, '1fr', 'auto 1fr auto');
+	mShade(names); //area coloring
+	mStyle('dMain', { padding: 4,overy:'auto' })
+	mFlexBaseline('dTop'); mStyle('dTop', { padding: 4, pabottom: 10 })
+	mStyle('dStatus', { padding: 4 }, { html: '&nbsp;' })
+
+	let dTop = mDom('dTop'); //top menu
+	let dHome = mHomeLogo(dTop, 'airplane', onclickHome, 'top'); //logo
+	let dCalc = mLinkMenu(dTop, 'CALC', {}, onclickCalc, 'top');
+	mLinkMenu(dTop, 'DAY', {}, onclickDay, 'top');
+	let dExample = mLinkMenu(dTop, 'EXAMPLE', {}, onclickExample, 'top');
+	mLinkMenu(dTop, 'GAME', {}, onclickGame, 'top');
+	//let dMath = mLinkMenu(dTop, 'MATH', {}, onclickMath, 'top');
+	let v = mLinkMenu(dTop, 'VEGAN RECIPES', {}, onclickVeganRecipes, 'top');
+	mLinkMenu(dTop, 'ZONE', {}, onclickZone, 'top');
+
+
+	v.click();
+	setTimeout(()=>clickOnElemWithAttr('innerHTML', 'Soups'),100);
+	setTimeout(()=>onclickRecipe('lentil_soup'),100)
+
+
+
+}
 async function test14() {
 	await loadAssets();
 	//Z = await mGetRoute('z', { done: 'Nil github' }); //console.log('Z', Z);

@@ -6,7 +6,6 @@ async function onclickCalc(ev) {
 	let dSide = mBy('dSide'); mStyle(dSide, { padding: 10, wbox: true });
 
 	let dMenu = mDom('dSide', { display: 'flex', dir: 'column' }); //side menu
-
 	let gencase = mLinkMenu(dMenu, 'Statistik', {}, onclickStatistik, 'side');
 	let x = mLinkMenu(dMenu, 'Binomial', {}, onclickBinomial, 'side');
 	let normal = mLinkMenu(dMenu, 'Normal', {}, onclickNormal, 'side');
@@ -50,25 +49,6 @@ async function onclickHome(ev) {
 	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', 'skyblue');
 	mShadeLight(names)
 	mRemoveClass(ev.target, 'active'); //just set other top menu buttons inactive!
-}
-async function onclickVeganRecipes(ev) {
-	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', 'green_bamboo');
-	mShadeLight(names)
-	let dSide = mBy('dSide'); mStyle(dSide, { padding: 10, wbox: true });
-
-	let dMenu = mDom('dSide', { display: 'flex', dir: 'column' }); //side menu
-
-	let recipes = ['Pumpkin Soup', 'Semmelknoedel', 'Stir Fry'];
-	for (const name of recipes) {
-		let b = mLinkMenu(dMenu, 'Pumpkin Soup', onclickRecipe(ev), 'side');
-	}
-	// let gencase = mLinkMenu(dMenu, 'Pumpkin Soup', onclickPumpkinSoup, 'side');
-	// let x = mLinkMenu(dMenu, 'Semmelknoedel', onclickSemmelknoedel, 'side');
-	// mLinkMenu(dMenu, 'Stir Fry', onclickStirFry, 'side');
-	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
-	// mLinkMenu(dMenu, 'Binomial', onclickBinomial, 'side');
-
-	gencase.click();
 }
 async function onclickZone(ev) {
 	let names = hPrepUi(ev, ` 'dSide dTable' `, 'auto 1fr', '1fr', 'indigo');
@@ -376,6 +356,8 @@ async function onclickNormalVar(ev) {
 
 //#endregion
 
+//#region Recipes
+//#endregion
 
 
 
