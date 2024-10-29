@@ -1,7 +1,100 @@
-_____ mo 28.10.24 airport 1770
-was hab ich gestern NICHT ausrechnenn koennen?
-lower bound upper bound
 
+
+Lehrstoff:
+I . J a h r g a n g :
+Reelle Zahlen:
+Mengenbegriff, Mengenoperationen; Zahlenbereiche; Dezimalsystem, Festkomma- und
+Gleitkommadarstellung; Potenzen und Wurzeln; Dualzahlen.
+Rechnen mit Zahlen und Größen:
+Überschlagsrechnung; Prozentrechnung; Umrechnung von Maßeinheiten.
+I I . J a h r g a n g :
+Komplexe Zahlen:
+Darstellung; Addition, Subtraktion, Multiplikation, Division. Polarkoordinaten.
+Rechnen mit Zahlen und Größen:
+Fehlerquellen, Fehlergrößen, Fehlerfortpflanzung. 
+
+Lehrstoff:
+I . J a h r g a n g :
+Gleichungen und Ungleichungen:
+Terme, Formelumwandlung; Äquivalenzumformungen; Ungleichungen; Gerade in der Ebene.
+Lineare Gleichungssysteme:
+Lösbarkeit; Lösungsmethoden.
+Rechnen mit reellwertigen Funktionen:
+Addition, Subtraktion, Multiplikation und zugehörige Rechenregeln.
+Elementare Geometrie:
+Ähnlichkeit, Dreieck, Viereck, Satz von Pythagoras, Kreis; elementare Körper.
+Trigonometrie:
+Trigonometrie des rechtwinkeligen Dreiecks.
+Vektoren:
+Darstellung, Ortsvektor; Multiplikation mit Skalar; Addition und Subtraktion.
+Matrizen:
+Begriff; Determinante.
+I I . J a h r g a n g :
+Trigonometrie:
+Trigonometrie des allgemeinen Dreiecks.
+Vektoren:
+Skalarprodukt, Betrag, Orthogonalität; vektorielles Produkt. 
+Matrizen:
+Bezeichnungen, Addition, Multiplikation, Multiplikation mit einer Zahl; Rechenregeln, lineare
+Gleichungssysteme in Matrizenform. 
+
+Lehrstoff:
+I . J a h r g a n g :
+Grundfunktionen:
+Funktionsbegriff, Definitions- und Wertemenge; lineare Funktion, direkte und indirekte Proportionalität.
+I I . J a h r g a n g :
+Grundfunktionen:
+Umkehrfunktion; Quadratische Funktion, Potenzfunktionen, Polynomfunktion, Exponentialfunktion
+Logarithmusfunktion, trigonometrische Funktionen; Parameterdarstellung.
+Eigenschaften von Funktionen:
+Nullstellen, Monotonie, Polstellen.
+Endliche Folgen:
+Arithmetische und geometrische Folgen, Summenformel; Zinseszinsrechnung.
+Interpolation:
+Lineare Interpolation.
+
+Lehrstoff:
+I I I. J a h r g a n g :
+Unendliche Folgen und Reihen:
+Grenzwert, konvergente und divergente Folgen, rekursive Definition von Folgen; elementarer
+Reihenbegriff, Grenzwert von Funktionen, Stetigkeit, Unstetigkeitsstellen, Iterationsverfahren zur
+Bestimmung von Nullstellen.
+Differentialrechnung:
+Ableitung, Ableitungsregeln, höhere Ableitungen, Konvexität; Extremwerte, Wendepunkte.
+Integralrechnung:
+Stammfunktion und bestimmtes Integral, Grundintegrale; grundlegende und im Fachgebiet relevante
+Integrationsregeln; Numerische Integration. 
+
+Lehrstoff:
+I I . J a h r g a n g :
+Eindimensionale Datenbeschreibung:
+Häufigkeitsverteilung, Lage- und Streuungsmaße, Boxplot.
+I V . u n d V . J a h r g a n g :
+Wahrscheinlichkeitsrechnung:
+Zufallsexperimente, Laplace-Wahrscheinlichkeit, Additions- und Multiplikationssatz für einander
+ausschließende bzw. unabhängige Ereignisse; bedingte Wahrscheinlichkeit.
+Wahrscheinlichkeitsverteilungen:
+Binomialverteilung; Normalverteilung.
+Ausgleichsrechnung: 
+Methode der kleinsten Quadrate, Ausgleichsfunktionen.
+Beurteilende Statistik:
+Lineare Regression und Korrelation.
+
+Lehrstoff (alle Kompetenzbereiche):
+I . b i s V . J a h r g a n g :
+Anwendungen aus dem Fachgebiet; Verwendung der in der Praxis üblichen Rechenhilfen; Einsatz
+von für das Fachgebiet relevanten Technologien. 
+
+
+_____ di 29.10.24 airport 1770
+distance:
+op= y2-y1
+adj= x2-x1
+(y2-y1)^2+(x2-x1)^2 = D^2
+d = sqrt((y2-y1)^2+(x2-x1)^2)
+_____ mo 28.10.24 airport 1770
+was hab ich gestern NICHT ausrechnen koennen?
+lower bound upper bound
 _____ so 27.10.24 airport 1770
 7h spaz 1
 10h math
@@ -11,40 +104,21 @@ _____ so 27.10.24 airport 1770
 establish boundaries
 distinguish: validation and submission/fawning
 rationalization vs acknowledgement of emotions
-
 _____ sa 26.10.24 airport 1770
 wie werden die recipes organisiert?
 5063 5576
 _____ fr 25.10.24 airport 1770
 nimm einen stick mit und dann mach das
-
 11h gehe zur buecherei und gib alles zurueck was geht
 verlaengern von medien
-
 https://www.telecave.net/mag/y/m.txt
-
 _____ do 24.10.24 airport 1770
 _____ mi 23.10.24 airport 1770
 wie kann ich recipes am besten accomplishen?
-recipes blog with Jekyll durchgehen
-
-98584048
-
-92465672
-https://github.com/isadora88/veganrecipes
-
- `C:\Program Files\Git\bin\bash.exe` 
-
-ssh-keygen -t ed25519 -C ama.leeb4@gmail.com
-
-https://isawzz.github.io/veganrecipes/
-
 _____ di 22.10.24 airport 1770
 _____ sa 19.10.24 airport 1770
-
 1/10
 1/16
-
 the probability of success in a trial is .5. What is the probability that in 5 trials all 5 succeed OR all 5 fail?
 
 6:13 AM 10/19/2024 0
