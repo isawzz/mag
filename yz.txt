@@ -1,4 +1,12 @@
 
+9:53 AM 10/30/2024
+1. 180 in der mitte, 140 links
+9:54 AM 10/30/2024
+2. P(X<=z)=.93 ... z=
+compute inversePdf for N(0,1) and p=.93 z=1.476
+dh etwa mitte zwischen 1. und 2. stdev ueber mu
+10:04 AM 10/30/2024
+
 
 Lehrstoff:
 I . J a h r g a n g :
