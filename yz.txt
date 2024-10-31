@@ -1,28 +1,49 @@
+_________ 9:38 AM 10/31/2024
+aus normalverteilung+_loesungen:
 
-gummibaeren: 26-34 YEAH!
+_______ batterien
+N(5320,156)
+berechne 90% intervall um mu
+min 5063.4028 and max 5576.5972
 
-feinstaub:
+wenn die prob gegeben ist => inverse normal
+wenn ein x-wert gegeben ist =>normal Cdf
+
+veranschaulichen: area <= 5200
+
+_______ 
+
+
+
+aus boxplot/boxplot_loesungen:
+______ gummibaeren: 26-34 YEAH!
+
+______ feinstaub:
 whisker bei 23
 max bei 72
 box oben bei 59
 box unten bei 33
 
-fluggepaeck:
+______ fluggepaeck:
 (H1+2H2)/(H1+H2+H3)
-
-
 
 median:2 
 FALSCHE loesung waere: 1:1 2:6 nein! da waer der median 1.5!!!
 RICHTIGE loesung: 1:0, 2:7
 
-sqrt( sum(val(i)-mu)*h(i)) / sum(h(i)) ) (4. formel)
-
-var=sum x-
+stdev: sqrt( sum(val(i)-mu)*h(i)) / sum(h(i)) ) (4. formel)
 
 boxplot:
 ... 23 ... 33---44---59 ... 72
 1.34 * 44 + 44 = 102.96
+
+______ koerpergroesse
+178.6
+stdev 7.49933330370107
+werte 168 ... 179 
+
+
+
 
 
 Lehrstoff:
