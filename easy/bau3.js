@@ -34,8 +34,6 @@ async function onclickExample(ev) {
 		mDom(dSide, { margin: 0 }, { tag: 'button', html: item, onclick: onclickExampleItem });
 		mLinebreak(dSide, 3);
 	}
-
-
 }
 async function onclickExampleItem(ev) {
 	mClear('dTable');
