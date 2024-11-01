@@ -1,5 +1,16 @@
 19.11. renew lib!!!
 
+
+beispiel fuer kettenregel:
+f(x)=e^(C(x-a)^2)
+g(x)=(x-a)^2=x^2-2ax+a^2
+g'(x) = 2x-2a=2(x-a)
+f'(x)=f(x)*C*2(x-a)
+
+C=-1/2(b^2) 2 kuerzt sich weg
+
+f'(x)=-1/b^2 * f(x) * (x-a) YEAH!!!!!!
+
 _________ 9:38 AM 10/31/2024
 aus normalverteilung+_loesungen:
 
@@ -74,7 +85,7 @@ _______ internet
  140, 180 P(X<=200 = .84 = 84%
 
 _______ mathago normal schularbeit
-aufgabe 1: 140, 180
+aufgabe 1: 140, 180 (same as normal2 internet)
 
 aufgabe 2:
 schau inverse normal N(0,1) <=.93 =>1.4758
