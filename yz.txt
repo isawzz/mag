@@ -1,17 +1,33 @@
 
 19.11. renew lib!!!
+sarah/annabel fragen wegen mathe buecher 1-4. AHS
 
-proof sum of triangle angles is 180
+_______ 7:32 AM 11/7/2024
+8:43 AM 11/7/2024 v stretch
+8:46 AM 11/7/2024 v tune
+8:53 AM 11/7/2024 m deiecke 1/3-3/3
+9:07 AM 11/7/2024 finde einen zirkel gibt es nicht!
+bis: 9:14
+9:27 AM 11/7/2024 +4l wasser
+9:37 AM 11/7/2024 schradiek
+9:53 AM 11/7/2024 mathe reverted to chapter G
+10:25 AM 11/7/2024 =>ULP
+bis: 5:37 PM 11/7/2024
 
-annabel fragen wegen mathe buecher 4. AHS
-sachen retour zu mac
-lib books return
-dolli vorschlag: samstag 15-17h
-oder di,mi,oder do 15-17h
+lim(x>0) (1-cos(x))/x
+erweitern um (1+cos(x)):
+1-cos^2(x)/1+cos(x)
+sin^2(x)/x(1+cos(x))
+jetzt muss super trick machen:
+lim(sin(x)/x) * lim(sin(x)/(1+cos(x)))!!!!!!!!!!!!!
+=0
 
-wann haben die alle 3 frei? bei Dolli oder bei Tage
+how can I use geogebra to calculate the inverse cdf for normal N(3.6,.7) and p=.9
 
 
+_______ 1:45 AM 11/7/2024
+konstruiere das gleichseitige dreieck dass durch die punkte A=(-2,3) und B=(3,-4) geht. wo liegt punkt C?
+C=(6.56,3.83):
 
 ___________ 7:03 AM 11/2/2024
 
