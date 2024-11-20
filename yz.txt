@@ -1,5 +1,114 @@
 
-19.11. renew lib!!!
+
+=>cancel di 17.12. 2h30 Gu appt dentist 425 836 8555
+
+28.11. renew lib!!!
+di ab 5h nachmittag!: tel RR dentistry alles absagen!!!
+   9h30 tage fruehstueck
+mi keramik abholen 16h mathe oben vega, 17h30 unten vega
+do 15h embroidery TP wandern mit A
+
+_______ 5:28 AM 11/19/2024
+dim1 p90/91
+dim2 p200/201
+
+schularbeit Theo
+
+dreieck a=175m, beta=62deg, gamma=75deg
+a) fertige eine zeichnung im masstab 1:2500 an
+b) um was fuer ein dreieck handelt es sich?
+c) berechne umfang
+d) zeichne: hoehenlinien,umkreismittelpunkt,innkreismittelpunkt,schwerpunkt
+
+813. Warum treffen einander die drei Höhen eines Dreiecks ABC in einem Punkt?
+Dieser Beweis soll das klären:
+1) Zeichne ein beliebiges Dreieck ABC!
+2) Konstruiere das parallele des Dreiecks ABC! Beschreibe mit eigenen Worten anhand Umdreieck der drei Skizzen, wie das Umdreieck entsteht!
+3) Anhand der auftretenden Parallelogramme sieht man, dass die „neuen“ parallelen Seiten jeweils so lang wie die „alten“ sind.
+
+
+
+
+test: dim2 loes: 978-3-209-12292-6
+https://www.oebv.at/flippingbook/9783209122926
+_______ 6:47 AM 11/17/2024
+still I want to do it! and now I can do it!
+- zu einem tiershelter fahren mit dem maedi
+badminton in park bei ihr zuhause
+badminton in ihrem garten
+keramik bemalen
+keramik machen in einem kurs
+I have to be totally neutral / positive / relaxed
+sachen die spass machen aufschreiben
+aber nur ich alleine
+dann fragen wann machen will
+_______ 6:27 AM 11/16/2024
+- ueberpruefen mit dim1 solutions! dim1 ue 73 sol:2,3
+problem: in der tu biblio gibt es kein free wifi
+
+was koennte RH sein?
+ich muss 7 sachen nehmen: violin, piano, math, programming, lesen, gehen, meditation
+dann muss ich diese abwechselnd in complete peace ablaufen lassen
+und all das uebrige zieht einfach unbemerkt vorueber
+- piano geht erst wenn mein klavier habe! das macht aber nichts
+priorities:
+gehen, math, lesen, 
+
+_______ 6:52 AM 11/15/2024
+59
+Schreibe die Menge der zweistelligen Zahlen auf, die man nur mit Hilfe der Ziffern 3, 6 und 7 bilden kann! Dabei kann eine Ziffer auch zweimal vorkommen!
+57
+Schreibe die Zahlenmenge auf! Wie viele Elemente hat sie?
+a) A Menge der Vielfachen von 5, die größer als 33 und kleiner als 81 sind
+=
+b) B Menge der zweistelligen Zahlen mit der Ziffernsumme 8
+=
+c) C Menge der ungeraden Zahlen größer als 94 und kleiner als 114
+=
+d) D Menge der zweistelligen Zahlen mit der Einerziffer 2
+54
+Kreuze alle Zahlen an, die die Ziffernsumme 7 haben!
+A 104 B 4 300 C 700 D 1 234 E 502
+53
+1) Gib alle zweistelligen Zahlen mit der Ziffernsumme
+a) 4, b) 6, c) 12 an!
+2) Gib alle dreistelligen Zahlen mit der Ziffernsumme 
+a) 3, b) 4 an.
+49
+Bei der Addition einer Zahl und ihres Nachfolgers (bzw. Vorgänger) erhält man immer eine ungerade
+Zahl. Begründe, warum dies immer so ist!
+48
+Wenn man zu einer Zahl ihren Nachfolger addiert, erhält man a) 5, b) 21, c) 247. Wie heißt die Zahl?
+Begründe deine Antwort!
+41
+Ordne die Zahlen in der gegebenen Menge der Größe nach! Schreibe sie wieder mit Mengen
+klammern auf! Beginne mit der kleinsten Zahl!
+a) {17, 8, 12, 5, 10, 21, 7} 
+c) {65, 49, 84, 73, 27, 56}
+b) {18, 81, 73, 37, 61, 16, 50, 5} 
+d) {111, 121, 212, 221, 122, 211}
+e) {3 113 311 112, 3 111 111 313, 3 111 333 111, 3 333 131 111, 3 333 313 111, 3 111 111 131}
+34
+Ali hat die Sommerferien in den Alpen verbracht und sich über
+die Höhen einiger Berge informiert: Dachstein (2 995 m), Hoch
+könig (2 941 m), Parseierspitze (3 036 m), Rauriser Sonnblick
+(3105 m), Schesaplana (2 965 m) und Zugspitze (2 962 m). Ali be
+hauptet: „Diese Berge sind alle ungefähr gleich hoch.“
+1) Auf welche dekadische Einheit hat Ali gerundet?
+2) Runde nun auf die nächstkleinere dekadische Einheit! Für
+welche zwei Berge stimmt die Behauptung nicht mehr?
+_______ 2:18 PM 11/14/2024
+fange nun wieder an bei: dim1
+alle die zeit die ich frei habe (nix konkretes steht an) mach ich einfach nur dim1 zeug!
+
+super lustiges tueftel problem!
+Ein Faden wird gleichmäßig um einen Zylinder (d = 5 cm, h = 15 cm) gewickelt. Der Faden reicht genau fünfmal um den Zylinder herum. Wie lang ist der Faden?"
+
+wenn ich den zylinder aufschneide und ausbreite erhalte ich ein rechteck
+die breite ist 5 * d * pi = 78.5
+die hoehe ist 15
+die diagonale ist sqrt(15^2+78.5^2)=80cm
+umfang ist 2pi*d/2 = d*pi
 
 _______ 6:06 AM 11/13/2024
 https://www.oebv.at/flippingbook/9783209091628/201/
@@ -12,12 +121,18 @@ ja: https://www.oebv.at/flippingbook/9783209091611/102
 dim4:
 9783209091628
 
+dim4 isbn: 978-3-209-09162-8
+https://www.oebv.at/flippingbook/9783209091628/199
+
+dim1 isbn: 978-3-209-12271-1
+https://www.oebv.at/flippingbook/9783209122711/100
+
 loesungen dim3 9783209091772 nein, geht nicht!
 
 ok! https://www.oebv.at/flippingbook/9783209091611/102
 nein! https://www.oebv.at/flippingbook/9783209091772/5
 https://www.oebv.at/flippingbook/9783209091628/134
-https://www.oebv.at/flippingbook/
+https://www.oebv.at/flippingbook/9783230041364/199
 https://www.oebv.at/flippingbook/
 
 
