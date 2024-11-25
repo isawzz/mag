@@ -7,15 +7,11 @@ mo 25 A therap++ langos asia thalia:skulls tage action
 di buecherei return buch!!!! lied aufnehmen!
 mi 27 catan mitnehmen zu tage! geb!vielleicht doch skulls?
 _______ 4:37 AM 11/25/2024
-nix reden! nix tun
+nix reden! nix tun! disengage!
 A therap++ langos asia thalia:skulls tage action
 _______ 6:50 AM 11/23/2024
 Die Masse von 1.5-kg-Hanteln ist normalverteilt mit mu=12cm und sigma=0.1mm. 1) Berechne die Wahrscheinlichkeit dass der Durchmesser einer DVD ausserhalb des Toleranzbereichs von mu += 0.3mm liegt.
 2) Aus technischen Gruenden gibt der Abnehmer einen Bereich von 11.98 cm bis 12.02 cm vor. Berechne wie gross sigma in diesem Fall sein darf, sodass der Bereich von mu += 3sigma nicht groesser als der Toleranzbereich ist.
-
-
-
-
 
 
 
