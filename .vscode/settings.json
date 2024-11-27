@@ -43,9 +43,6 @@
 		"**/degrees*":true,
 		"**/maze*":true,
 		"**/pyscript*":true,
-		"**/tf*":true,
-		"**/t0*":false,
-		"**/t1*":true,
 	},
 	"editor.bracketPairColorization.enabled": false,
 	"[python]": {
