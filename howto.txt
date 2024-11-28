@@ -1,4 +1,25 @@
 
+_______ FASTCOMET
+____ created test0/app.js: www.moxito.online/test0
+(not secure!) https://de11.fcomet.com:2083/cpsess0328552022/frontend/jupiter/lveversion/nodejs-selector.html.tt#/applications/test0
+____ added IP address to ssh tool
+
+____ https://cloud.fastcomet.com/
+
+ssh -p 17177 moxitoon@de11.fcomet.com
+(alles sehr komisch aber ich bin drin!)
+
+_______ Ubuntu (see OneNote ubuntu linux)
+move file or dir: mv source target
+delete file: rm -r target
+
+
+
+
+
+
+
+_______ MATH
 Jemand wuerfelt mit 3 wuerfeln und notiert die anzahl der wuerfel die eine gerade augenzahl zeigen.
 1) berechne den Erwartungswert und die Varianz.
 

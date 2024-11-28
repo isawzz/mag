@@ -4077,7 +4077,7 @@ function AddGUIPiece(sq, pce) {
   var file = FilesBrd[sq];
   var rankName = "rank" + (rank + 1);
   var fileName = "file" + (file + 1);
-  pieceFileName = "../base/assets/images/chess/" + SideChar[PieceCol[pce]] + PceChar[pce].toUpperCase() + ".png";
+  pieceFileName = "../base/assets/icons/chess/" + SideChar[PieceCol[pce]] + PceChar[pce].toUpperCase() + ".png";
   imageString = "<image src='" + pieceFileName + "' class='Piece clickElement " + rankName + " " + fileName + "'/>";
   $("#ChessBoard").append(imageString);
 }
@@ -57867,7 +57867,7 @@ function SetInitialBoardPieces() {
     if (pce >= PIECES.wP && pce <= PIECES.bK) {
       rankName = "rank" + (rank + 1);
       fileName = "file" + (file + 1);
-      pieceFileName = "../base/assets/images/chess/" + SideChar[PieceCol[pce]] + PceChar[pce].toUpperCase() + ".png";
+      pieceFileName = "../base/assets/icons/chess/" + SideChar[PieceCol[pce]] + PceChar[pce].toUpperCase() + ".png";
       imageString = "<image src='" + pieceFileName + "' class='Piece " + rankName + " " + fileName + "'/>";
       $("#ChessBoard").append(imageString);
     }

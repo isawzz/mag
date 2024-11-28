@@ -2531,8 +2531,9 @@ function deleteKeyFromLocalSuperdi(k) {
   }
 }
 function detectSessionType() {
-  let loc = window.location.href;
+  let loc = window.location.href; console.log('loc', loc);
   DA.sessionType =
+  loc.includes('moxito.online') ? 'fastcomet' :
     loc.includes('vidulus') ? 'vps' :
       loc.includes('telecave') ? 'telecave' : loc.includes('8080') ? 'php'
         : loc.includes(':40') ? 'nodejs'
@@ -6014,9 +6015,10 @@ async function loadAndScaleImage(imageUrl) {
     console.error("Error loading image:", error);
   }
 }
-async function loadAssets() {
+async function loadAssets(sessionType) {
   if (nundef(M)) M = {};
-  let sessionType = detectSessionType(); console.log(sessionType)
+  if (nundef(sessionType)) sessionType = detectSessionType(); 
+  console.log('in loadAssets:',sessionType)
   if (sessionType == 'telecave') {
     let res = await postPHP({}, 'assets'); //console.log(res);
     let jsonObject = JSON.parse(res); //console.log(jsonObject);

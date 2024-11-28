@@ -1,4 +1,5 @@
 onload = start;
+DA.FASTCOMET = 'php';
 
 async function start() { loadColors(); await test15(); }
 
