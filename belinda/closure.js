@@ -720,7 +720,7 @@ function createElementFromHTML(htmlString) {
 function csv2list(allText, hasHeadings = true) {
 	var numHeadings = 11;  // or however many elements there are in each row
 	if (!allText || nundef(allText)) return [];
-	console.log(allText)
+	//console.log(allText)
 	var allTextLines = allText.split(/\r\n|\n/);
 	var headings = allTextLines[0].split(',');
 	numHeadings = headings.length;
@@ -11047,7 +11047,7 @@ function getAnimals() {
 }
 function getGSGElements(gCond, sCond) {
 	let keys = [];
-	let byg = ByGroupSubgroup; console.log('byg',byg)
+	let byg = ByGroupSubgroup; 
 	for (const gKey in byg) {
 		if (!gCond(gKey)) continue;
 		for (const sKey in byg[gKey]) {
