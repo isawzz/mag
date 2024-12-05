@@ -18,6 +18,7 @@ async function test13_closureMin(){
 }
 async function test12(){
 	let names = ["../ode/closure.js","../ode/games.js","../ode/corrext.js","../ode/bauclosure.js","../ode/baugames.js","../ode/bau_old.js","../ode/bau_new.js","../ode/bau1.js","../ode/bau2.js","../ode/bau3.js","../ode/bau4.js"];
+	names = ["../easy/closure.js","../easy/statistics.js","../easy/bau1.js","../easy/bau2.js","../easy/bau3.js","../easy/bau4.js"];
 	let di={};
 	for(const name of names){
 		let list = await codeParseFile(name);
