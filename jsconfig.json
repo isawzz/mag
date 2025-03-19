@@ -4,7 +4,8 @@
     "target": "es6"
   },
   "include": [
-    "." 
+    "." ,
+    "free"
   ],
   "exclude": [
     "basejs",
@@ -34,6 +35,6 @@
     "ode",
     "*/ersetzt.js",
     "sarah",
-    "free"
+    "easy"
   ]
 }

@@ -1,0 +1,67 @@
+status: started
+id: K3jVbq1gRaZH8mQWJACO
+fen:
+  points:
+    - '380_603_1'
+    - '556_284_1'
+    - '712_673_1'
+    - '184_484_1'
+    - '812_333_4'
+    - '375_866_4'
+    - '235_177_1'
+    - '936_600_4'
+    - '58_673_2'
+    - '725_54_2'
+  meeples: []
+game: lacuna
+owner: felix
+friendly: showdown in Banjul
+players:
+  felix:
+    name: felix
+    color: '#0e1e76'
+    texture: ../assets/textures/marble_meer1.jpg
+    blendMode: normal
+    imgKey: felix
+    playmode: human
+    score: 0
+    positions: []
+    flowers:
+      '0': 0
+      '1': 0
+  lauren:
+    name: lauren
+    color: '#006c7f'
+    texture: ../assets/textures/marble_blue2.jpeg
+    blendMode: normal
+    imgKey: lauren
+    palette:
+      - '#006c7f'
+      - '#7caac1'
+      - '#39688b'
+      - '#cddbe0'
+      - '#abc3cd'
+      - '#b6d6e2'
+      - '#566a79'
+      - '#6c848e'
+    playmode: human
+    score: 0
+    positions: []
+    flowers:
+      '0': 0
+      '1': 0
+playerNames:
+  - felix
+  - lauren
+options:
+  numPoints: 28
+  numColors: 4
+  numMeeples: 3
+  gamemode: multi
+step: 0
+moves: []
+plorder:
+  - felix
+  - lauren
+turn:
+  - felix
