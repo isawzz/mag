@@ -1,0 +1,16 @@
+name: carla
+color: '#48061a'
+key: nations_australia
+texture: ../assets/textures/marble_red.jpeg
+palette:
+  - '#901eb3'
+  - '#6d0c39'
+  - '#1f040d'
+  - '#530624'
+  - '#3f041b'
+  - '#090405'
+  - '#340415'
+  - '#28041d'
+blendMode: multiply
+fg: '#ffffff'
+imgKey: abstract_023

@@ -1,8 +1,18 @@
 name: gul
-color: '#e6be8a'
+color: '#283618'
 texture: ../assets/textures/marble_beige1.jpeg
-blendMode: normal
+blendMode: luminosity
 imgKey: leopard
 games:
   setgame:
     level: 1
+palette:
+  - '#ffd59a'
+  - '#7c5217'
+  - '#251604'
+  - '#512f04'
+  - '#633c04'
+  - '#3e2404'
+  - '#6c3c04'
+  - '#341c04'
+fg: '#000000'

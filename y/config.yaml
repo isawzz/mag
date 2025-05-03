@@ -302,3 +302,9 @@ themes:
     texture: ../assets/textures/wall1.jpg
     blendMode: overlay
     name: forest
+  luxury:
+    color: '#5c0c4c'
+    texture: ../assets/textures/marble_red.jpeg
+    blendMode: multiply
+    fg: '#ffffff'
+    name: luxury
