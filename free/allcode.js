@@ -10104,7 +10104,8 @@ function showTitle(title, dParent = 'dTitle') {
   return mDom(dParent, { maleft: 20 }, { tag: 'h1', html: title, classes: 'title' });
 }
 function showTitleGame(table) {
-  let d = mBy('dExtraLeft');
+  //console.log('HAAAAAAAAAAAAAAAA')
+  let d = mBy('dExtraLeft');mClear(d);
   let html = `${getGameProp('friendly').toUpperCase()}: ${table.friendly}`;
   mDom(d, { maleft: 10, family: 'algerian' }, { html });
 }

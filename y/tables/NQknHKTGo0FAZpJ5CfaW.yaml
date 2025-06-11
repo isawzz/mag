@@ -1,0 +1,233 @@
+status: started
+id: NQknHKTGo0FAZpJ5CfaW
+fen:
+  deck:
+    - green_diamond_2_striped
+    - purple_squiggle_1_solid
+    - green_squiggle_1_striped
+    - green_squiggle_3_open
+    - purple_squiggle_3_striped
+    - green_oval_2_solid
+    - purple_squiggle_1_open
+    - red_diamond_1_open
+    - purple_oval_1_striped
+    - red_squiggle_2_solid
+    - red_squiggle_3_striped
+    - red_squiggle_1_solid
+    - green_oval_3_striped
+    - purple_squiggle_2_solid
+    - red_diamond_3_solid
+    - purple_diamond_1_striped
+    - red_oval_3_open
+    - red_oval_1_open
+    - red_squiggle_2_striped
+    - purple_squiggle_3_open
+    - green_diamond_2_solid
+    - green_diamond_2_open
+    - red_oval_3_striped
+    - red_squiggle_3_open
+    - purple_oval_1_solid
+    - red_diamond_1_solid
+    - red_oval_2_solid
+    - red_oval_1_striped
+    - purple_squiggle_1_striped
+    - red_diamond_2_solid
+    - red_squiggle_2_open
+    - green_oval_3_solid
+    - purple_diamond_3_open
+    - green_diamond_3_open
+    - purple_diamond_3_solid
+    - green_oval_1_striped
+    - purple_diamond_2_striped
+    - red_diamond_3_open
+    - green_squiggle_2_striped
+    - purple_diamond_3_striped
+    - green_oval_1_open
+    - red_oval_2_striped
+    - purple_oval_2_solid
+    - purple_oval_2_striped
+    - green_diamond_3_solid
+    - green_squiggle_3_striped
+    - red_diamond_2_open
+    - green_diamond_1_solid
+  cards:
+    - purple_oval_1_open
+    - purple_diamond_1_solid
+    - purple_squiggle_2_striped
+    - purple_squiggle_2_open
+    - red_squiggle_1_striped
+    - red_oval_3_solid
+    - purple_squiggle_3_solid
+    - green_squiggle_1_open
+    - purple_diamond_1_open
+    - green_oval_2_open
+    - green_diamond_3_striped
+    - red_diamond_2_striped
+game: setgame
+owner: guest
+friendly: festival of Bandar Seri Begawan
+players:
+  guest:
+    name: guest
+    color: '#002e63'
+    texture: ../assets/textures/marble_blue1.jpeg
+    imgKey: stellers_jay
+    blendMode: normal
+    bg: '#55bc41'
+    fg: '#ffffff'
+    palette:
+      - '#002e63'
+      - '#071c3b'
+      - '#81591f'
+      - '#42372f'
+      - '#202737'
+      - '#23446a'
+      - '#0c2c55'
+      - '#131922'
+    level: 7
+    playmode: human
+    score: -1
+  gul:
+    name: gul
+    color: '#283618'
+    texture: ../assets/textures/marble_beige1.jpeg
+    blendMode: luminosity
+    imgKey: leopard
+    palette:
+      - '#ffd59a'
+      - '#7c5217'
+      - '#251604'
+      - '#512f04'
+      - '#633c04'
+      - '#3e2404'
+      - '#6c3c04'
+      - '#341c04'
+    fg: '#000000'
+    level: 1
+    playmode: human
+    score: 5
+playerNames:
+  - guest
+  - gul
+options:
+  use_level: 'yes'
+  numCards: 12
+  gamemode: multi
+step: 10
+moves:
+  - step: 0
+    name: guest
+    move:
+      - noSet
+    change: '-1'
+    score: -1
+  - step: 0
+    name: gul
+    move:
+      - red_squiggle_1_open
+      - red_diamond_1_striped
+      - red_oval_1_solid
+    change: '+1'
+    score: 1
+  - step: 1
+    name: gul
+    move:
+      - green_oval_1_solid
+      - green_oval_2_striped
+      - green_oval_3_open
+    change: '+1'
+    score: 2
+  - step: 2
+    name: gul
+    move:
+      - noSet
+    change: '-1'
+    score: 1
+  - step: 2
+    name: gul
+    move:
+      - noSet
+    change: '-1'
+    score: 0
+  - step: 2
+    name: gul
+    move:
+      - noSet
+    change: '-1'
+    score: -1
+  - step: 2
+    name: gul
+    move:
+      - noSet
+    change: '-1'
+    score: -2
+  - step: 2
+    name: gul
+    move:
+      - noSet
+    change: '-1'
+    score: -3
+  - step: 2
+    name: gul
+    move:
+      - green_squiggle_1_solid
+      - green_squiggle_3_solid
+      - green_squiggle_2_solid
+    change: '+1'
+    score: -2
+  - step: 3
+    name: gul
+    move:
+      - purple_oval_3_striped
+      - purple_oval_3_open
+      - purple_oval_3_solid
+    change: '+1'
+    score: -1
+  - step: 4
+    name: gul
+    move:
+      - purple_oval_2_open
+      - red_squiggle_3_solid
+      - green_diamond_1_striped
+    change: '+1'
+    score: 0
+  - step: 5
+    name: gul
+    move:
+      - noSet
+    change: '+1'
+    score: 1
+  - step: 6
+    name: gul
+    move:
+      - purple_diamond_2_open
+      - red_oval_2_open
+      - green_squiggle_2_open
+    change: '+1'
+    score: 2
+  - step: 7
+    name: gul
+    move:
+      - noSet
+    change: '+1'
+    score: 3
+  - step: 8
+    name: gul
+    move:
+      - noSet
+    change: '+1'
+    score: 4
+  - step: 9
+    name: gul
+    move:
+      - red_diamond_3_striped
+      - purple_diamond_2_solid
+      - green_diamond_1_open
+    change: '+1'
+    score: 5
+plorder:
+  - guest
+  - gul
+turn:
+  - guest
+  - gul
